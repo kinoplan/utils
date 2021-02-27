@@ -1,0 +1,12 @@
+*.class
+*.log
+target/
+.idea/
+.metals/
+.bloop/
+.bsp/
+local.*
+node_modules/
+package-lock.json
+yarn.lock
+.DS_Store
