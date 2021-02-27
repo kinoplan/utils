@@ -1,6 +1,7 @@
 import sbt.Keys._
 import sbt._
 import scalafix.sbt.ScalafixPlugin
+import scoverage.ScoverageKeys._
 
 object ProjectSettings {
   lazy val commonProfile: Project => Project =
@@ -23,7 +24,10 @@ object ProjectSettings {
           "-Wunused:explicits"
         )
       )),
-      libraryDependencies ++= Seq(Dependencies.scalatest.value)
+      libraryDependencies ++= Seq(Dependencies.scalatest.value),
+      coverageMinimum := 80,
+      coverageFailOnMinimum := true,
+      coverageHighlighting := true
     )
 
   lazy val rootProfile: Project => Project = _.settings(
