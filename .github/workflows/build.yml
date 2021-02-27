@@ -2,6 +2,9 @@ name: build
 
 on: [push, pull_request]
 
+env:
+  PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
+  CODECOV_TOKEN: 'ee4436da-b150-418d-8558-92770ded87ed'
 jobs:
   build:
     name: Build and Test
