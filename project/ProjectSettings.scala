@@ -27,7 +27,8 @@ object ProjectSettings {
       libraryDependencies ++= Seq(Dependencies.scalatest.value),
       coverageMinimum := 80,
       coverageFailOnMinimum := true,
-      coverageHighlighting := true
+      coverageHighlighting := true,
+      testFrameworks += new TestFramework("munit.Framework")
     )
 
   lazy val rootProfile: Project => Project = _.settings(

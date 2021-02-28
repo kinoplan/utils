@@ -1,1 +1,1 @@
-addCommandAlias("fix", "; +all compile:scalafix")
+addCommandAlias("fix", "+scalafixAll")

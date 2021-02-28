@@ -1,10 +1,13 @@
 resolvers in ThisBuild += "Artima Maven Repository" at "https://repo.artima.com/releases"
 
 lazy val root = project.in(file(".")).aggregate(
-  implicitsCollection
+  implicitsBoolean, implicitsCollection
 ).configure(ProjectSettings.rootProfile)
 
 // zzzzzzzzzzzzzzzzzzzz Implicits Modules zzzzzzzzzzzzzzzzzzzz
+
+lazy val implicitsBoolean = project.in(file("implicits/boolean"))
+  .configure(ImplicitsModules.booleanProfile)
 
 lazy val implicitsCollection = project.in(file("implicits/collection"))
   .configure(ImplicitsModules.collectionProfile)

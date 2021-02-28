@@ -2,19 +2,10 @@ package io.kinoplan.utils.implicits
 
 import org.scalatest.wordspec.AnyWordSpec
 
-class CollectionSyntaxSpec extends AnyWordSpec with CollectionSyntax {
-  import CollectionSyntaxSpec._
+import io.kinoplan.utils.implicits.CollectionSyntax.syntaxCollectionOps
 
-  "CollectionHelper#intersectBy" should {
-    "return correct value" in {
-      assert(commons.intersectBy(_.number)(List()) === List())
-      assert(commons.intersectBy(_.number)(List(1, 2)) === List(test1, test2))
-      assert(commons.intersectBy(_.number)(List(3, 4)) === List(test3, test4))
-    }
-  }
-}
+class CollectionSyntaxSpec extends AnyWordSpec {
 
-object CollectionSyntaxSpec {
   case class ClassForTest(number: Int, text: String)
 
   val test1 = ClassForTest(1, "Number One")
@@ -26,4 +17,12 @@ object CollectionSyntaxSpec {
   val test7 = ClassForTest(3, "Number Seven (but Three)")
 
   val commons = List(test1, test2, test3, test4)
+
+  "CollectionSyntax#intersectBy" should {
+    "return correct value" in {
+      assert(commons.intersectBy(_.number)(List()) === List())
+      assert(commons.intersectBy(_.number)(List(1, 2)) === List(test1, test2))
+      assert(commons.intersectBy(_.number)(List(3, 4)) === List(test3, test4))
+    }
+  }
 }
