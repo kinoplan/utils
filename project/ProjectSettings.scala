@@ -4,32 +4,28 @@ import scalafix.sbt.ScalafixPlugin
 import scoverage.ScoverageKeys._
 
 object ProjectSettings {
+
   lazy val commonProfile: Project => Project =
     _.enablePlugins(ScalafixPlugin)
       .settings(
-      crossScalaVersions := Seq("2.12.11", "2.13.4"),
-      scalaVersion := crossScalaVersions.value.last,
-      javacOptions ++= Seq(
-        "-source", "1.8",
-        "-target", "1.8",
-        "-Xlint"
-      ),
-      scalacOptions ~= (_.filterNot(
-        Set(
-          "-Wdead-code",
-          "-Wunused:params",
-          "-Ywarn-dead-code",
-          "-Ywarn-unused:params",
-          "-Ywarn-unused:patvars",
-          "-Wunused:explicits"
-        )
-      )),
-      libraryDependencies ++= Seq(Dependencies.scalatest.value),
-      coverageMinimum := 80,
-      coverageFailOnMinimum := true,
-      coverageHighlighting := true,
-      testFrameworks += new TestFramework("munit.Framework")
-    )
+        crossScalaVersions := Seq("2.12.11", "2.13.4"),
+        scalaVersion := crossScalaVersions.value.last,
+        scalacOptions ~= (_.filterNot(
+          Set(
+            "-Wdead-code",
+            "-Wunused:params",
+            "-Ywarn-dead-code",
+            "-Ywarn-unused:params",
+            "-Ywarn-unused:patvars",
+            "-Wunused:explicits"
+          )
+        )),
+        libraryDependencies ++= Seq(Dependencies.scalatest.value),
+        coverageMinimum := 80,
+        coverageFailOnMinimum := true,
+        coverageHighlighting := true,
+        testFrameworks += new TestFramework("munit.Framework")
+      )
 
   lazy val rootProfile: Project => Project = _.settings(
     name := "utils",
@@ -38,4 +34,5 @@ object ProjectSettings {
     skip in publishArtifact := true,
     Keys.`package` := file("")
   )
+
 }

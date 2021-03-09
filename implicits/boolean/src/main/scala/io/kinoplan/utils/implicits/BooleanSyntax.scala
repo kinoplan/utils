@@ -4,6 +4,7 @@ final class BooleanOps(private val value: Boolean) extends AnyVal {
 
   @inline
   def toOption: Option[Boolean] = if (value) Some(true) else None
+
 }
 
 trait BooleanSyntax {
