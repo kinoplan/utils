@@ -6,8 +6,8 @@ import scala.collection.generic.IsIterable
 final class CollectionOps[Repr, I <: IsIterable[Repr]](private val value: Repr, it: I) {
 
   @inline
-  def intersectBy[B >: it.A, That](f: it.A => B)(container: Iterable[B])(
-    implicit bf: BuildFrom[Repr, it.A, That]
+  def intersectBy[B >: it.A, That](f: it.A => B)(container: Iterable[B])(implicit
+    bf: BuildFrom[Repr, it.A, That]
   ): That = {
     val thisOps = it(value)
 
@@ -19,12 +19,15 @@ final class CollectionOps[Repr, I <: IsIterable[Repr]](private val value: Repr, 
       }
     )
   }
+
 }
 
 trait CollectionSyntax {
 
-  implicit def syntaxCollectionOps[Repr](value: Repr)(implicit it: IsIterable[Repr]): CollectionOps[Repr, it.type] =
-    new CollectionOps(value, it)
+  implicit def syntaxCollectionOps[Repr](value: Repr)(implicit
+    it: IsIterable[Repr]
+  ): CollectionOps[Repr, it.type] = new CollectionOps(value, it)
+
 }
 
 object CollectionSyntax extends CollectionSyntax
