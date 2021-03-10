@@ -1,32 +1,56 @@
 package io.kinoplan.utils.implicits
 
-import scala.collection.BuildFrom
+import scala.collection.{BuildFrom, IterableOps}
 import scala.collection.generic.IsIterable
 
-final class CollectionOps[Repr, I <: IsIterable[Repr]](private val value: Repr, it: I) {
+final private[implicits] class CollectionOps[Repr, A, C](
+  private val value: Repr,
+  it: IterableOps[A, Iterable, C]
+) extends CollectionBase[A] {
 
   @inline
-  def intersectBy[B >: it.A, That](f: it.A => B)(container: Iterable[B])(implicit
-    bf: BuildFrom[Repr, it.A, That]
-  ): That = {
-    val thisOps = it(value)
+  def diffBy[B >: A, That](f: A => B)(container: Iterable[B])(implicit
+    bf: BuildFrom[Repr, A, That]
+  ): That = bf.fromSpecific(value)(it.view.filterNot(a => container.exists(_ == f(a))))
 
-    bf.fromSpecific(value)(
-      thisOps.view.filter { a =>
-        val b = f(a)
+  @inline
+  def diffByMerge[B >: A, That](f: A => B)(container: Iterable[A])(implicit
+    bf: BuildFrom[Repr, A, That]
+  ): That = bf.fromSpecific(value)(it.++(container.view.filterNot(a => it.view.exists(f(_) == a))))
 
-        container.exists(_ == b)
-      }
-    )
-  }
+  @inline
+  def filterIf[B >: A, That](cond: Boolean)(f: A => Boolean)(implicit
+    bf: BuildFrom[Repr, A, That]
+  ): That = bf.fromSpecific(value)(if (cond) it.view.filter(f) else it.view)
+
+  @inline
+  def intersectBy[B >: A, That](f: A => B)(container: Iterable[B])(implicit
+    bf: BuildFrom[Repr, A, That]
+  ): That = bf.fromSpecific(value)(it.view.filter(a => container.exists(_ == f(a))))
+
+  @inline
+  def intersectByMerge[B >: A, That](f: A => B)(container: Iterable[A])(implicit
+    bf: BuildFrom[Repr, A, That]
+  ): That = bf.fromSpecific(value)(it.view.filter(a => container.exists(f(_) == f(a))))
+
+  @inline
+  def sumBy[B](f: A => B)(implicit
+    num: Numeric[B]
+  ): B = it.foldLeft(num.zero)((a, b) => num.plus(a, f(b)))
+
+  @inline
+  def zipWith[B >: A](f: A => B): Map[B, A] = it.view.map(a => f(a) -> a).toMap
+
+  @inline
+  def zipBoth[B, I](k: A => B, v: A => I): Map[B, I] = it.view.map(a => k(a) -> v(a)).toMap
 
 }
 
 trait CollectionSyntax {
 
-  implicit def syntaxCollectionOps[Repr](value: Repr)(implicit
+  implicit final def syntaxCollectionOps[Repr](value: Repr)(implicit
     it: IsIterable[Repr]
-  ): CollectionOps[Repr, it.type] = new CollectionOps(value, it)
+  ): CollectionOps[Repr, it.A, it.C] = new CollectionOps(value, it(value))
 
 }
 
