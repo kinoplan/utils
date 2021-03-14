@@ -19,7 +19,7 @@ You will need the following tools:
     and work in a local branch based on `main`.
 2.  Write code.
 3.  Write tests.
-4.  Run `sbt fix` and `sbt fmt` sequentially before creating the pull request.
+4.  Run `sbt format` (or `sbt fix` and `sbt fmt` sequentially) before creating the pull request.
 5.  [Submit a pull request](#submit-a-pull-request)
 
 ## Formatting
