@@ -11,13 +11,22 @@ to facilitate re-development and use.
 
 ## Usage
 
-Add `libraryDependencies` to your Scala project:
+You can add a module to your build by adding the following line to `libraryDependencies`:
 
 ```scala
-// 1. Replace *** with the desired module
-// 2. Replace "x.y.z" with the current version
-libraryDependencies += "io.kinoplan" %% "utils-***" % "x.y.z"
+"io.kinoplan" %% "utils-${module}" % ${version}
 ```
+
+Here is the complete list of published artifacts:
+
+```scala
+libraryDependencies ++= Seq(
+  "io.kinoplan" %% "utils-implicits-collection" % ${version},
+  "io.kinoplan" %% "utils-implicits-boolean" % ${version}
+)
+```
+
+You need to replace `${version}` with the version of Utils you want to use.
 
 ## Contributing
 

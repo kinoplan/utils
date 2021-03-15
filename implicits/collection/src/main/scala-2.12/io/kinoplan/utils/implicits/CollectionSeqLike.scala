@@ -24,12 +24,11 @@ abstract private[implicits] class CollectionSeqLike[A, Repr](
     val builder = cbf(value.repr)
     val i = value.iterator
 
-    operation match {
-      case CollectionOperation.Intersection => i
-          .foreach(o => if (container.exists(_ == f(o))) builder += o)
-      case CollectionOperation.Difference => i
-          .foreach(o => if (!container.exists(_ == f(o))) builder += o)
-    }
+    builder ++=
+      (operation match {
+        case CollectionOperation.Intersection => i.filter(o => container.exists(_ == f(o)))
+        case CollectionOperation.Difference   => i.filterNot(o => container.exists(_ == f(o)))
+      })
 
     builder.result()
   }
@@ -42,19 +41,14 @@ abstract private[implicits] class CollectionSeqLike[A, Repr](
     cbf: CanBuildFrom[Repr, A, That]
   ): That = {
     val builder = cbf(value.repr)
-    val i = container.iterator
+    val i = value.iterator
 
-    operation match {
-      case CollectionOperation.Intersection => i
-          .foreach(o => if (container.exists(f(_) == f(o))) builder += o)
-      case CollectionOperation.Difference =>
-        var temp = Set[A]()
-
-        i.foreach(o => if (!value.exists(f(_) == f(o))) temp += o)
-
-        builder ++= value
-        builder ++= temp
-    }
+    builder ++=
+      (operation match {
+        case CollectionOperation.Intersection => i.filter(o => container.exists(f(_) == f(o)))
+        case CollectionOperation.Difference => i ++
+            container.filterNot(o => value.exists(f(_) == f(o)))
+      })
 
     builder.result()
   }
