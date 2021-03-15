@@ -1,5 +1,9 @@
 # Changes
 
+## 0.0.3
+
+*   Fix diffByMerge and fix tests in utils-implicits-collection
+
 ## 0.0.2
 
 *   Extended utils-implicits-collection
