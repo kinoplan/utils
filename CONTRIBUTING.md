@@ -16,10 +16,10 @@ You will need the following tools:
 ## Workflow
 
 1.  Create your own [fork][fork-and-pull] of the repository
-    and work in a local branch based on `main`.
-2.  Write code.
-3.  Write tests.
-4.  Run `sbt format` (or `sbt fix` and `sbt fmt` sequentially) before creating the pull request.
+    and work in a local branch based on `main`
+2.  Write code
+3.  [Write tests](#write-tests)
+4.  Run `sbt format` (or `sbt fix` and `sbt fmt` sequentially) before creating the pull request
 5.  [Submit a pull request](#submit-a-pull-request)
 
 ## Formatting
@@ -45,11 +45,11 @@ If you have made any changes to one of the markdown files, run the formatting as
 2.  Install [remark-preset-lint-recommended][remark-preset-lint-recommended]: `npm install remark-preset-lint-recommended`
 3.  Run formatting: `remark . -o`
 
-## Run Tests
+## Write tests
 
-From the sbt shell:
+Project uses testing library [ScalaTest][scalatest], and organizes tests according to the following guidelines:
 
-    > +test
+*   An assertion in regular tests should be written with `assert` and `===`.
 
 ## Submit a pull request
 
@@ -100,6 +100,8 @@ then make the corrections and try again.
 [scalafix]: https://scalacenter.github.io/scalafix/
 
 [scalafmt]: https://scalameta.org/scalafmt/
+
+[scalatest]: https://www.scalatest.org/
 
 [scalafmt-install]: https://scalameta.org/scalafmt/docs/installation.html
 

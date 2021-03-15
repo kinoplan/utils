@@ -16,7 +16,8 @@ final private[implicits] class CollectionOps[Repr, A, C](
   @inline
   def diffByMerge[B >: A, That](f: A => B)(container: Iterable[A])(implicit
     bf: BuildFrom[Repr, A, That]
-  ): That = bf.fromSpecific(value)(it.++(container.view.filterNot(a => it.view.exists(f(_) == a))))
+  ): That = bf
+    .fromSpecific(value)(it.++(container.view.filterNot(a => it.view.exists(f(_) == f(a)))))
 
   @inline
   def filterIf[B >: A, That](cond: Boolean)(f: A => Boolean)(implicit
