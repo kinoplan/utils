@@ -4,7 +4,7 @@ addSbtPlugin("com.artima.supersafe" % "sbtplugin" % "1.1.12")
 
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.6.1")
 
-addSbtPlugin("io.github.davidgregory084" % "sbt-tpolecat" % "0.1.16")
+addSbtPlugin("io.github.davidgregory084" % "sbt-tpolecat" % "0.1.17")
 
 addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.9.26")
 
