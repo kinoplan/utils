@@ -21,7 +21,9 @@ class CollectionSyntaxSpec extends AnyWordSpec with Matchers {
 
   "CollectionHelper#diffBy" should {
     "return correct value" in {
-      assert(commons.diffBy(_.number)(List()) === List(test1, test2, test3, test4))
+      assert(
+        commons.diffBy(_.number)(List()) === List(test1, test2, test3, test4)
+      )
       assert(commons.diffBy(_.number)(List(1, 2)) === List(test3, test4))
       assert(commons.diffBy(_.number)(List(3, 4)) === List(test1, test2))
     }
@@ -29,8 +31,12 @@ class CollectionSyntaxSpec extends AnyWordSpec with Matchers {
 
   "CollectionHelper#diffByMerge" should {
     "return correct value" in {
-      assert(commons.diffByMerge(_.number)(List()) === List(test1, test2, test3, test4))
-      assert(commons.diffByMerge(_.number)(List(test5, test6)) === commons ++ List(test5, test6))
+      assert(
+        commons.diffByMerge(_.number)(List()) === List(test1, test2, test3, test4)
+      )
+      assert(
+        commons.diffByMerge(_.number)(List(test5, test6)) === commons ++ List(test5, test6)
+      )
       assert(
         commons.diffByMerge(_.number)(List(test5, test6, test7)) === commons ++ List(test5, test6)
       )
@@ -55,16 +61,24 @@ class CollectionSyntaxSpec extends AnyWordSpec with Matchers {
   "CollectionSyntax#intersectBy" should {
     "return correct value" in {
       assert(commons.intersectBy(_.number)(List()) === List())
-      assert(commons.intersectBy(_.number)(List(1, 2)) === List(test1, test2))
-      assert(commons.intersectBy(_.number)(List(3, 4)) === List(test3, test4))
+      assert(
+        commons.intersectBy(_.number)(List(1, 2)) === List(test1, test2)
+      )
+      assert(
+        commons.intersectBy(_.number)(List(3, 4)) === List(test3, test4)
+      )
     }
   }
 
   "CollectionHelper#intersectByMerge" should {
     "return correct value" in {
       assert(commons.intersectByMerge(_.number)(List()) === List())
-      assert(commons.intersectByMerge(_.number)(List(test1, test2)) === List(test1, test2))
-      assert(commons.intersectByMerge(_.number)(List(test3, test4, test7)) === List(test3, test4))
+      assert(
+        commons.intersectByMerge(_.number)(List(test1, test2)) === List(test1, test2)
+      )
+      assert(
+        commons.intersectByMerge(_.number)(List(test3, test4, test7)) === List(test3, test4)
+      )
     }
   }
 
@@ -123,7 +137,9 @@ class CollectionSyntaxSpec extends AnyWordSpec with Matchers {
 
   "CollectionHelper#zipWithDefaultValue" should {
     "return correct value" in {
-      assert(commons.zipWithDefaultValue(_.number)(test2) === Map(1 -> test1, 2 -> test2, 3 -> test4))
+      assert(
+        commons.zipWithDefaultValue(_.number)(test2) === Map(1 -> test1, 2 -> test2, 3 -> test4)
+      )
       assert(commons.zipWithDefaultValue(_.number)(test2)(5) === test2)
     }
 
@@ -137,7 +153,9 @@ class CollectionSyntaxSpec extends AnyWordSpec with Matchers {
             test4.number -> test4.text
           )
         )
-        assert(commons.zipBothWithDefaultValue(_.number, _.text)(test2.text)(5) === test2.text)
+        assert(
+          commons.zipBothWithDefaultValue(_.number, _.text)(test2.text)(5) === test2.text
+        )
       }
     }
   }

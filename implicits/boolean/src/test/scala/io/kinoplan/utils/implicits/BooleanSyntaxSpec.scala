@@ -24,8 +24,12 @@ class BooleanSyntaxSpec extends AnyWordSpec {
 
   "BooleanSyntax#toEither" should {
     "return correct value" in {
-      assert(false.toEither(textLeft, textRight) === Left[String, String](textLeft))
-      assert(true.toEither(textLeft, textRight) === Right[String, String](textRight))
+      assert(
+        false.toEither(textLeft, textRight) === Left[String, String](textLeft)
+      )
+      assert(
+        true.toEither(textLeft, textRight) === Right[String, String](textRight)
+      )
     }
   }
 

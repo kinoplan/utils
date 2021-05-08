@@ -43,7 +43,9 @@ class MapContextSpec
 
       assert(testMapContext.remove("arg2").isEmpty)
       testMapContext.remove("arg2")
-      assert(testMapContext.underlyingMap == MapContext(Map("arg1" -> "1")).underlyingMap)
+      assert(
+        testMapContext.underlyingMap == MapContext(Map("arg1" -> "1")).underlyingMap
+      )
     }
   }
 
