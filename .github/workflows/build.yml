@@ -4,6 +4,7 @@ on: [push, pull_request]
 
 jobs:
   build:
+    name: Build and Test
     strategy:
       matrix:
         os: [ubuntu-latest]
