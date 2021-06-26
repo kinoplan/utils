@@ -1,9 +1,18 @@
 pull_request_rules:
+  - name: assign and label scala-steward's PRs
+    conditions:
+      - author=scala-steward
+    actions:
+      assign:
+        users: [kazievab]
+      label:
+        add: [dependencies]
   - name: automatically merge scala-steward's PRs
     conditions:
       - author=scala-steward
       - body~=labels:.*semver-patch.*
-      - status-success=build
+      - status-success=Build and Test (ubuntu-latest, 2.12.13, adopt@1.8)
+      - status-success=Build and Test (ubuntu-latest, 2.13.5, adopt@1.8)
     actions:
       merge:
         method: merge
