@@ -77,8 +77,8 @@ $ git push origin v0.0.1
 If release build fails, delete the tag from `main` branch
 
 ```bash
-$ git tag -d v0.1.0
-$ git push origin :refs/tags/v0.1.0
+$ git tag -d v0.0.1
+$ git push origin :refs/tags/v0.0.1
 ```
 
 then make the corrections and try again.

@@ -7,8 +7,8 @@ import reactivemongo.api.indexes.{Index, IndexType}
 import zio.{Task, ZIO}
 
 import io.kinoplan.utils.zio.reactivemongo.api.ReactiveMongoApi
-import io.kinoplan.utils.zio.reactivemongo.utils.Queries._
-import io.kinoplan.utils.zio.reactivemongo.utils.syntax.ReactiveMongoSyntax
+import io.kinoplan.utils.zio.reactivemongo.daos.Queries._
+import io.kinoplan.utils.zio.reactivemongo.syntax.ReactiveMongoSyntax
 
 abstract class ReactiveMongoDaoBase[T](reactiveMongoApi: ReactiveMongoApi, collectionName: String)
     extends ReactiveMongoSyntax {
