@@ -5,5 +5,5 @@ object Dependencies {
   val logback      = "ch.qos.logback"              % "logback-classic" % "1.2.7"
   val mockitoScala = "org.scalatestplus"          %% "mockito-3-4"     % "3.2.10.0" % Test
   val scalaLogging = "com.typesafe.scala-logging" %% "scala-logging"   % "3.9.3"
-  val scalatest    = "org.scalatest"              %% "scalatest"       % "3.2.9"    % Test
+  val scalatest    = "org.scalatest"              %% "scalatest"       % "3.2.10"   % Test
 }
