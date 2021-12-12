@@ -1,4 +1,4 @@
-package io.kinoplan.utils.zio.reactivemongo.utils
+package io.kinoplan.utils.zio.reactivemongo.bson
 
 import reactivemongo.api.bson.{BSONNull, BSONValue, BSONWriter}
 

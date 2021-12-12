@@ -1,4 +1,4 @@
-package io.kinoplan.utils.zio.reactivemongo.utils.syntax
+package io.kinoplan.utils.zio.reactivemongo.syntax
 
 import scala.concurrent.{ExecutionContext, Future}
 
