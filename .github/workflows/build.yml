@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        scala: [2.12.14, 2.13.7]
+        scala: [2.12.15, 2.13.7]
         java: [adopt@1.8]
     runs-on: ${{ matrix.os }}
     steps:
@@ -39,7 +39,7 @@ jobs:
       run: sbt ++${{ matrix.scala }} coverageReport
 
     - name: Send coverage report to codecov
-      uses: codecov/codecov-action@v2.0.3
+      uses: codecov/codecov-action@v2.1.0
 
 #    - name: Send coverage report to codacy
 #      uses: codacy/codacy-coverage-reporter-action@master
