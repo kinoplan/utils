@@ -4,7 +4,7 @@ object Dependencies {
 
   object Versions {
     val reactivemongoV = "1.0.8"
-    val zioV           = "1.0.12"
+    val zioV           = "1.0.13"
     val zioConfigV     = "1.0.10"
   }
 
