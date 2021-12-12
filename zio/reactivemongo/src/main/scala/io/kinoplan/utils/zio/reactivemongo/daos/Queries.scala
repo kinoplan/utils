@@ -1,4 +1,4 @@
-package io.kinoplan.utils.zio.reactivemongo.utils
+package io.kinoplan.utils.zio.reactivemongo.daos
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
@@ -7,7 +7,7 @@ import reactivemongo.api.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWri
 import reactivemongo.api.bson.collection.BSONCollection
 import reactivemongo.api.commands.WriteResult
 
-import io.kinoplan.utils.zio.reactivemongo.utils.syntax.ReactiveMongoSyntax
+import io.kinoplan.utils.zio.reactivemongo.syntax.ReactiveMongoSyntax
 
 object Queries extends ReactiveMongoSyntax {
 

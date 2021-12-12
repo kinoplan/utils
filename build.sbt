@@ -24,6 +24,10 @@ lazy val wrappersBaseLogging = project
 
 // zzzzzzzzzzzzzzzzzzzz ZIO Modules zzzzzzzzzzzzzzzzzzzz
 
+lazy val zioMonitoringPrometheus = project
+  .in(file("zio/monitoring/prometheus"))
+  .configure(ZioModules.monitoringPrometheusProfile)
+
 lazy val zioReactivemongo = project
   .in(file("zio/reactivemongo"))
   .configure(ZioModules.reactivemongoProfile)
