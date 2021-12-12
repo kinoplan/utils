@@ -1,5 +1,11 @@
 ThisBuild / resolvers += "Artima Maven Repository".at("https://repo.artima.com/releases")
 
+// zzzzzzzzzzzzzzzzzzzz Common Modules zzzzzzzzzzzzzzzzzzzz
+
+lazy val reactivemongoBsonJodaTime = project
+  .in(file("base/reactivemongo/bson-joda-time"))
+  .configure(BaseModules.reactivemongoBsonJodaTimeProfile)
+
 // zzzzzzzzzzzzzzzzzzzz Implicits Modules zzzzzzzzzzzzzzzzzzzz
 
 lazy val implicitsBoolean = project
@@ -15,6 +21,12 @@ lazy val implicitsCollection = project
 lazy val wrappersBaseLogging = project
   .in(file("wrappers/base/logging"))
   .configure(WrappersModules.baseLoggingProfile)
+
+// zzzzzzzzzzzzzzzzzzzz ZIO Modules zzzzzzzzzzzzzzzzzzzz
+
+lazy val zioReactivemongo = project
+  .in(file("zio/reactivemongo"))
+  .configure(ZioModules.reactivemongoProfile)
 
 // format: off
 inThisBuild(

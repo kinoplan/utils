@@ -3,6 +3,9 @@ codecov:
 
 coverage:
   status:
+    patch:
+      default:
+        threshold: 100% # change by 5-10% after writing most of the tests
     project:
       default:
-        threshold: 5%
+        threshold: 100% # change by 5-10% after writing most of the tests
