@@ -23,14 +23,16 @@ Here is the complete list of published artifacts:
 ```scala
 libraryDependencies ++= Seq(
   // base
+  "io.kinoplan" %% "utils-logback-config" % ${version},
   "io.kinoplan" %% "utils-scala-logging" % ${version},
-  "io.kinoplan" %% "utils-reactivemongo-bson-joda-time" % ${version}
+  "io.kinoplan" %% "utils-reactivemongo-bson-joda-time" % ${version},
   // implicits
   "io.kinoplan" %% "utils-implicits-collection" % ${version},
-  "io.kinoplan" %% "utils-implicits-boolean" % ${version}
+  "io.kinoplan" %% "utils-implicits-boolean" % ${version},
   // zio
+  "io.kinoplan" %% "utils-zio-http-healthcheck" % ${version},
   "io.kinoplan" %% "utils-zio-monitoring-prometheus" % ${version},
-  "io.kinoplan" %% "utils-zio-reactivemongo" % ${version}
+  "io.kinoplan" %% "utils-zio-reactivemongo" % ${version},
 )
 ```
 
