@@ -26,6 +26,10 @@ lazy val implicitsCollection = project
 
 // zzzzzzzzzzzzzzzzzzzz ZIO Modules zzzzzzzzzzzzzzzzzzzz
 
+lazy val zioHttpHealthcheck = project
+  .in(file("zio/http/healthcheck"))
+  .configure(ZioModules.httpHealthcheckProfile)
+
 lazy val zioMonitoringPrometheus = project
   .in(file("zio/monitoring/prometheus"))
   .configure(ZioModules.monitoringPrometheusProfile)
