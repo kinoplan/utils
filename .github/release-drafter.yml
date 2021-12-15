@@ -1,4 +1,4 @@
-name-template: 'Utils $NEXT_PATCH_VERSION'
+name-template: 'v$NEXT_PATCH_VERSION'
 tag-template: 'v$NEXT_PATCH_VERSION'
 categories:
   - title: '🚀 Features'
@@ -30,6 +30,9 @@ categories:
       - 'build'
       - 'chores'
       - 'ci'
+  - title: '📈 Version Bumps'
+    labels:
+      - 'dependencies'
 change-template: '- $TITLE by @$AUTHOR (#$NUMBER)'
 change-title-escapes: '\<*_&' # You can add # and @ to disable mentions, and add ` to disable code blocks.
 version-resolver:
