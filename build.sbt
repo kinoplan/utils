@@ -2,6 +2,10 @@ ThisBuild / resolvers += "Artima Maven Repository".at("https://repo.artima.com/r
 
 // zzzzzzzzzzzzzzzzzzzz Common Modules zzzzzzzzzzzzzzzzzzzz
 
+lazy val logbackConfig = project
+  .in(file("base/logback-config"))
+  .configure(BaseModules.logbackConfigProfile)
+
 lazy val scalaLogging = project
   .in(file("base/scala-logging"))
   .configure(BaseModules.scalaLoggingProfile)
