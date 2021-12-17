@@ -3,7 +3,7 @@ import sbt._
 object Dependencies {
 
   object Versions {
-    val reactivemongoV = "1.0.8"
+    val reactivemongoV = "1.0.9"
     val zioV           = "1.0.13"
     val zioConfigV     = "1.0.10"
   }
