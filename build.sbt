@@ -41,6 +41,8 @@ lazy val zioReactivemongo = project
 // format: off
 inThisBuild(
   List(
+    sonatypeCredentialHost := Sonatype.sonatype01,
+    versionScheme := Some(VersionScheme.EarlySemVer),
     organization := "io.kinoplan",
     homepage := Some(url("https://github.com/kinoplan/utils")),
     licenses := Seq("Apache-2.0" -> url("https://opensource.org/licenses/Apache-2.0")),
