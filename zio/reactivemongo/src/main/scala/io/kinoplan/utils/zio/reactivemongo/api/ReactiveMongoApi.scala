@@ -39,7 +39,7 @@ object ReactiveMongoApi {
     mongoConfig: MongoConfig
   ): ZManaged[Any, Throwable, ReactiveMongoApi] = {
 
-    def acquire = for {
+    def acquire = (for {
       uri <- ZIO.fromOption(mongoConfig.databases.find(_.current(dbName)).map(_.uri)).orElseFail(
         new Throwable(s"mongodb database with name $dbName not found")
       )
@@ -48,7 +48,7 @@ object ReactiveMongoApi {
         asyncDriver.connect(mongoParsedUri, Some(mongoParsedUri.db), strictMode = false)
       )
       mongoDb <- Task.fromFuture(implicit ec => mongoConnection.database(mongoParsedUri.db))
-    } yield Live(mongoParsedUri, mongoConnection, mongoDb, asyncDriver)
+    } yield Live(mongoParsedUri, mongoConnection, mongoDb, asyncDriver)).uninterruptible
 
     def release(api: ReactiveMongoApi) = (for {
       mongoConnection <- api.connection
