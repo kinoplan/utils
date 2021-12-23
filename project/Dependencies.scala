@@ -13,8 +13,8 @@ object Dependencies {
   //A -> Z
   val distageCore          = "io.7mind.izumi"             %% "distage-core"           % "1.0.8"
   val jodaTime             = "joda-time"                   % "joda-time"              % "2.10.13"
-  val logback              = "ch.qos.logback"              % "logback-classic"        % "1.2.9"
-  val logbackCore          = "ch.qos.logback"              % "logback-core"           % "1.2.9"
+  val logback              = "ch.qos.logback"              % "logback-classic"        % "1.2.10"
+  val logbackCore          = "ch.qos.logback"              % "logback-core"           % "1.2.10"
   val mockitoScala         = "org.scalatestplus"          %% "mockito-3-4"            % "3.2.10.0" % Test
   val reactiveMongo        = "org.reactivemongo"          %% "reactivemongo"          % reactivemongoV
   val scalaLogging         = "com.typesafe.scala-logging" %% "scala-logging"          % "3.9.3"
