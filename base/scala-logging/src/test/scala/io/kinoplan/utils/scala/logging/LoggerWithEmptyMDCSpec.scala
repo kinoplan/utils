@@ -6,6 +6,7 @@ import org.mockito.Mockito.verify
 import org.scalatest.wordspec.AnyWordSpec
 
 class LoggerWithEmptyMDCSpec extends AnyWordSpec with Loggable with TestKitConstants {
+
   "Logger#error with empty MDCAdapter" should {
     "call the underlying logger's methods with a message" in {
       EmptyMDCAdapter.initialize()
@@ -230,4 +231,5 @@ class LoggerWithEmptyMDCSpec extends AnyWordSpec with Loggable with TestKitConst
       assert(oldMDCMap == null || oldMDCMap.isEmpty)
     }
   }
+
 }

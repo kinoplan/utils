@@ -5,6 +5,7 @@ import org.mockito.Mockito.verify
 import org.scalatest.wordspec.AnyWordSpec
 
 class LoggerSpec extends AnyWordSpec with Loggable with TestKitConstants {
+
   "Logger#error" should {
     "call the underlying logger's error method with a message" in {
       logger.error(message)
@@ -168,4 +169,5 @@ class LoggerSpec extends AnyWordSpec with Loggable with TestKitConstants {
       verify(underlying).trace(dummyMarkerContext, message, cause)
     }
   }
+
 }
