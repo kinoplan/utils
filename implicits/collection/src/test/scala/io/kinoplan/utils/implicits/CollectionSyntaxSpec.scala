@@ -159,4 +159,5 @@ class CollectionSyntaxSpec extends AnyWordSpec with Matchers {
       }
     }
   }
+
 }

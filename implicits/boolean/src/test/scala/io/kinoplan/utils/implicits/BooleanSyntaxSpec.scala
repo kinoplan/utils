@@ -67,4 +67,5 @@ class BooleanSyntaxSpec extends AnyWordSpec {
       assert(true.unless(10).isEmpty)
     }
   }
+
 }
