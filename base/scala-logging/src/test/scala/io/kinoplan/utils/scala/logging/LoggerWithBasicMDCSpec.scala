@@ -7,6 +7,7 @@ import org.scalatest.wordspec.AnyWordSpec
 import org.slf4j.MDC
 
 class LoggerWithBasicMDCSpec extends AnyWordSpec with Loggable with TestKitConstants {
+
   "Logger#error with MDCAdapter" should {
     "call the underlying logger's methods with a message" in {
       BasicMDCAdapter.initialize()
@@ -291,4 +292,5 @@ class LoggerWithBasicMDCSpec extends AnyWordSpec with Loggable with TestKitConst
       )
     }
   }
+
 }
