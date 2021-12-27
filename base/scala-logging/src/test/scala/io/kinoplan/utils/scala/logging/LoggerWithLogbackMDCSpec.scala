@@ -7,6 +7,7 @@ import org.scalatest.wordspec.AnyWordSpec
 import org.slf4j.MDC
 
 class LoggerWithLogbackMDCSpec extends AnyWordSpec with Loggable with TestKitConstants {
+
   "Logger#error with default LogbackMDCAdapter" should {
     "call the underlying logger's error method with a message" in {
       LogbackMDCAdapter.initialize()
@@ -291,4 +292,5 @@ class LoggerWithLogbackMDCSpec extends AnyWordSpec with Loggable with TestKitCon
       )
     }
   }
+
 }
