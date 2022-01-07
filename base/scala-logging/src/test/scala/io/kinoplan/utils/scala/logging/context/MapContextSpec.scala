@@ -9,6 +9,7 @@ import io.kinoplan.utils.scala.logging.Loggable
 
 class MapContextSpec
     extends AnyWordSpec with MockitoSugar with Matchers with Loggable with TestKitConstants {
+
   "MapContext#isEmpty" should {
     "check call method with empty value" in assert(MapContext.empty.isEmpty)
     "check call method with non empty value" in assert(!mapContext.isEmpty)
@@ -58,4 +59,5 @@ class MapContextSpec
       assert(testMapContext.isEmpty)
     }
   }
+
 }

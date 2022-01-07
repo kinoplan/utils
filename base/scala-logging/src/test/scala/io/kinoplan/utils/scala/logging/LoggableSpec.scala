@@ -10,6 +10,7 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
 class LoggableSpec extends AnyWordSpec with Matchers with Loggable with TestKitConstants {
+
   "TryOps#toOptionLogging" should {
     "call Try with success result" in assert(Try(zero / 1).toOptionLogging.contains(0))
     "call Try with failure result" in assert(Try(1 / zero).toOptionLogging.isEmpty)
@@ -27,4 +28,5 @@ class LoggableSpec extends AnyWordSpec with Matchers with Loggable with TestKitC
       ScalaFutures.whenReady(f.failed)(_ shouldBe a[NullPointerException])
     }
   }
+
 }

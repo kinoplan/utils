@@ -2,6 +2,10 @@ ThisBuild / resolvers += "Artima Maven Repository".at("https://repo.artima.com/r
 
 // zzzzzzzzzzzzzzzzzzzz Common Modules zzzzzzzzzzzzzzzzzzzz
 
+lazy val logbackConfig = project
+  .in(file("base/logback-config"))
+  .configure(BaseModules.logbackConfigProfile)
+
 lazy val scalaLogging = project
   .in(file("base/scala-logging"))
   .configure(BaseModules.scalaLoggingProfile)
@@ -22,6 +26,10 @@ lazy val implicitsCollection = project
 
 // zzzzzzzzzzzzzzzzzzzz ZIO Modules zzzzzzzzzzzzzzzzzzzz
 
+lazy val zioHttpHealthcheck = project
+  .in(file("zio/http/healthcheck"))
+  .configure(ZioModules.httpHealthcheckProfile)
+
 lazy val zioMonitoringPrometheus = project
   .in(file("zio/monitoring/prometheus"))
   .configure(ZioModules.monitoringPrometheusProfile)
@@ -33,6 +41,8 @@ lazy val zioReactivemongo = project
 // format: off
 inThisBuild(
   List(
+    sonatypeCredentialHost := Sonatype.sonatype01,
+    versionScheme := Some(VersionScheme.EarlySemVer),
     organization := "io.kinoplan",
     homepage := Some(url("https://github.com/kinoplan/utils")),
     licenses := Seq("Apache-2.0" -> url("https://opensource.org/licenses/Apache-2.0")),
