@@ -11,8 +11,8 @@ pull_request_rules:
     conditions:
       - author=scala-steward
       - body~=labels:.*semver-patch.*
-      - "check-success~=Build and Test (ubuntu-latest, 2.12"
-      - "check-success~=Build and Test (ubuntu-latest, 2.13"
+      - check-success~=Build and Test \(ubuntu-latest, 2\.12\.\d+, adopt@1.8\)
+      - check-success~=Build and Test \(ubuntu-latest, 2\.13\.\d+, adopt@1.8\)
     actions:
       merge:
         method: merge
