@@ -19,7 +19,7 @@ object Dependencies {
   val reactiveMongo        = "org.reactivemongo"          %% "reactivemongo"          % reactivemongoV
   val scalaLogging         = "com.typesafe.scala-logging" %% "scala-logging"          % "3.9.3"
   val scalatest            = "org.scalatest"              %% "scalatest"              % "3.2.11"   % Test
-  val typesafeConfig       = "com.typesafe"                % "config"                 % "1.4.1"
+  val typesafeConfig       = "com.typesafe"                % "config"                 % "1.4.2"
   val zio                  = "dev.zio"                    %% "zio"                    % zioV
   val zioConfig            = "dev.zio"                    %% "zio-config"             % zioConfigV
   val zioConfigTypesafe    = "dev.zio"                    %% "zio-config-typesafe"    % zioConfigV
