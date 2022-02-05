@@ -11,7 +11,7 @@ object Dependencies {
   import Versions._
 
   // A -> Z
-  val distageCore          = "io.7mind.izumi"             %% "distage-core"           % "1.0.9"
+  val distageCore          = "io.7mind.izumi"             %% "distage-core"           % "1.0.10"
   val jodaTime             = "joda-time"                   % "joda-time"              % "2.10.13"
   val logback              = "ch.qos.logback"              % "logback-classic"        % "1.2.10"
   val logbackCore          = "ch.qos.logback"              % "logback-core"           % "1.2.10"
