@@ -18,7 +18,9 @@ object ProjectSettings {
             "-Ywarn-dead-code",
             "-Ywarn-unused:params",
             "-Ywarn-unused:patvars",
-            "-Wunused:explicits"
+            "-Wunused:explicits",
+            "-Xlint:infer-any",
+            "-Ywarn-infer-any"
           )
         )),
       libraryDependencies ++= Seq(Dependencies.scalatest, Dependencies.mockitoScala),
