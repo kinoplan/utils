@@ -29,4 +29,11 @@ object BaseModules {
       libraryDependencies ++= Seq(Dependencies.reactiveMongo % Provided, Dependencies.jodaTime)
     )
 
+  lazy val reactivemongoBsonAnyProfile: Project => Project = _
+    .configure(ProjectSettings.commonProfile)
+    .settings(name := "utils-reactivemongo-bson-any")
+    .settings(
+      libraryDependencies ++= Seq(Dependencies.reactiveMongo % Provided)
+    )
+
 }
