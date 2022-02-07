@@ -14,6 +14,10 @@ lazy val reactivemongoBsonJodaTime = project
   .in(file("base/reactivemongo/bson-joda-time"))
   .configure(BaseModules.reactivemongoBsonJodaTimeProfile)
 
+lazy val reactivemongoBsonAny = project
+  .in(file("base/reactivemongo/bson-any"))
+  .configure(BaseModules.reactivemongoBsonAnyProfile)
+
 // zzzzzzzzzzzzzzzzzzzz Implicits Modules zzzzzzzzzzzzzzzzzzzz
 
 lazy val implicitsBoolean = project
