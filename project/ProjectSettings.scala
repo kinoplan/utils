@@ -23,6 +23,8 @@ object ProjectSettings {
             "-Ywarn-infer-any"
           )
         )),
+      Test / fork := true,
+      Test / javaOptions += "-Duser.timezone=UTC",
       libraryDependencies ++= Seq(Dependencies.scalatest, Dependencies.mockitoScala),
       coverageHighlighting := true
     )
