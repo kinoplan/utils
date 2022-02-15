@@ -25,6 +25,7 @@ libraryDependencies ++= Seq(
   // base
   "io.kinoplan" %% "utils-logback-config" % ${version},
   "io.kinoplan" %% "utils-scala-logging" % ${version},
+  "io.kinoplan" %% "utils-reactivemongo-bson-any" % ${version},
   "io.kinoplan" %% "utils-reactivemongo-bson-joda-time" % ${version},
   // implicits
   "io.kinoplan" %% "utils-implicits-collection" % ${version},
