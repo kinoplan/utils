@@ -23,7 +23,7 @@ object Dependencies {
   val zio                  = "dev.zio"                    %% "zio"                    % zioV
   val zioConfig            = "dev.zio"                    %% "zio-config"             % zioConfigV
   val zioConfigTypesafe    = "dev.zio"                    %% "zio-config-typesafe"    % zioConfigV
-  val zioHttp              = "io.d11"                     %% "zhttp"                  % "1.0.0.0-RC17"
+  val zioHttp              = "io.d11"                     %% "zhttp"                  % "1.0.0.0-RC24"
   val zioLogging           = "dev.zio"                    %% "zio-logging"            % "0.5.14"
   val zioMetricsPrometheus = "dev.zio"                    %% "zio-metrics-prometheus" % "1.0.13"
   val zioPrelude           = "dev.zio"                    %% "zio-prelude"            % "1.0.0-RC8"
