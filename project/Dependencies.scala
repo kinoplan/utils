@@ -4,7 +4,6 @@ object Dependencies {
 
   object Versions {
     val reactivemongoV = "1.0.10"
-    val zioV           = "1.0.14"
     val zioConfigV     = "1.0.10"
   }
 
@@ -20,7 +19,7 @@ object Dependencies {
   val scalaLogging         = "com.typesafe.scala-logging" %% "scala-logging"          % "3.9.3"
   val scalatest            = "org.scalatest"              %% "scalatest"              % "3.2.11"   % Test
   val typesafeConfig       = "com.typesafe"                % "config"                 % "1.4.2"
-  val zio                  = "dev.zio"                    %% "zio"                    % zioV
+  val zio                  = "dev.zio"                    %% "zio"                    % "1.0.13"
   val zioConfig            = "dev.zio"                    %% "zio-config"             % zioConfigV
   val zioConfigTypesafe    = "dev.zio"                    %% "zio-config-typesafe"    % zioConfigV
   val zioHttp              = "io.d11"                     %% "zhttp"                  % "1.0.0.0-RC17"
