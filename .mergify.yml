@@ -15,4 +15,4 @@ pull_request_rules:
       - check-success~=Build and Test \(ubuntu-latest, 2\.13\.\d+, adopt@1.8\)
     actions:
       merge:
-        method: merge
+        method: squash
