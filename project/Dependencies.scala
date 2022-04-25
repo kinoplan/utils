@@ -17,7 +17,7 @@ object Dependencies {
   val mockitoScala         = "org.scalatestplus"          %% "mockito-3-4"            % "3.2.10.0" % Test
   val reactiveMongo        = "org.reactivemongo"          %% "reactivemongo"          % reactivemongoV
   val scalaLogging         = "com.typesafe.scala-logging" %% "scala-logging"          % "3.9.3"
-  val scalatest            = "org.scalatest"              %% "scalatest"              % "3.2.11"   % Test
+  val scalatest            = "org.scalatest"              %% "scalatest"              % "3.2.12"   % Test
   val typesafeConfig       = "com.typesafe"                % "config"                 % "1.4.2"
   val zio                  = "dev.zio"                    %% "zio"                    % "1.0.14"
   val zioConfig            = "dev.zio"                    %% "zio-config"             % zioConfigV
