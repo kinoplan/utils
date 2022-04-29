@@ -25,5 +25,5 @@ object Dependencies {
   val zioHttp              = "io.d11"                     %% "zhttp"                  % "1.0.0.0-RC17"
   val zioLogging           = "dev.zio"                    %% "zio-logging"            % "0.5.14"
   val zioMetricsPrometheus = "dev.zio"                    %% "zio-metrics-prometheus" % "1.0.14"
-  val zioPrelude           = "dev.zio"                    %% "zio-prelude"            % "1.0.0-RC8"
+  val zioPrelude           = "dev.zio"                    %% "zio-prelude"            % "1.0.0-RC13"
 }
