@@ -26,7 +26,7 @@ class MapContext private (private[logging] val underlyingMap: java.util.Map[Stri
 
 object MapContext {
 
-  def apply(): MapContext = new MapContext(new java.util.HashMap[String, String]())
+  def apply(): MapContext = new MapContext(new java.util.HashMap[String, String])
 
   def apply(elems: (String, String)*): MapContext = apply().put(elems: _*)
 
