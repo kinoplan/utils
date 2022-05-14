@@ -89,7 +89,7 @@ final private[implicits] class CollectionOps[A, Repr](private val value: Iterabl
     var builder = Map[B, A]()
     val i = value.iterator
 
-    i.foreach(o => builder += (f(o) -> o))
+    i.foreach(o => builder += f(o) -> o)
 
     builder
   }
@@ -99,7 +99,7 @@ final private[implicits] class CollectionOps[A, Repr](private val value: Iterabl
     var builder = Map[B, I]()
     val i = value.iterator
 
-    i.foreach(o => builder += (k(o) -> v(o)))
+    i.foreach(o => builder += k(o) -> v(o))
 
     builder
   }

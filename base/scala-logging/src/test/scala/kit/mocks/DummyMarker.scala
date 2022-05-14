@@ -14,8 +14,8 @@ object DummyMarker extends Marker {
 
   override def iterator(): java.util.Iterator[Marker] = new java.util.Iterator[Marker] {
     override def hasNext: Boolean = false
-    override def next(): Marker = throw new NoSuchElementException()
-    override def remove(): Unit = throw new NoSuchElementException()
+    override def next(): Marker = throw new NoSuchElementException
+    override def remove(): Unit = throw new NoSuchElementException
   }
 
   override def remove(child: Marker): Boolean = false
