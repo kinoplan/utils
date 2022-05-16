@@ -41,7 +41,7 @@ final private[implicits] class CollectionOps[Repr, A, C](
   ): B = it.foldLeft(num.zero)((a, b) => num.plus(a, f(b)))
 
   @inline
-  def zipWith[B >: A](f: A => B): Map[B, A] = it.view.map(a => f(a) -> a).toMap
+  def zipWith[B](f: A => B): Map[B, A] = it.view.map(a => f(a) -> a).toMap
 
   @inline
   def zipBoth[B, I](k: A => B, v: A => I): Map[B, I] = it.view.map(a => k(a) -> v(a)).toMap

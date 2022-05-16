@@ -116,37 +116,41 @@ class CollectionSyntaxSpec extends AnyWordSpec with Matchers {
 
   "CollectionHelper#zipWith" should {
     "return correct value" in {
-      assert(commons.zipWith(_.number) === Map(1 -> test1, 2 -> test2, 3 -> test4))
-      the[NoSuchElementException] thrownBy commons.zipWith(_.number)(5)
+      assert(
+        commons.zipWith[Int](_.number) === Map[Int, ClassForTest](1 -> test1, 2 -> test2, 3 -> test4)
+      )
+      the[NoSuchElementException] thrownBy commons.zipWith[Int](_.number)(5)
     }
   }
 
   "CollectionHelper#zipBoth" should {
     "return correct value" in {
       assert(
-        commons.zipBoth(_.number, _.text) === Map(
+        commons.zipBoth[Int, String](_.number, _.text) === Map(
           test1.number -> test1.text,
           test2.number -> test2.text,
           test3.number -> test3.text,
           test4.number -> test4.text
         )
       )
-      the[NoSuchElementException] thrownBy commons.zipBoth(_.number, _.text)(5)
+      the[NoSuchElementException] thrownBy commons.zipBoth[Int, String](_.number, _.text)(5)
     }
   }
 
   "CollectionHelper#zipWithDefaultValue" should {
     "return correct value" in {
       assert(
-        commons.zipWithDefaultValue(_.number)(test2) === Map(1 -> test1, 2 -> test2, 3 -> test4)
+        commons.zipWithDefaultValue[Int](_.number)(test2) === Map(1 -> test1, 2 -> test2, 3 -> test4)
       )
-      assert(commons.zipWithDefaultValue(_.number)(test2)(5) === test2)
+      assert(
+        commons.zipWithDefaultValue[Int](_.number)(test2)(5) === test2
+      )
     }
 
     "CollectionHelper#zipBothWithDefaultValue" should {
       "return correct value" in {
         assert(
-          commons.zipBothWithDefaultValue(_.number, _.text)(test2.text) === Map(
+          commons.zipBothWithDefaultValue[Int, String](_.number, _.text)(test2.text) === Map(
             test1.number -> test1.text,
             test2.number -> test2.text,
             test3.number -> test3.text,
@@ -154,7 +158,9 @@ class CollectionSyntaxSpec extends AnyWordSpec with Matchers {
           )
         )
         assert(
-          commons.zipBothWithDefaultValue(_.number, _.text)(test2.text)(5) === test2.text
+          commons.zipBothWithDefaultValue[Int, String](_.number, _.text)(test2.text)(
+            5
+          ) === test2.text
         )
       }
     }
