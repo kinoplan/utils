@@ -11,6 +11,6 @@ object PrometheusConfig {
   private val configDescriptor = nested("prometheus")(int("port").to[PrometheusConfig])
 
   val live: Layer[ReadError[String], Has[PrometheusConfig]] = TypesafeConfig
-    .fromResourcePath(configDescriptor)
+    .fromDefaultLoader(configDescriptor)
 
 }
