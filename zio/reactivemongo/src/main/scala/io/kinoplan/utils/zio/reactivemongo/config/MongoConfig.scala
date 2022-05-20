@@ -27,6 +27,6 @@ object MongoConfig {
   ).to[MongoConfig]
 
   def live(dbNames: Seq[String]): Layer[ReadError[String], Has[MongoConfig]] = TypesafeConfig
-    .fromResourcePath(configDescriptor(dbNames))
+    .fromDefaultLoader(configDescriptor(dbNames))
 
 }
