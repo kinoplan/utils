@@ -2,6 +2,8 @@ ThisBuild / resolvers += "Artima Maven Repository".at("https://repo.artima.com/r
 
 // zzzzzzzzzzzzzzzzzzzz Common Modules zzzzzzzzzzzzzzzzzzzz
 
+lazy val date = project.in(file("base/date")).configure(BaseModules.dateProfile)
+
 lazy val logbackConfig = project
   .in(file("base/logback-config"))
   .configure(BaseModules.logbackConfigProfile)
@@ -27,6 +29,11 @@ lazy val implicitsBoolean = project
 lazy val implicitsCollection = project
   .in(file("implicits/collection"))
   .configure(ImplicitsModules.collectionProfile)
+
+lazy val implicitsJodaTime = project
+  .in(file("implicits/date/joda-time"))
+  .configure(ImplicitsModules.jodaTimeProfile)
+  .dependsOn(date)
 
 // zzzzzzzzzzzzzzzzzzzz ZIO Modules zzzzzzzzzzzzzzzzzzzz
 
@@ -60,5 +67,5 @@ inThisBuild(
   )
 )
 
-onChangedBuildSource in Global := ReloadOnSourceChanges
+Global / onChangedBuildSource := ReloadOnSourceChanges
 // format: on

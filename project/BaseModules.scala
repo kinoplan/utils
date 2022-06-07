@@ -3,6 +3,9 @@ import sbt.{Project, Provided, Test}
 
 object BaseModules {
 
+  lazy val dateProfile: Project => Project =
+    _.configure(ProjectSettings.commonProfile).settings(name := "utils-date")
+
   lazy val logbackConfigProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-logback-config")
