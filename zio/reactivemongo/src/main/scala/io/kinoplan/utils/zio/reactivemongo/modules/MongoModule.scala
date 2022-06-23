@@ -1,7 +1,6 @@
 package io.kinoplan.utils.zio.reactivemongo.modules
 
-import distage.ModuleDef
-import reactivemongo.api.AsyncDriver
+import zio._
 import zio.prelude.NonEmptySet
 
 import io.kinoplan.utils.zio.reactivemongo.api.ReactiveMongoApi
@@ -10,14 +9,12 @@ import io.kinoplan.utils.zio.reactivemongo.config.MongoConfig
 
 object MongoModule {
 
-  def apply(dbNames: NonEmptySet[String]): ModuleDef = new ModuleDef {
-    make[AsyncDriver].fromResource[AsyncDriverResource]
-    make[MongoConfig].fromHas(MongoConfig.live(dbNames.toSeq))
-
-    dbNames.toSeq.foreach { dbName =>
-      make[ReactiveMongoApi].named(dbName).fromHas(ReactiveMongoApi.live(dbName))
-    }
-
-  }
+  def live(
+    dbNames: NonEmptySet[String]
+  ): ZLayer[Any, Throwable, Map[String, ReactiveMongoApi]] = AsyncDriverResource.live ++
+    MongoConfig.live(dbNames.toSeq) >>>
+    ZLayer
+      .foreach(dbNames.toSeq)(ReactiveMongoApi.make)
+      .map(a => ZEnvironment(a.get.toMap))
 
 }

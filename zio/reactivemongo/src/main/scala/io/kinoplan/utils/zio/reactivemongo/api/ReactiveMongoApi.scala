@@ -4,7 +4,7 @@ import scala.concurrent.duration.DurationInt
 
 import reactivemongo.api.{AsyncDriver, DB, MongoConnection}
 import reactivemongo.api.MongoConnection.ParsedURIWithDB
-import zio.{Has, IO, Task, ZIO, ZLayer, ZManaged}
+import zio.{Task, ZIO, ZLayer}
 
 import io.kinoplan.utils.zio.reactivemongo.config.MongoConfig
 
@@ -14,55 +14,59 @@ trait ReactiveMongoApi {
   def database: Task[DB]
 }
 
+private case class ReactiveMongoApiLive(
+  mongoParsedUri: ParsedURIWithDB,
+  mongoConnection: MongoConnection,
+  mongoDb: DB,
+  asyncDriver: AsyncDriver
+) extends ReactiveMongoApi with IntegrationCheck[Task] {
+
+  override val driver: AsyncDriver = asyncDriver
+
+  override val connection: Task[MongoConnection] = ZIO.succeed(mongoConnection)
+
+  override def database: Task[DB] = ZIO.succeed(mongoDb)
+
+  override def checkAvailability: Task[Boolean] = ZIO.fromFuture(implicit ec => mongoDb.ping())
+
+}
+
 object ReactiveMongoApi {
 
-  final private case class Live(
-    mongoParsedUri: ParsedURIWithDB,
-    mongoConnection: MongoConnection,
-    mongoDb: DB,
-    asyncDriver: AsyncDriver
-  ) extends ReactiveMongoApi with IntegrationCheck[Task] {
+  private def acquire(dbName: String) = (for {
+    asyncDriver <- ZIO.service[AsyncDriver]
+    mongoConfig <- ZIO.service[MongoConfig]
+    uri <- ZIO.fromOption(mongoConfig.databases.find(_.current(dbName)).map(_.uri)).orElseFail(
+      new Throwable(s"mongodb database with name $dbName not found")
+    )
+    mongoParsedUri <- ZIO.fromFuture(implicit ec => MongoConnection.fromStringWithDB(uri))
+    mongoConnection <- ZIO.fromFuture(_ =>
+      asyncDriver.connect(mongoParsedUri, Some(mongoParsedUri.db), strictMode = false)
+    )
+    mongoDb <- ZIO.fromFuture(implicit ec => mongoConnection.database(mongoParsedUri.db))
+  } yield dbName -> ReactiveMongoApiLive(
+    mongoParsedUri,
+    mongoConnection,
+    mongoDb,
+    asyncDriver
+  )).uninterruptible
 
-    override val driver: AsyncDriver = asyncDriver
+  private def release(api: ReactiveMongoApi) = (for {
+    mongoConnection <- api.connection
+    _ <- ZIO.fromFuture(_ => mongoConnection.close()(10.seconds))
+  } yield ()).orDie.unit
 
-    override val connection: Task[MongoConnection] = Task.succeed(mongoConnection)
-
-    override def database: Task[DB] = Task.succeed(mongoDb)
-
-    override def checkAvailability: Task[Boolean] = Task.fromFuture(implicit ec => mongoDb.ping())
-
-  }
-
-  private def make(
-    dbName: String,
-    asyncDriver: AsyncDriver,
-    mongoConfig: MongoConfig
-  ): ZManaged[Any, Throwable, ReactiveMongoApi] = {
-
-    def acquire = (for {
-      uri <- ZIO.fromOption(mongoConfig.databases.find(_.current(dbName)).map(_.uri)).orElseFail(
-        new Throwable(s"mongodb database with name $dbName not found")
-      )
-      mongoParsedUri <- Task.fromFuture(implicit ec => MongoConnection.fromStringWithDB(uri))
-      mongoConnection <- Task.fromFuture(_ =>
-        asyncDriver.connect(mongoParsedUri, Some(mongoParsedUri.db), strictMode = false)
-      )
-      mongoDb <- Task.fromFuture(implicit ec => mongoConnection.database(mongoParsedUri.db))
-    } yield Live(mongoParsedUri, mongoConnection, mongoDb, asyncDriver)).uninterruptible
-
-    def release(api: ReactiveMongoApi) = (for {
-      mongoConnection <- api.connection
-      _ <- IO.fromFuture(_ => mongoConnection.close()(10.seconds))
-    } yield ()).orDie.unit
-
-    ZManaged.make(acquire)(release)
-  }
-
-  def live(
+  def make(
     dbName: String
-  ): ZLayer[Has[AsyncDriver] with Has[MongoConfig], Throwable, Has[ReactiveMongoApi]] = ZLayer
-    .fromServicesManaged[AsyncDriver, MongoConfig, Any, Throwable, ReactiveMongoApi] {
-      (asyncDriver, mongoConfig) => make(dbName, asyncDriver, mongoConfig)
-    }
+  ): ZLayer[AsyncDriver with MongoConfig, Throwable, (String, ReactiveMongoApi)] = ZLayer.scoped(
+    ZIO.acquireRelease(acquire(dbName)) { case (_, api) => release(api) }
+  )
+
+  def getAt(dbName: String): ZIO[Map[String, ReactiveMongoApi], Throwable, ReactiveMongoApi] = ZIO
+    .serviceAt[ReactiveMongoApi](dbName)
+    .flatMap(ZIO.fromOption(_))
+    .orElseFail(
+      new Throwable(s"The mongodb $dbName key cannot be found in the ZIO environment")
+    )
 
 }

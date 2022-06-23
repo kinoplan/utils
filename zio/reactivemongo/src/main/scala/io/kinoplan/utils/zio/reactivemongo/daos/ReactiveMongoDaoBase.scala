@@ -15,14 +15,27 @@ abstract class ReactiveMongoDaoBase[T](reactiveMongoApi: ReactiveMongoApi, colle
 
   val collection: Task[BSONCollection] = reactiveMongoApi.database.map(_.collection(collectionName))
 
-  protected def smartEnsureIndexes(ensuredKeys: Seq[Set[(String, IndexType)]]): Unit = zio.Runtime
-    .default.unsafeRunAsync_(
+  protected def smartEnsureIndexes(
+    ensuredKeys: Seq[Set[(String, IndexType)]],
+    drop: Boolean = false
+  ): Unit = zio.Runtime
+    .default.unsafeRunAsync(
       for {
         coll <- collection
         _ <- createIndexes(coll, ensuredKeys)
-        _ <- dropIndexes(coll, ensuredKeys)
+        _ <- ZIO.when(drop)(dropIndexes(coll, ensuredKeys))
       } yield ()
     )
+
+  protected def smartEnsureIndexesWithDrop(ensuredKeys: Seq[Set[(String, IndexType)]]): Unit =
+    zio.Runtime
+      .default.unsafeRunAsync(
+        for {
+          coll <- collection
+          _ <- createIndexes(coll, ensuredKeys)
+          _ <- dropIndexes(coll, ensuredKeys)
+        } yield ()
+      )
 
   def findMany[M <: T](
     selector: BSONDocument = BSONDocument(),
@@ -31,7 +44,7 @@ abstract class ReactiveMongoDaoBase[T](reactiveMongoApi: ReactiveMongoApi, colle
     r: BSONDocumentReader[M]
   ): Task[List[M]] = for {
     coll <- collection
-    result <- Task.fromFuture(implicit ec => findManyQ[M](coll)(selector, projection))
+    result <- ZIO.fromFuture(implicit ec => findManyQ[M](coll)(selector, projection))
   } yield result
 
   def findOne(selector: BSONDocument = BSONDocument(), projection: Option[BSONDocument] = None)(
@@ -39,7 +52,7 @@ abstract class ReactiveMongoDaoBase[T](reactiveMongoApi: ReactiveMongoApi, colle
     r: BSONDocumentReader[T]
   ): Task[Option[T]] = for {
     coll <- collection
-    result <- Task.fromFuture(implicit ec => findOneQ[T](coll)(selector, projection))
+    result <- ZIO.fromFuture(implicit ec => findOneQ[T](coll)(selector, projection))
   } yield result
 
   def findOneById(id: BSONObjectID)(implicit
@@ -54,14 +67,14 @@ abstract class ReactiveMongoDaoBase[T](reactiveMongoApi: ReactiveMongoApi, colle
     w: BSONDocumentWriter[T]
   ): Task[BSONCollection#MultiBulkWriteResult] = for {
     coll <- collection
-    result <- Task.fromFuture(implicit ec => insertManyQ(coll)(values))
+    result <- ZIO.fromFuture(implicit ec => insertManyQ(coll)(values))
   } yield result
 
   def insertOne(value: T)(implicit
     w: BSONDocumentWriter[T]
   ): Task[WriteResult] = for {
     coll <- collection
-    result <- Task.fromFuture(implicit ec => insertOneQ(coll)(value))
+    result <- ZIO.fromFuture(implicit ec => insertOneQ(coll)(value))
   } yield result
 
   def update(
@@ -71,7 +84,7 @@ abstract class ReactiveMongoDaoBase[T](reactiveMongoApi: ReactiveMongoApi, colle
     upsert: Boolean = false
   ): Task[BSONCollection#UpdateWriteResult] = for {
     coll <- collection
-    result <- Task.fromFuture(implicit ec => updateQ(coll)(q, u, multi, upsert))
+    result <- ZIO.fromFuture(implicit ec => updateQ(coll)(q, u, multi, upsert))
   } yield result
 
   def updateMany(
@@ -79,40 +92,40 @@ abstract class ReactiveMongoDaoBase[T](reactiveMongoApi: ReactiveMongoApi, colle
     f: T => (BSONDocument, BSONDocument, Boolean, Boolean)
   ): Task[BSONCollection#MultiBulkWriteResult] = for {
     coll <- collection
-    result <- Task.fromFuture(implicit ec => updateManyQ(coll)(values, f))
+    result <- ZIO.fromFuture(implicit ec => updateManyQ(coll)(values, f))
   } yield result
 
   def saveOne(q: BSONDocument, value: T, multi: Boolean, upsert: Boolean)(implicit
     w: BSONDocumentWriter[T]
   ): Task[BSONCollection#UpdateWriteResult] = for {
     coll <- collection
-    result <- Task.fromFuture(implicit ec => saveQ(coll)(q, value, multi, upsert))
+    result <- ZIO.fromFuture(implicit ec => saveQ(coll)(q, value, multi, upsert))
   } yield result
 
   def saveOneWithoutId(q: BSONDocument, value: T)(implicit
     w: BSONDocumentWriter[T]
   ): Task[BSONCollection#UpdateWriteResult] = for {
     coll <- collection
-    result <- Task.fromFuture(implicit ec => saveWithoutIdQ(coll)(q, value))
+    result <- ZIO.fromFuture(implicit ec => saveWithoutIdQ(coll)(q, value))
   } yield result
 
   def saveMany(values: List[T], f: T => (BSONDocument, T, Boolean, Boolean))(implicit
     w: BSONDocumentWriter[T]
   ): Task[BSONCollection#MultiBulkWriteResult] = for {
     coll <- collection
-    result <- Task.fromFuture(implicit ec => saveManyQ(coll)(values, f))
+    result <- ZIO.fromFuture(implicit ec => saveManyQ(coll)(values, f))
   } yield result
 
   def removeOne(q: BSONDocument): Task[WriteResult] = for {
     coll <- collection
-    result <- Task.fromFuture(implicit ec => removeOneQ(coll)(q))
+    result <- ZIO.fromFuture(implicit ec => removeOneQ(coll)(q))
   } yield result
 
   private def createIndexes(
     coll: BSONCollection,
     ensuredKeys: Seq[Set[(String, IndexType)]]
   ): Task[Seq[Boolean]] = ZIO.foreach(ensuredKeys)(key =>
-    Task.fromFuture(implicit ec =>
+    ZIO.fromFuture(implicit ec =>
       coll.indexesManager.ensure(Index(key = key.toSeq, unique = false, background = true))
     )
   )
@@ -121,12 +134,12 @@ abstract class ReactiveMongoDaoBase[T](reactiveMongoApi: ReactiveMongoApi, colle
     coll: BSONCollection,
     ensuredKeys: Seq[Set[(String, IndexType)]]
   ): Task[List[Int]] = for {
-    indexes <- Task.fromFuture(implicit ec => coll.indexesManager.list())
+    indexes <- ZIO.fromFuture(implicit ec => coll.indexesManager.list())
     filteredIndexNames = indexes.filterNot(index =>
       index.unique || ensuredKeys.contains(index.key.toSet) || index.name.contains("_id_")
     ).flatMap(_.name)
     result <- ZIO.foreach(filteredIndexNames)(indexName =>
-      Task.fromFuture(implicit ec => coll.indexesManager.drop(indexName))
+      ZIO.fromFuture(implicit ec => coll.indexesManager.drop(indexName))
     )
   } yield result
 

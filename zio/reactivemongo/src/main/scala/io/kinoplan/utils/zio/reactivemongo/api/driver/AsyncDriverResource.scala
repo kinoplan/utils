@@ -2,11 +2,14 @@ package io.kinoplan.utils.zio.reactivemongo.api.driver
 
 import scala.concurrent.duration.DurationInt
 
-import izumi.distage.model.definition.Lifecycle
 import reactivemongo.api.AsyncDriver
-import zio.{IO, ZManaged}
+import zio.{TaskLayer, ZIO, ZLayer}
 
-class AsyncDriverResource
-    extends Lifecycle.OfZIO(ZManaged.make(IO(AsyncDriver()))(driver =>
-      IO.fromFuture(implicit ec => driver.close(10.seconds)).orDie.unit
-    ))
+object AsyncDriverResource {
+  private def acquire = ZIO.attempt(AsyncDriver())
+
+  private def release(asyncDriver: AsyncDriver) =
+    ZIO.fromFuture(implicit ec => asyncDriver.close(10.seconds)).orDie.unit
+
+  val live: TaskLayer[AsyncDriver] = ZLayer.scoped(ZIO.acquireRelease(acquire)(release))
+}
