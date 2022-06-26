@@ -6,7 +6,7 @@ import reactivemongo.api.{Cursor, ReadPreference}
 import reactivemongo.api.bson.BSONDocumentReader
 import reactivemongo.api.bson.collection.BSONCollection
 import reactivemongo.api.commands.WriteResult
-import zio.Task
+import zio.{Task, ZIO}
 
 trait ReactiveMongoSyntax {
 
@@ -22,8 +22,8 @@ trait ReactiveMongoSyntax {
   implicit class WriteResultFutureOps[A <: WriteResult](task: Task[A]) {
 
     def adaptError: Task[A] = task.flatMap { result =>
-      if (result.writeErrors.isEmpty) Task.succeed(result)
-      else Task.fail(
+      if (result.writeErrors.isEmpty) ZIO.succeed(result)
+      else ZIO.fail(
         new Throwable(result.writeErrors.map(_.errmsg).mkString(", "))
       )
     }
@@ -33,8 +33,8 @@ trait ReactiveMongoSyntax {
   implicit class MultiBulkWriteResultFutureOps(task: Task[BSONCollection#MultiBulkWriteResult]) {
 
     def adaptError: Task[BSONCollection#MultiBulkWriteResult] = task.flatMap { result =>
-      if (result.writeErrors.isEmpty) Task.succeed(result)
-      else Task.fail(
+      if (result.writeErrors.isEmpty) ZIO.succeed(result)
+      else ZIO.fail(
         new Throwable(result.writeErrors.map(_.errmsg).mkString(", "))
       )
     }

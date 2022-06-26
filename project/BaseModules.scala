@@ -1,4 +1,4 @@
-import sbt.Keys._
+import sbt.Keys.*
 import sbt.{Project, Provided, Test}
 
 object BaseModules {

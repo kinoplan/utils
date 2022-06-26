@@ -1,6 +1,7 @@
 package io.kinoplan.utils.zio.reactivemongo.config
 
-import zio.{Has, Layer}
+import com.typesafe.config.ConfigFactory
+import zio.Layer
 import zio.config._
 import zio.config.ConfigDescriptor._
 import zio.config.typesafe._
@@ -26,7 +27,7 @@ object MongoConfig {
     databasesDescriptor(dbNames).tail: _*
   ).to[MongoConfig]
 
-  def live(dbNames: Seq[String]): Layer[ReadError[String], Has[MongoConfig]] = TypesafeConfig
-    .fromDefaultLoader(configDescriptor(dbNames))
+  def live(dbNames: Seq[String]): Layer[ReadError[String], MongoConfig] =
+    TypesafeConfig.fromTypesafeConfig(ConfigFactory.load.resolve, configDescriptor(dbNames))
 
 }

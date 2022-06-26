@@ -1,5 +1,5 @@
-import sbt.Keys._
-import sbt.{Project, Provided}
+import sbt.Keys.*
+import sbt.Project
 
 object ZioModules {
 
@@ -7,12 +7,7 @@ object ZioModules {
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-zio-http-healthcheck")
     .settings(
-      libraryDependencies ++=
-        Seq(
-          Dependencies.zio % Provided,
-          Dependencies.zioHttp,
-          Dependencies.zioLogging
-        )
+      libraryDependencies ++= Seq(Dependencies.zio, Dependencies.zioHttp)
     )
 
   lazy val monitoringPrometheusProfile: Project => Project = _
@@ -21,11 +16,9 @@ object ZioModules {
     .settings(
       libraryDependencies ++=
         Seq(
-          Dependencies.distageCore % Provided,
-          Dependencies.zio         % Provided,
+          Dependencies.zio,
           Dependencies.zioConfig,
           Dependencies.zioConfigTypesafe,
-          Dependencies.zioLogging,
           Dependencies.zioMetricsPrometheus
         )
     )
@@ -36,9 +29,8 @@ object ZioModules {
     .settings(
       libraryDependencies ++=
         Seq(
-          Dependencies.distageCore % Provided,
           Dependencies.reactiveMongo,
-          Dependencies.zio % Provided,
+          Dependencies.zio,
           Dependencies.zioConfig,
           Dependencies.zioConfigTypesafe,
           Dependencies.zioPrelude
