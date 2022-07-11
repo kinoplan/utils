@@ -2,7 +2,7 @@ ThisBuild / resolvers += "Artima Maven Repository".at("https://repo.artima.com/r
 
 addSbtPlugin("com.artima.supersafe" % "sbtplugin" % "1.1.12")
 
-addSbtPlugin("org.scoverage" % "sbt-scoverage" % "2.0.0")
+addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.9.3")
 
 addSbtPlugin("io.github.davidgregory084" % "sbt-tpolecat" % "0.3.1")
 
