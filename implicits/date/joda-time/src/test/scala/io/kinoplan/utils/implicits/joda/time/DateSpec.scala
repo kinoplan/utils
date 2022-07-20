@@ -8,30 +8,30 @@ import io.kinoplan.utils.date.DatePattern
 class DateSpec extends AnyWordSpec {
   val date = "2022-06-07T16:06:54.786"
 
-  "Date#parseDateTime" should {
+  "Date#parseDateTimeO" should {
     "return correct value" in {
       assert(
-        Date.parseDateTime(DatePattern.`yyyy-MM-dd'T'HH:mm:ss.SSS`, date).contains(
+        Date.parseDateTimeO(DatePattern.`yyyy-MM-dd'T'HH:mm:ss.SSS`, date).contains(
           new DateTime("2022-06-07T16:06:54.786Z")
         )
       )
     }
   }
 
-  "Date#parseLocalDateTime" should {
+  "Date#parseLocalDateTimeO" should {
     "return correct value" in {
       assert(
-        Date.parseLocalDateTime(DatePattern.`yyyy-MM-dd'T'HH:mm:ss.SSS`, date).contains(
+        Date.parseLocalDateTimeO(DatePattern.`yyyy-MM-dd'T'HH:mm:ss.SSS`, date).contains(
           new LocalDateTime("2022-06-07T16:06:54.786")
         )
       )
     }
   }
 
-  "Date#parseLocalTime" should {
+  "Date#parseLocalTimeO" should {
     "return correct value" in {
       assert(
-        Date.parseLocalTime(DatePattern.`yyyy-MM-dd'T'HH:mm:ss.SSS`, date).contains(new LocalTime(
+        Date.parseLocalTimeO(DatePattern.`yyyy-MM-dd'T'HH:mm:ss.SSS`, date).contains(new LocalTime(
           16,
           6,
           54,
@@ -41,10 +41,10 @@ class DateSpec extends AnyWordSpec {
     }
   }
 
-  "Date#parseInterval" should {
+  "Date#parseIntervalO" should {
     "return correct value" in {
       assert(
-        Date.parseInterval("2022-06-07", "2022-06-08").contains(
+        Date.parseIntervalO("2022-06-07", "2022-06-08").contains(
           new Interval(
             new DateTime("2022-06-07T00:00:00.000Z"),
             new DateTime("2022-06-08T00:00:00.000Z")
