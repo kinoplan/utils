@@ -12,10 +12,10 @@ trait ReactiveMongoSyntax {
 
   implicit class QueryBuilderOps(builder: BSONCollection#QueryBuilder) {
 
-    def all[T: BSONDocumentReader](implicit
+    def all[T: BSONDocumentReader](limit: Int = -1)(implicit
       ec: ExecutionContext
     ): Future[List[T]] = builder.cursor[T](ReadPreference.secondaryPreferred)
-      .collect[List](-1, Cursor.FailOnError[List[T]]())
+      .collect[List](limit, Cursor.FailOnError[List[T]]())
 
   }
 
