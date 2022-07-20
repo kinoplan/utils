@@ -11,11 +11,25 @@ import io.kinoplan.utils.zio.reactivemongo.syntax.ReactiveMongoSyntax
 
 object Queries extends ReactiveMongoSyntax {
 
+  def countQ(collection: BSONCollection)(
+    selector: Option[BSONDocument] = None,
+    limit: Option[Int] = None,
+    skip: Int = 0
+  )(implicit
+    ec: ExecutionContext
+  ): Future[Long] = collection.count(selector, limit, skip)
+
   def findManyQ[T: BSONDocumentReader](
     collection: BSONCollection
-  )(selector: BSONDocument = BSONDocument(), projection: Option[BSONDocument] = None)(implicit
+  )(
+    selector: BSONDocument = document,
+    projection: Option[BSONDocument] = None,
+    sort: BSONDocument = document,
+    skip: Int = 0,
+    limit: Int = -1
+  )(implicit
     ec: ExecutionContext
-  ): Future[List[T]] = collection.find(selector, projection).all[T]
+  ): Future[List[T]] = collection.find(selector, projection).sort(sort).skip(skip).all[T](limit)
 
   def findOneQ[T: BSONDocumentReader](
     collection: BSONCollection
