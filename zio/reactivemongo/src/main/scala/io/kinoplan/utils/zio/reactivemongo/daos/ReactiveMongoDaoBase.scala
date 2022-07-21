@@ -3,11 +3,12 @@ package io.kinoplan.utils.zio.reactivemongo.daos
 import reactivemongo.api.bson._
 import reactivemongo.api.bson.collection.BSONCollection
 import reactivemongo.api.commands.WriteResult
-import reactivemongo.api.indexes.{Index, IndexType}
+import reactivemongo.api.indexes.Index
 import zio.{Task, ZIO}
 
 import io.kinoplan.utils.zio.reactivemongo.api.ReactiveMongoApi
 import io.kinoplan.utils.zio.reactivemongo.daos.Queries._
+import io.kinoplan.utils.zio.reactivemongo.models.SmartIndex
 import io.kinoplan.utils.zio.reactivemongo.syntax.ReactiveMongoSyntax
 
 abstract class ReactiveMongoDaoBase[T](reactiveMongoApi: ReactiveMongoApi, collectionName: String)
@@ -16,35 +17,38 @@ abstract class ReactiveMongoDaoBase[T](reactiveMongoApi: ReactiveMongoApi, colle
   val collection: Task[BSONCollection] = reactiveMongoApi.database.map(_.collection(collectionName))
 
   protected def smartEnsureIndexes(
-    ensuredKeys: Seq[Set[(String, IndexType)]],
+    smartIndexes: Seq[SmartIndex],
     drop: Boolean = false
   ): Unit = zio.Runtime
     .default.unsafeRunAsync(
       for {
         coll <- collection
-        _ <- createIndexes(coll, ensuredKeys)
-        _ <- ZIO.when(drop)(dropIndexes(coll, ensuredKeys))
+        _ <- createIndexes(coll, smartIndexes)
+        _ <- ZIO.when(drop)(dropIndexes(coll, smartIndexes))
       } yield ()
     )
 
-  protected def smartEnsureIndexesWithDrop(ensuredKeys: Seq[Set[(String, IndexType)]]): Unit =
-    zio.Runtime
-      .default.unsafeRunAsync(
-        for {
-          coll <- collection
-          _ <- createIndexes(coll, ensuredKeys)
-          _ <- dropIndexes(coll, ensuredKeys)
-        } yield ()
-      )
+  def count(
+    selector: Option[BSONDocument] = None,
+    limit: Option[Int] = None,
+    skip: Int = 0
+  ): Task[Long] = for {
+    coll <- collection
+    result <- ZIO.fromFuture(implicit ec => countQ(coll)(selector, limit, skip))
+  } yield result
 
   def findMany[M <: T](
-    selector: BSONDocument = BSONDocument(),
-    projection: Option[BSONDocument] = None
+    selector: BSONDocument = document,
+    projection: Option[BSONDocument] = None,
+    sort: BSONDocument = document,
+    skip: Int = 0,
+    limit: Int = -1
   )(implicit
     r: BSONDocumentReader[M]
   ): Task[List[M]] = for {
     coll <- collection
-    result <- ZIO.fromFuture(implicit ec => findManyQ[M](coll)(selector, projection))
+    result <-
+      ZIO.fromFuture(implicit ec => findManyQ[M](coll)(selector, projection, sort, skip, limit))
   } yield result
 
   def findOne(selector: BSONDocument = BSONDocument(), projection: Option[BSONDocument] = None)(
@@ -123,20 +127,26 @@ abstract class ReactiveMongoDaoBase[T](reactiveMongoApi: ReactiveMongoApi, colle
 
   private def createIndexes(
     coll: BSONCollection,
-    ensuredKeys: Seq[Set[(String, IndexType)]]
-  ): Task[Seq[Boolean]] = ZIO.foreach(ensuredKeys)(key =>
+    smartIndexes: Seq[SmartIndex]
+  ): Task[Seq[Boolean]] = ZIO.foreach(smartIndexes)(smartIndex =>
     ZIO.fromFuture(implicit ec =>
-      coll.indexesManager.ensure(Index(key = key.toSeq, unique = false, background = true))
+      coll.indexesManager.ensure(
+        Index(
+          key = smartIndex.key.toSeq,
+          unique = smartIndex.unique,
+          background = smartIndex.background
+        )
+      )
     )
   )
 
   private def dropIndexes(
     coll: BSONCollection,
-    ensuredKeys: Seq[Set[(String, IndexType)]]
+    smartIndexes: Seq[SmartIndex]
   ): Task[List[Int]] = for {
     indexes <- ZIO.fromFuture(implicit ec => coll.indexesManager.list())
     filteredIndexNames = indexes.filterNot(index =>
-      index.unique || ensuredKeys.contains(index.key.toSet) || index.name.contains("_id_")
+      index.unique || smartIndexes.exists(_.key == index.key.toSet) || index.name.contains("_id_")
     ).flatMap(_.name)
     result <- ZIO.foreach(filteredIndexNames)(indexName =>
       ZIO.fromFuture(implicit ec => coll.indexesManager.drop(indexName))
