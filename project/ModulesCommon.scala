@@ -1,7 +1,7 @@
-import sbt.Keys.*
+import sbt.Keys._
 import sbt.{Project, Provided, Test}
 
-object BaseModules {
+object ModulesCommon {
 
   lazy val dateProfile: Project => Project =
     _.configure(ProjectSettings.commonProfile).settings(name := "utils-date")

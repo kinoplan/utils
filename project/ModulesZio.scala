@@ -1,7 +1,7 @@
-import sbt.Keys.*
+import sbt.Keys._
 import sbt.Project
 
-object ZioModules {
+object ModulesZio {
 
   lazy val httpHealthcheckProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
