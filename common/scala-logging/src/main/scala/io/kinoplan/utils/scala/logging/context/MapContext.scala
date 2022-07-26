@@ -9,10 +9,14 @@ class MapContext private (private[logging] val underlyingMap: java.util.Map[Stri
   def get(key: String): Option[String] = Option(underlyingMap.get(key))
 
   def put(pairs: (String, Any)*): MapContext = {
-    pairs.collect {
-      case (k, Some(v))                         => k -> v.toString
-      case (k, v) if !v.isInstanceOf[Option[_]] => k -> v.toString
-    }.foreach { case (k, v) => underlyingMap.put(k, v) }
+    pairs
+      .collect {
+        case (k, Some(v))                         => k -> v.toString
+        case (k, v) if !v.isInstanceOf[Option[_]] => k -> v.toString
+      }
+      .foreach { case (k, v) =>
+        underlyingMap.put(k, v)
+      }
     this
   }
 

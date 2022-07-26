@@ -14,9 +14,7 @@ trait BsonJodaTimeHandlers {
 
     override def readTry(bson: BSONValue): Try[DateTime] = bson.asTry[BSONDateTime] match {
       case Success(bsonDateTime) => Try(new DateTime(bsonDateTime.value))
-      case _ => Failure(
-          new IllegalArgumentException(s"expected BSONDateTime, but found $bson")
-        )
+      case _ => Failure(new IllegalArgumentException(s"expected BSONDateTime, but found $bson"))
     }
 
   }
@@ -28,9 +26,7 @@ trait BsonJodaTimeHandlers {
 
     override def readTry(bson: BSONValue): Try[LocalTime] = bson.asTry[BSONDateTime] match {
       case Success(bsonDateTime) => Try(new LocalTime(bsonDateTime.value))
-      case _ => Failure(
-          new IllegalArgumentException(s"expected BSONDateTime, but found $bson")
-        )
+      case _ => Failure(new IllegalArgumentException(s"expected BSONDateTime, but found $bson"))
     }
 
   }
@@ -42,9 +38,7 @@ trait BsonJodaTimeHandlers {
 
     override def readTry(bson: BSONValue): Try[LocalDate] = bson.asTry[BSONDateTime] match {
       case Success(bsonDateTime) => Try(new LocalDate(bsonDateTime.value))
-      case _ => Failure(
-          new IllegalArgumentException(s"expected BSONDateTime, but found $bson")
-        )
+      case _ => Failure(new IllegalArgumentException(s"expected BSONDateTime, but found $bson"))
     }
 
   }

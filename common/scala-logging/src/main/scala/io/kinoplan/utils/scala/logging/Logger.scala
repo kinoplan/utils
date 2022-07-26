@@ -256,7 +256,9 @@ class Logger(name: String) {
       MDC.setContextMap(mapContext.underlyingMap)
 
       try logAction
-      finally if (oldMDCMap == null) MDC.clear() else MDC.setContextMap(oldMDCMap)
+      finally
+        if (oldMDCMap == null) MDC.clear()
+        else MDC.setContextMap(oldMDCMap)
     }
 
 }

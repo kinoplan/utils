@@ -26,7 +26,9 @@ trait Loggable {
     def logError()(implicit
       logger: Logger,
       ec: ExecutionContext
-    ): Future[T] = f.andThen { case Failure(ex) => logger.error(ex.toString) }
+    ): Future[T] = f.andThen { case Failure(ex) =>
+      logger.error(ex.toString)
+    }
 
   }
 

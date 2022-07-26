@@ -6,9 +6,7 @@ object ModulesZio {
   lazy val httpHealthcheckProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-zio-http-healthcheck")
-    .settings(
-      libraryDependencies ++= Seq(Dependencies.zio, Dependencies.zioHttp)
-    )
+    .settings(libraryDependencies ++= Seq(Dependencies.zio, Dependencies.zioHttp))
 
   lazy val monitoringPrometheusProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
