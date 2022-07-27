@@ -2,52 +2,52 @@ ThisBuild / resolvers += "Artima Maven Repository".at("https://repo.artima.com/r
 
 // zzzzzzzzzzzzzzzzzzzz Common Modules zzzzzzzzzzzzzzzzzzzz
 
-lazy val date = project.in(file("base/date")).configure(BaseModules.dateProfile)
+lazy val date = project.in(file("common/date")).configure(ModulesCommon.dateProfile)
 
 lazy val logbackConfig = project
-  .in(file("base/logback-config"))
-  .configure(BaseModules.logbackConfigProfile)
+  .in(file("common/logback-config"))
+  .configure(ModulesCommon.logbackConfigProfile)
 
 lazy val scalaLogging = project
-  .in(file("base/scala-logging"))
-  .configure(BaseModules.scalaLoggingProfile)
+  .in(file("common/scala-logging"))
+  .configure(ModulesCommon.scalaLoggingProfile)
 
 lazy val reactivemongoBsonJodaTime = project
-  .in(file("base/reactivemongo/bson-joda-time"))
-  .configure(BaseModules.reactivemongoBsonJodaTimeProfile)
+  .in(file("common/reactivemongo/bson-joda-time"))
+  .configure(ModulesCommon.reactivemongoBsonJodaTimeProfile)
 
 lazy val reactivemongoBsonAny = project
-  .in(file("base/reactivemongo/bson-any"))
-  .configure(BaseModules.reactivemongoBsonAnyProfile)
+  .in(file("common/reactivemongo/bson-any"))
+  .configure(ModulesCommon.reactivemongoBsonAnyProfile)
 
 // zzzzzzzzzzzzzzzzzzzz Implicits Modules zzzzzzzzzzzzzzzzzzzz
 
 lazy val implicitsBoolean = project
   .in(file("implicits/boolean"))
-  .configure(ImplicitsModules.booleanProfile)
+  .configure(ModulesImplicits.booleanProfile)
 
 lazy val implicitsCollection = project
   .in(file("implicits/collection"))
-  .configure(ImplicitsModules.collectionProfile)
+  .configure(ModulesImplicits.collectionProfile)
 
 lazy val implicitsJodaTime = project
   .in(file("implicits/date/joda-time"))
-  .configure(ImplicitsModules.jodaTimeProfile)
+  .configure(ModulesImplicits.jodaTimeProfile)
   .dependsOn(date)
 
 // zzzzzzzzzzzzzzzzzzzz ZIO Modules zzzzzzzzzzzzzzzzzzzz
 
 lazy val zioHttpHealthcheck = project
   .in(file("zio/http/healthcheck"))
-  .configure(ZioModules.httpHealthcheckProfile)
+  .configure(ModulesZio.httpHealthcheckProfile)
 
 lazy val zioMonitoringPrometheus = project
   .in(file("zio/monitoring/prometheus"))
-  .configure(ZioModules.monitoringPrometheusProfile)
+  .configure(ModulesZio.monitoringPrometheusProfile)
 
 lazy val zioReactivemongo = project
   .in(file("zio/reactivemongo"))
-  .configure(ZioModules.reactivemongoProfile)
+  .configure(ModulesZio.reactivemongoProfile)
 
 // format: off
 inThisBuild(

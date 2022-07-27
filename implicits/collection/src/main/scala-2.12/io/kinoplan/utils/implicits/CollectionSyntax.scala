@@ -4,7 +4,8 @@ import scala.collection.{GenIterable, IterableLike}
 import scala.collection.generic.CanBuildFrom
 
 final private[implicits] class CollectionOps[A, Repr](private val value: IterableLike[A, Repr])
-    extends CollectionSeqLike[A, Repr](value) with CollectionBase[A] {
+    extends CollectionSeqLike[A, Repr](value)
+      with CollectionBase[A] {
 
   @inline
   def diffBy[B, That](f: A => B)(container: GenIterable[B])(implicit
@@ -44,7 +45,9 @@ final private[implicits] class CollectionOps[A, Repr](private val value: Iterabl
     val builder = cbf(value.repr)
     val i = value.iterator
 
-    builder ++= (if (cond) i.filter(f) else i)
+    builder ++=
+      (if (cond) i.filter(f)
+       else i)
 
     builder.result()
   }
@@ -62,22 +65,30 @@ final private[implicits] class CollectionOps[A, Repr](private val value: Iterabl
   @inline
   def maxOption(implicit
     cmp: Ordering[A]
-  ): Option[A] = if (value.isEmpty) None else Some(value.max)
+  ): Option[A] =
+    if (value.isEmpty) None
+    else Some(value.max)
 
   @inline
   def maxByOption[B](f: A => B)(implicit
     cmp: Ordering[B]
-  ): Option[A] = if (value.isEmpty) None else Some(value.maxBy(f)(cmp))
+  ): Option[A] =
+    if (value.isEmpty) None
+    else Some(value.maxBy(f)(cmp))
 
   @inline
   def minOption(implicit
     cmp: Ordering[A]
-  ): Option[A] = if (value.isEmpty) None else Some(value.min)
+  ): Option[A] =
+    if (value.isEmpty) None
+    else Some(value.min)
 
   @inline
   def minByOption[B](f: A => B)(implicit
     cmp: Ordering[B]
-  ): Option[A] = if (value.isEmpty) None else Some(value.minBy(f)(cmp))
+  ): Option[A] =
+    if (value.isEmpty) None
+    else Some(value.minBy(f)(cmp))
 
   @inline
   def sumBy[B](f: A => B)(implicit

@@ -11,17 +11,13 @@ import io.kinoplan.utils.zio.reactivemongo.syntax.ReactiveMongoSyntax
 
 object Queries extends ReactiveMongoSyntax {
 
-  def countQ(collection: BSONCollection)(
-    selector: Option[BSONDocument] = None,
-    limit: Option[Int] = None,
-    skip: Int = 0
-  )(implicit
+  def countQ(
+    collection: BSONCollection
+  )(selector: Option[BSONDocument] = None, limit: Option[Int] = None, skip: Int = 0)(implicit
     ec: ExecutionContext
   ): Future[Long] = collection.count(selector, limit, skip)
 
-  def findManyQ[T: BSONDocumentReader](
-    collection: BSONCollection
-  )(
+  def findManyQ[T: BSONDocumentReader](collection: BSONCollection)(
     selector: BSONDocument = document,
     projection: Option[BSONDocument] = None,
     sort: BSONDocument = document,
@@ -49,7 +45,8 @@ object Queries extends ReactiveMongoSyntax {
     collection: BSONCollection
   )(q: BSONDocument, u: BSONDocument, multi: Boolean = false, upsert: Boolean = false)(implicit
     ec: ExecutionContext
-  ): Future[BSONCollection#UpdateWriteResult] = collection.update(ordered = false)
+  ): Future[BSONCollection#UpdateWriteResult] = collection
+    .update(ordered = false)
     .one(q, u, multi = multi, upsert = upsert)
 
   def updateManyQ[T](
@@ -59,9 +56,11 @@ object Queries extends ReactiveMongoSyntax {
   ): Future[BSONCollection#MultiBulkWriteResult] = {
     val update = collection.update(ordered = false)
     val elements = Future.sequence(
-      values.map(f).map { case (q, u, multi, upsert) =>
-        update.element(q, u, multi = multi, upsert = upsert)
-      }
+      values
+        .map(f)
+        .map { case (q, u, multi, upsert) =>
+          update.element(q, u, multi = multi, upsert = upsert)
+        }
     )
     elements.flatMap(element => update.many(element))
   }
@@ -70,7 +69,8 @@ object Queries extends ReactiveMongoSyntax {
     collection: BSONCollection
   )(q: BSONDocument, u: T, multi: Boolean = false, upsert: Boolean = false)(implicit
     ec: ExecutionContext
-  ): Future[BSONCollection#UpdateWriteResult] = collection.update(ordered = false)
+  ): Future[BSONCollection#UpdateWriteResult] = collection
+    .update(ordered = false)
     .one(q, document("$set" -> u), multi = multi, upsert = upsert)
 
   def saveWithoutIdQ[T: BSONDocumentWriter](
@@ -79,8 +79,8 @@ object Queries extends ReactiveMongoSyntax {
     ec: ExecutionContext,
     w: BSONDocumentWriter[T]
   ): Future[BSONCollection#UpdateWriteResult] = w.writeTry(u) match {
-    case Success(bson) => collection.update(ordered = false)
-        .one(q, u = bson -- "_id", multi = false, upsert = true)
+    case Success(bson) =>
+      collection.update(ordered = false).one(q, u = bson -- "_id", multi = false, upsert = true)
     case Failure(ex) => throw ex
   }
 
@@ -91,9 +91,11 @@ object Queries extends ReactiveMongoSyntax {
   ): Future[BSONCollection#MultiBulkWriteResult] = {
     val update = collection.update(ordered = false)
     val elements = Future.sequence(
-      values.map(f).map { case (q, u, multi, upsert) =>
-        update.element(q, document("$set" -> u), multi = multi, upsert = upsert)
-      }
+      values
+        .map(f)
+        .map { case (q, u, multi, upsert) =>
+          update.element(q, document("$set" -> u), multi = multi, upsert = upsert)
+        }
     )
     elements.flatMap(element => update.many(element))
   }

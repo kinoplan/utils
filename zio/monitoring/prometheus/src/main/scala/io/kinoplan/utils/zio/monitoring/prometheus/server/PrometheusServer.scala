@@ -11,12 +11,14 @@ import io.kinoplan.utils.zio.monitoring.prometheus.config.PrometheusConfig
 
 object PrometheusServer {
 
-  private def acquire = (for {
-    config <- getConfig[PrometheusConfig]
-    registry <- getCurrentRegistry()
-    _ <- initializeDefaultExports(registry).ignore
-    server <- http(registry, config.port)
-  } yield PrometheusHttpServer(server)).tapError(error => ZIO.logError(error.getMessage))
+  private def acquire = (
+    for {
+      config <- getConfig[PrometheusConfig]
+      registry <- getCurrentRegistry()
+      _ <- initializeDefaultExports(registry).ignore
+      server <- http(registry, config.port)
+    } yield PrometheusHttpServer(server)
+  ).tapError(error => ZIO.logError(error.getMessage))
 
   private def release(prometheusHttpServer: PrometheusHttpServer) =
     stopHttp(prometheusHttpServer.httpServer).ignore
@@ -26,12 +28,8 @@ object PrometheusServer {
   def start: ZIO[Any, Throwable, Nothing] = ZIO
     .acquireRelease(acquire)(release)
     .flatMap(server =>
-      ZIO.logInfo(
-        s"Prometheus server started on port: ${server.httpServer.getPort}"
-      ) *> ZIO.never
+      ZIO.logInfo(s"Prometheus server started on port: ${server.httpServer.getPort}") *> ZIO.never
     )
-    .provideSomeLayer(
-      PrometheusConfig.live ++ Registry.live ++ Exporters.live ++ Scope.default
-    )
+    .provideSomeLayer(PrometheusConfig.live ++ Registry.live ++ Exporters.live ++ Scope.default)
 
 }
