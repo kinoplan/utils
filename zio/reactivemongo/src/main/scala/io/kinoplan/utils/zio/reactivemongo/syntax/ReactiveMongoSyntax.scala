@@ -14,7 +14,8 @@ trait ReactiveMongoSyntax {
 
     def all[T: BSONDocumentReader](limit: Int = -1)(implicit
       ec: ExecutionContext
-    ): Future[List[T]] = builder.cursor[T](ReadPreference.secondaryPreferred)
+    ): Future[List[T]] = builder
+      .cursor[T](ReadPreference.secondaryPreferred)
       .collect[List](limit, Cursor.FailOnError[List[T]]())
 
   }
@@ -23,9 +24,7 @@ trait ReactiveMongoSyntax {
 
     def adaptError: Task[A] = task.flatMap { result =>
       if (result.writeErrors.isEmpty) ZIO.succeed(result)
-      else ZIO.fail(
-        new Throwable(result.writeErrors.map(_.errmsg).mkString(", "))
-      )
+      else ZIO.fail(new Throwable(result.writeErrors.map(_.errmsg).mkString(", ")))
     }
 
   }
@@ -34,9 +33,7 @@ trait ReactiveMongoSyntax {
 
     def adaptError: Task[BSONCollection#MultiBulkWriteResult] = task.flatMap { result =>
       if (result.writeErrors.isEmpty) ZIO.succeed(result)
-      else ZIO.fail(
-        new Throwable(result.writeErrors.map(_.errmsg).mkString(", "))
-      )
+      else ZIO.fail(new Throwable(result.writeErrors.map(_.errmsg).mkString(", ")))
     }
 
   }

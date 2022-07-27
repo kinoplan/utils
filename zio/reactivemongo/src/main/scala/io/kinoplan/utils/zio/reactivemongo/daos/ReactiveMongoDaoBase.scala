@@ -16,11 +16,10 @@ abstract class ReactiveMongoDaoBase[T](reactiveMongoApi: ReactiveMongoApi, colle
 
   val collection: Task[BSONCollection] = reactiveMongoApi.database.map(_.collection(collectionName))
 
-  protected def smartEnsureIndexes(
-    smartIndexes: Seq[SmartIndex],
-    drop: Boolean = false
-  ): Unit = zio.Runtime
-    .default.unsafeRunAsync(
+  protected def smartEnsureIndexes(smartIndexes: Seq[SmartIndex], drop: Boolean = false): Unit = zio
+    .Runtime
+    .default
+    .unsafeRunAsync(
       for {
         coll <- collection
         _ <- createIndexes(coll, smartIndexes)
@@ -47,8 +46,8 @@ abstract class ReactiveMongoDaoBase[T](reactiveMongoApi: ReactiveMongoApi, colle
     r: BSONDocumentReader[M]
   ): Task[List[M]] = for {
     coll <- collection
-    result <-
-      ZIO.fromFuture(implicit ec => findManyQ[M](coll)(selector, projection, sort, skip, limit))
+    result <- ZIO
+      .fromFuture(implicit ec => findManyQ[M](coll)(selector, projection, sort, skip, limit))
   } yield result
 
   def findOne(selector: BSONDocument = BSONDocument(), projection: Option[BSONDocument] = None)(
@@ -130,27 +129,30 @@ abstract class ReactiveMongoDaoBase[T](reactiveMongoApi: ReactiveMongoApi, colle
     smartIndexes: Seq[SmartIndex]
   ): Task[Seq[Boolean]] = ZIO.foreach(smartIndexes)(smartIndex =>
     ZIO.fromFuture(implicit ec =>
-      coll.indexesManager.ensure(
-        Index(
-          key = smartIndex.key.toSeq,
-          unique = smartIndex.unique,
-          background = smartIndex.background
+      coll
+        .indexesManager
+        .ensure(
+          Index(
+            key = smartIndex.key.toSeq,
+            unique = smartIndex.unique,
+            background = smartIndex.background
+          )
         )
-      )
     )
   )
 
-  private def dropIndexes(
-    coll: BSONCollection,
-    smartIndexes: Seq[SmartIndex]
-  ): Task[List[Int]] = for {
-    indexes <- ZIO.fromFuture(implicit ec => coll.indexesManager.list())
-    filteredIndexNames = indexes.filterNot(index =>
-      index.unique || smartIndexes.exists(_.key == index.key.toSet) || index.name.contains("_id_")
-    ).flatMap(_.name)
-    result <- ZIO.foreach(filteredIndexNames)(indexName =>
-      ZIO.fromFuture(implicit ec => coll.indexesManager.drop(indexName))
-    )
-  } yield result
+  private def dropIndexes(coll: BSONCollection, smartIndexes: Seq[SmartIndex]): Task[List[Int]] =
+    for {
+      indexes <- ZIO.fromFuture(implicit ec => coll.indexesManager.list())
+      filteredIndexNames = indexes
+        .filterNot(index =>
+          index.unique || smartIndexes.exists(_.key == index.key.toSet) ||
+          index.name.contains("_id_")
+        )
+        .flatMap(_.name)
+      result <- ZIO.foreach(filteredIndexNames)(indexName =>
+        ZIO.fromFuture(implicit ec => coll.indexesManager.drop(indexName))
+      )
+    } yield result
 
 }

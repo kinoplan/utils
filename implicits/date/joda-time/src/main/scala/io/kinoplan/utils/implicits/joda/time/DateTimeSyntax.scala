@@ -7,7 +7,8 @@ import io.kinoplan.utils.date.DatePatternExtension
 
 final private[implicits] class DateTimeOps(private val value: DateTime) extends DatePatternExtension {
 
-  @inline def timestamp: Long = value.getMillis / 1000
+  @inline
+  def timestamp: Long = value.getMillis / 1000
 
   override def toString(pattern: String): String = DateTimeFormat.forPattern(pattern).print(value)
 
