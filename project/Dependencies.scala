@@ -1,4 +1,4 @@
-import sbt.*
+import sbt._
 
 object Dependencies {
 
@@ -7,10 +7,9 @@ object Dependencies {
     val zioConfigV     = "3.0.0-RC9"
   }
 
-  import Versions.*
+  import Versions._
 
   // A -> Z
-//  val distageCore          = "io.7mind.izumi"             %% "distage-core"           % "1.0.10"
   val jodaTime             = "joda-time"                   % "joda-time"              % "2.10.14"
   val logback              = "ch.qos.logback"              % "logback-classic"        % "1.2.11"
   val logbackCore          = "ch.qos.logback"              % "logback-core"           % "1.2.11"

@@ -1,7 +1,7 @@
-import sbt.Keys.*
-import sbt.*
+import sbt.Keys._
+import sbt._
 import scalafix.sbt.ScalafixPlugin
-import scoverage.ScoverageKeys.*
+import scoverage.ScoverageKeys._
 
 object ProjectSettings {
 

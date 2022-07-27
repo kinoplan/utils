@@ -11,7 +11,7 @@ case class PrometheusConfig(port: Int)
 object PrometheusConfig {
   private val configDescriptor = nested("prometheus")(int("port").to[PrometheusConfig])
 
-  val live: Layer[ReadError[String], PrometheusConfig] =
-    TypesafeConfig.fromTypesafeConfig(ConfigFactory.load.resolve, configDescriptor)
+  val live: Layer[ReadError[String], PrometheusConfig] = TypesafeConfig
+    .fromTypesafeConfig(ConfigFactory.load.resolve, configDescriptor)
 
 }
