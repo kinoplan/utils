@@ -13,33 +13,23 @@ class DateTimeSyntaxSpec extends AnyWordSpec {
   val date = new DateTime("2022-06-07T16:06:54.786+01:00")
 
   "DateTimeSyntax#timestamp" should {
-    "return correct value" in {
-      assert(date.timestamp === 1654614414)
-    }
+    "return correct value" in assert(date.timestamp === 1654614414)
   }
 
   "DateTimeSyntax#`yyyy-MM-dd`" should {
-    "return correct value" in {
-      assert(date.`yyyy-MM-dd` === "2022-06-07")
-    }
+    "return correct value" in assert(date.`yyyy-MM-dd` === "2022-06-07")
   }
 
   "DateTimeSyntax#`dd-MM-yyyy`" should {
-    "return correct value" in {
-      assert(date.`dd-MM-yyyy` === "07-06-2022")
-    }
+    "return correct value" in assert(date.`dd-MM-yyyy` === "07-06-2022")
   }
 
   "DateTimeSyntax#`dd.MM.yyyy`" should {
-    "return correct value" in {
-      assert(date.`dd.MM.yyyy` === "07.06.2022")
-    }
+    "return correct value" in assert(date.`dd.MM.yyyy` === "07.06.2022")
   }
 
   "DateTimeSyntax#`dd.MM.yy`" should {
-    "return correct value" in {
-      assert(date.`dd.MM.yy` === "07.06.22")
-    }
+    "return correct value" in assert(date.`dd.MM.yy` === "07.06.22")
   }
 
   "DateTimeSyntax#`d MMMM`" should {
@@ -79,9 +69,7 @@ class DateTimeSyntaxSpec extends AnyWordSpec {
   }
 
   "DateTimeSyntax#`yyyy`" should {
-    "return correct value" in {
-      assert(date.`yyyy` === "2022")
-    }
+    "return correct value" in assert(date.`yyyy` === "2022")
   }
 
   "DateTimeSyntax#`MMMM`" should {
@@ -94,27 +82,19 @@ class DateTimeSyntaxSpec extends AnyWordSpec {
   }
 
   "DateTimeSyntax#`HH:mm:ss`" should {
-    "return correct value" in {
-      assert(date.`HH:mm:ss` === "15:06:54")
-    }
+    "return correct value" in assert(date.`HH:mm:ss` === "15:06:54")
   }
 
   "DateTimeSyntax#`HH:mm`" should {
-    "return correct value" in {
-      assert(date.`HH:mm` === "15:06")
-    }
+    "return correct value" in assert(date.`HH:mm` === "15:06")
   }
 
   "DateTimeSyntax#`mm:ss`" should {
-    "return correct value" in {
-      assert(date.`mm:ss` === "06:54")
-    }
+    "return correct value" in assert(date.`mm:ss` === "06:54")
   }
 
   "DateTimeSyntax#`yyyyMMddHHmmss`" should {
-    "return correct value" in {
-      assert(date.`yyyyMMddHHmmss` === "20220607150654")
-    }
+    "return correct value" in assert(date.`yyyyMMddHHmmss` === "20220607150654")
   }
 
   "DateTimeSyntax#`dd MMMM yyyy HH:mm`" should {
@@ -127,65 +107,43 @@ class DateTimeSyntaxSpec extends AnyWordSpec {
   }
 
   "DateTimeSyntax#`dd.MM.yyyy HH:mm`" should {
-    "return correct value" in {
-      assert(date.`dd.MM.yyyy HH:mm` === "07.06.2022 15:06")
-    }
+    "return correct value" in assert(date.`dd.MM.yyyy HH:mm` === "07.06.2022 15:06")
   }
 
   "DateTimeSyntax#`dd.MM.yyyy / HH:mm`" should {
-    "return correct value" in {
-      assert(date.`dd.MM.yyyy / HH:mm` === "07.06.2022 / 15:06")
-    }
+    "return correct value" in assert(date.`dd.MM.yyyy / HH:mm` === "07.06.2022 / 15:06")
   }
 
   "DateTimeSyntax#`dd.MM.yy HH:mm`" should {
-    "return correct value" in {
-      assert(date.`dd.MM.yy HH:mm` === "07.06.22 15:06")
-    }
+    "return correct value" in assert(date.`dd.MM.yy HH:mm` === "07.06.22 15:06")
   }
 
   "DateTimeSyntax#`dd.MM.yyyy HH:mm:ss`" should {
-    "return correct value" in {
-      assert(date.`dd.MM.yyyy HH:mm:ss` === "07.06.2022 15:06:54")
-    }
+    "return correct value" in assert(date.`dd.MM.yyyy HH:mm:ss` === "07.06.2022 15:06:54")
   }
 
   "DateTimeSyntax#`dd-MM-yyyy HH:mm:ss`" should {
-    "return correct value" in {
-      assert(date.`dd-MM-yyyy HH:mm:ss` === "07-06-2022 15:06:54")
-    }
+    "return correct value" in assert(date.`dd-MM-yyyy HH:mm:ss` === "07-06-2022 15:06:54")
   }
 
   "DateTimeSyntax#`yyyy-MM-dd HH:mm:ss`" should {
-    "return correct value" in {
-      assert(date.`yyyy-MM-dd HH:mm:ss` === "2022-06-07 15:06:54")
-    }
+    "return correct value" in assert(date.`yyyy-MM-dd HH:mm:ss` === "2022-06-07 15:06:54")
   }
 
   "DateTimeSyntax#`yyyy-MM-dd HH:mm:ss.SSS`" should {
-    "return correct value" in {
-      assert(date.`yyyy-MM-dd HH:mm:ss.SSS` === "2022-06-07 15:06:54.786")
-    }
+    "return correct value" in assert(date.`yyyy-MM-dd HH:mm:ss.SSS` === "2022-06-07 15:06:54.786")
   }
 
   "DateTimeSyntax#`yyyy-MM-dd HH:mm`" should {
-    "return correct value" in {
-      assert(date.`yyyy-MM-dd HH:mm` === "2022-06-07 15:06")
-    }
+    "return correct value" in assert(date.`yyyy-MM-dd HH:mm` === "2022-06-07 15:06")
   }
 
   "DateTimeSyntax#`yyyy-MM-dd'T'HH:mm:ss`" should {
-    "return correct value" in {
-      assert(date.`yyyy-MM-dd'T'HH:mm:ss` === "2022-06-07T15:06:54")
-    }
+    "return correct value" in assert(date.`yyyy-MM-dd'T'HH:mm:ss` === "2022-06-07T15:06:54")
   }
 
   "DateTimeSyntax#`yyyy-MM-dd'T'HH:mm:ss.SSS`" should {
-    "return correct value" in {
-      assert(
-        date.`yyyy-MM-dd'T'HH:mm:ss.SSS` === "2022-06-07T15:06:54.786"
-      )
-    }
+    "return correct value" in assert(date.`yyyy-MM-dd'T'HH:mm:ss.SSS` === "2022-06-07T15:06:54.786")
   }
 
 }

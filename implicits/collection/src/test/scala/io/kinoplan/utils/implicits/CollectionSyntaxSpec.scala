@@ -21,9 +21,7 @@ class CollectionSyntaxSpec extends AnyWordSpec with Matchers {
 
   "CollectionHelper#diffBy" should {
     "return correct value" in {
-      assert(
-        commons.diffBy(_.number)(List()) === List(test1, test2, test3, test4)
-      )
+      assert(commons.diffBy(_.number)(List()) === List(test1, test2, test3, test4))
       assert(commons.diffBy(_.number)(List(1, 2)) === List(test3, test4))
       assert(commons.diffBy(_.number)(List(3, 4)) === List(test1, test2))
     }
@@ -31,12 +29,8 @@ class CollectionSyntaxSpec extends AnyWordSpec with Matchers {
 
   "CollectionHelper#diffByMerge" should {
     "return correct value" in {
-      assert(
-        commons.diffByMerge(_.number)(List()) === List(test1, test2, test3, test4)
-      )
-      assert(
-        commons.diffByMerge(_.number)(List(test5, test6)) === commons ++ List(test5, test6)
-      )
+      assert(commons.diffByMerge(_.number)(List()) === List(test1, test2, test3, test4))
+      assert(commons.diffByMerge(_.number)(List(test5, test6)) === commons ++ List(test5, test6))
       assert(
         commons.diffByMerge(_.number)(List(test5, test6, test7)) === commons ++ List(test5, test6)
       )
@@ -61,24 +55,16 @@ class CollectionSyntaxSpec extends AnyWordSpec with Matchers {
   "CollectionSyntax#intersectBy" should {
     "return correct value" in {
       assert(commons.intersectBy(_.number)(List()) === List())
-      assert(
-        commons.intersectBy(_.number)(List(1, 2)) === List(test1, test2)
-      )
-      assert(
-        commons.intersectBy(_.number)(List(3, 4)) === List(test3, test4)
-      )
+      assert(commons.intersectBy(_.number)(List(1, 2)) === List(test1, test2))
+      assert(commons.intersectBy(_.number)(List(3, 4)) === List(test3, test4))
     }
   }
 
   "CollectionHelper#intersectByMerge" should {
     "return correct value" in {
       assert(commons.intersectByMerge(_.number)(List()) === List())
-      assert(
-        commons.intersectByMerge(_.number)(List(test1, test2)) === List(test1, test2)
-      )
-      assert(
-        commons.intersectByMerge(_.number)(List(test3, test4, test7)) === List(test3, test4)
-      )
+      assert(commons.intersectByMerge(_.number)(List(test1, test2)) === List(test1, test2))
+      assert(commons.intersectByMerge(_.number)(List(test3, test4, test7)) === List(test3, test4))
     }
   }
 
@@ -112,7 +98,9 @@ class CollectionSyntaxSpec extends AnyWordSpec with Matchers {
     }
   }
 
-  "CollectionHelper#sumBy" should { "return correct value" in commons.sumBy(_.number) === 9 }
+  "CollectionHelper#sumBy" should {
+    "return correct value" in commons.sumBy(_.number) === 9
+  }
 
   "CollectionHelper#zipWith" should {
     "return correct value" in {
@@ -126,12 +114,13 @@ class CollectionSyntaxSpec extends AnyWordSpec with Matchers {
   "CollectionHelper#zipBoth" should {
     "return correct value" in {
       assert(
-        commons.zipBoth[Int, String](_.number, _.text) === Map(
-          test1.number -> test1.text,
-          test2.number -> test2.text,
-          test3.number -> test3.text,
-          test4.number -> test4.text
-        )
+        commons.zipBoth[Int, String](_.number, _.text) ===
+          Map(
+            test1.number -> test1.text,
+            test2.number -> test2.text,
+            test3.number -> test3.text,
+            test4.number -> test4.text
+          )
       )
       the[NoSuchElementException] thrownBy commons.zipBoth[Int, String](_.number, _.text)(5)
     }
@@ -142,25 +131,23 @@ class CollectionSyntaxSpec extends AnyWordSpec with Matchers {
       assert(
         commons.zipWithDefaultValue[Int](_.number)(test2) === Map(1 -> test1, 2 -> test2, 3 -> test4)
       )
-      assert(
-        commons.zipWithDefaultValue[Int](_.number)(test2)(5) === test2
-      )
+      assert(commons.zipWithDefaultValue[Int](_.number)(test2)(5) === test2)
     }
 
     "CollectionHelper#zipBothWithDefaultValue" should {
       "return correct value" in {
         assert(
-          commons.zipBothWithDefaultValue[Int, String](_.number, _.text)(test2.text) === Map(
-            test1.number -> test1.text,
-            test2.number -> test2.text,
-            test3.number -> test3.text,
-            test4.number -> test4.text
-          )
+          commons.zipBothWithDefaultValue[Int, String](_.number, _.text)(test2.text) ===
+            Map(
+              test1.number -> test1.text,
+              test2.number -> test2.text,
+              test3.number -> test3.text,
+              test4.number -> test4.text
+            )
         )
         assert(
-          commons.zipBothWithDefaultValue[Int, String](_.number, _.text)(test2.text)(
-            5
-          ) === test2.text
+          commons.zipBothWithDefaultValue[Int, String](_.number, _.text)(test2.text)(5) ===
+            test2.text
         )
       }
     }
