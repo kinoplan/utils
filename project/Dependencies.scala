@@ -10,7 +10,7 @@ object Dependencies {
   import Versions._
 
   // A -> Z
-  val jodaTime             = "joda-time"                   % "joda-time"              % "2.10.14"
+  val jodaTime             = "joda-time"                   % "joda-time"              % "2.11.0"
   val logback              = "ch.qos.logback"              % "logback-classic"        % "1.2.11"
   val logbackCore          = "ch.qos.logback"              % "logback-core"           % "1.2.11"
   val mockitoScala         = "org.scalatestplus"          %% "mockito-3-4"            % "3.2.10.0" % Test
@@ -21,7 +21,7 @@ object Dependencies {
   val zio                  = "dev.zio"                    %% "zio"                    % "2.0.0"
   val zioConfig            = "dev.zio"                    %% "zio-config"             % zioConfigV
   val zioConfigTypesafe    = "dev.zio"                    %% "zio-config-typesafe"    % zioConfigV
-  val zioHttp              = "io.d11"                     %% "zhttp"                  % "2.0.0-RC9"
+  val zioHttp              = "io.d11"                     %% "zhttp"                  % "2.0.0-RC10"
   val zioMetricsPrometheus = "dev.zio"                    %% "zio-metrics-prometheus" % "2.0.0"
   val zioPrelude           = "dev.zio"                    %% "zio-prelude"            % "1.0.0-RC14"
 }
