@@ -1,9 +1,11 @@
 package io.kinoplan.utils.zio.reactivemongo.daos
 
+import scala.annotation.nowarn
+
 import reactivemongo.api.bson._
 import reactivemongo.api.bson.collection.BSONCollection
 import reactivemongo.api.indexes.Index
-import zio.{Task, ZIO}
+import zio.{Task, Unsafe, ZIO}
 
 import io.kinoplan.utils.zio.reactivemongo.api.ReactiveMongoApi
 import io.kinoplan.utils.zio.reactivemongo.daos.Queries._
@@ -15,16 +17,34 @@ abstract class ReactiveMongoDaoBase[T](reactiveMongoApi: ReactiveMongoApi, colle
 
   val collection: Task[BSONCollection] = reactiveMongoApi.database.map(_.collection(collectionName))
 
-  protected def smartEnsureIndexes(smartIndexes: Seq[SmartIndex], drop: Boolean = false): Unit = zio
-    .Runtime
-    .default
-    .unsafeRunAsync(
-      for {
-        coll <- collection
-        _ <- createIndexes(coll, smartIndexes)
-        _ <- ZIO.when(drop)(dropIndexes(coll, smartIndexes))
-      } yield ()
-    )
+  @nowarn("msg=discarded non-Unit value")
+  protected def smartEnsureIndexes(smartIndexes: Seq[SmartIndex], drop: Boolean = false): Unit =
+    Unsafe.unsafe { implicit unsafe =>
+      zio
+        .Runtime
+        .default
+        .unsafe
+        .fork(
+          for {
+            coll <- collection
+            _ <- createIndexes(coll, smartIndexes)
+            _ <- ZIO.when(drop)(dropIndexes(coll, smartIndexes))
+          } yield coll
+        )
+        .unsafe
+        .addObserver(
+          _.foldZIO(
+            ex =>
+              ZIO.logError(
+                s"Failure ensure for $collectionName indexes $smartIndexes with drop=$drop: $ex"
+              ),
+            coll =>
+              ZIO.logInfo(
+                s"Success ensure for ${coll.db.name}/$collectionName indexes $smartIndexes with drop=$drop"
+              )
+          )
+        )
+    }
 
   def count(
     selector: Option[BSONDocument] = None,
