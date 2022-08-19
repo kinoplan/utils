@@ -35,6 +35,12 @@ lazy val implicitsJodaTime = project
   .configure(ModulesImplicits.jodaTimeProfile)
   .dependsOn(date)
 
+// zzzzzzzzzzzzzzzzzzzz Play Modules zzzzzzzzzzzzzzzzzzzz
+
+lazy val playReactivemongo = project
+  .in(file("play/reactivemongo"))
+  .configure(ModulesPlay.reactivemongoProfile)
+
 // zzzzzzzzzzzzzzzzzzzz ZIO Modules zzzzzzzzzzzzzzzzzzzz
 
 lazy val zioHttpHealthcheck = project
