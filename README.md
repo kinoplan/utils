@@ -32,6 +32,8 @@ libraryDependencies ++= Seq(
   "io.kinoplan" %% "utils-implicits-boolean" % ${version},
   "io.kinoplan" %% "utils-implicits-collection" % ${version},
   "io.kinoplan" %% "utils-implicits-joda-time" % ${version},
+  // play
+  "io.kinoplan" %% "utils-play-reactivemongo" % ${version},
   // zio
   "io.kinoplan" %% "utils-zio-http-healthcheck" % ${version},
   "io.kinoplan" %% "utils-zio-monitoring-prometheus" % ${version},
