@@ -81,6 +81,10 @@ class DateTimeSyntaxSpec extends AnyWordSpec {
     }
   }
 
+  "DateTimeSyntax#`MM/dd/yyyy`" should {
+    "return correct value" in assert(date.`MM/dd/yyyy` === "06/07/2022")
+  }
+
   "DateTimeSyntax#`HH:mm:ss`" should {
     "return correct value" in assert(date.`HH:mm:ss` === "15:06:54")
   }

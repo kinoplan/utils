@@ -34,6 +34,9 @@ trait DatePatternExtension {
   def `MMMM`: String = toString(DatePattern.`MMMM`)
 
   @inline
+  def `MM/dd/yyyy`: String = toString(DatePattern.`MM/dd/yyyy`)
+
+  @inline
   def `HH:mm:ss`: String = toString(DatePattern.`HH:mm:ss`)
 
   @inline
