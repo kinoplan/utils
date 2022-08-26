@@ -11,6 +11,7 @@ object DatePattern {
   val `d MMMM, EEEE` = "d MMMM, EEEE"
   val `yyyy` = "yyyy"
   val `MMMM` = "MMMM"
+  val `MM/dd/yyyy` = "MM/dd/yyyy"
   val `HH:mm:ss` = "HH:mm:ss"
   val `HH:mm` = "HH:mm"
   val `mm:ss` = "mm:ss"
