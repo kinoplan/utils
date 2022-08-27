@@ -23,21 +23,21 @@ Here is the complete list of published artifacts:
 ```scala
 libraryDependencies ++= Seq(
   // base
-  "io.kinoplan" %% "utils-date" % ${version},
-  "io.kinoplan" %% "utils-logback-config" % ${version},
-  "io.kinoplan" %% "utils-scala-logging" % ${version},
-  "io.kinoplan" %% "utils-reactivemongo-bson-any" % ${version},
-  "io.kinoplan" %% "utils-reactivemongo-bson-joda-time" % ${version},
+  "io.kinoplan" %% "utils-date" % ${version}, // JVM and Scala.js
+  "io.kinoplan" %% "utils-logback-config" % ${version}, // JVM only
+  "io.kinoplan" %% "utils-scala-logging" % ${version}, // JVM only
+  "io.kinoplan" %% "utils-reactivemongo-bson-any" % ${version}, // JVM only
+  "io.kinoplan" %% "utils-reactivemongo-bson-joda-time" % ${version}, // JVM only
   // implicits
-  "io.kinoplan" %% "utils-implicits-boolean" % ${version},
-  "io.kinoplan" %% "utils-implicits-collection" % ${version},
-  "io.kinoplan" %% "utils-implicits-joda-time" % ${version},
+  "io.kinoplan" %% "utils-implicits-boolean" % ${version}, // JVM and Scala.js
+  "io.kinoplan" %% "utils-implicits-collection" % ${version}, // JVM and Scala.js
+  "io.kinoplan" %% "utils-implicits-joda-time" % ${version}, // JVM and Scala.js
   // play
-  "io.kinoplan" %% "utils-play-reactivemongo" % ${version},
+  "io.kinoplan" %% "utils-play-reactivemongo" % ${version}, // JVM only
   // zio
-  "io.kinoplan" %% "utils-zio-http-healthcheck" % ${version},
-  "io.kinoplan" %% "utils-zio-monitoring-prometheus" % ${version},
-  "io.kinoplan" %% "utils-zio-reactivemongo" % ${version},
+  "io.kinoplan" %% "utils-zio-http-healthcheck" % ${version}, // JVM only
+  "io.kinoplan" %% "utils-zio-monitoring-prometheus" % ${version}, // JVM only
+  "io.kinoplan" %% "utils-zio-reactivemongo" % ${version}, // JVM only
 )
 ```
 
