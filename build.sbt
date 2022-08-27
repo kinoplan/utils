@@ -2,7 +2,14 @@ ThisBuild / resolvers += "Artima Maven Repository".at("https://repo.artima.com/r
 
 // zzzzzzzzzzzzzzzzzzzz Common Modules zzzzzzzzzzzzzzzzzzzz
 
-lazy val date = project.in(file("common/date")).configure(ModulesCommon.dateProfile)
+lazy val date = crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Pure)
+  .in(file("common/date"))
+  .configure(ModulesCommon.dateProfile)
+  .jsConfigure(ProjectSettings.scalaJsProfile)
+
+lazy val dateJs = date.js
+lazy val dateJvm = date.jvm
 
 lazy val logbackConfig = project
   .in(file("common/logback-config"))
@@ -22,18 +29,28 @@ lazy val reactivemongoBsonAny = project
 
 // zzzzzzzzzzzzzzzzzzzz Implicits Modules zzzzzzzzzzzzzzzzzzzz
 
-lazy val implicitsBoolean = project
+lazy val implicitsBoolean = crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Pure)
   .in(file("implicits/boolean"))
   .configure(ModulesImplicits.booleanProfile)
+  .jsConfigure(ProjectSettings.scalaJsProfile)
 
-lazy val implicitsCollection = project
+lazy val implicitsBooleanJs = implicitsBoolean.js
+lazy val implicitsBooleanJvm = implicitsBoolean.jvm
+
+lazy val implicitsCollection = crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Pure)
   .in(file("implicits/collection"))
   .configure(ModulesImplicits.collectionProfile)
+  .jsConfigure(ProjectSettings.scalaJsProfile)
+
+lazy val implicitsCollectionJs = implicitsCollection.js
+lazy val implicitsCollectionJvm = implicitsCollection.jvm
 
 lazy val implicitsJodaTime = project
   .in(file("implicits/date/joda-time"))
   .configure(ModulesImplicits.jodaTimeProfile)
-  .dependsOn(date)
+  .dependsOn(dateJvm)
 
 // zzzzzzzzzzzzzzzzzzzz Play Modules zzzzzzzzzzzzzzzzzzzz
 

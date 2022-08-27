@@ -29,4 +29,6 @@ object ProjectSettings {
       coverageHighlighting := true
     )
 
+  lazy val scalaJsProfile: Project => Project = _.settings(Test / fork := false)
+
 }
