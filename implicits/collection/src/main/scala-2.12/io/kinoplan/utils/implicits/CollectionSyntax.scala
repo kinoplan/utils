@@ -53,6 +53,22 @@ final private[implicits] class CollectionOps[A, Repr](private val value: Iterabl
   }
 
   @inline
+  def mapIf[That](cond: A => Boolean)(f: A => A)(implicit
+    cbf: CanBuildFrom[Repr, A, That]
+  ): That = {
+    val builder = cbf(value.repr)
+    val i = value.iterator
+
+    builder ++=
+      i.map(a =>
+        if (cond(a)) f(a)
+        else a
+      )
+
+    builder.result()
+  }
+
+  @inline
   def intersectBy[B, That](f: A => B)(container: GenIterable[B])(implicit
     cbf: CanBuildFrom[Repr, A, That]
   ): That = computesOperationBy[B, That](f, container, CollectionOperation.Intersection)
