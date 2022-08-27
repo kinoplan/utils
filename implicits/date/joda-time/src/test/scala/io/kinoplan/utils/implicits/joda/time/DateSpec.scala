@@ -8,6 +8,13 @@ import io.kinoplan.utils.date.DatePattern
 class DateSpec extends AnyWordSpec {
   val date = "2022-06-07T16:06:54.786"
 
+  "Date#fromUnixTimestamp" should {
+    "return correct value" in {
+      assert(Date.fromUnixTimestamp(1661568682) == new DateTime(1661568682 * 1000L))
+      assert(Date.fromUnixTimestamp(1661568682L) == new DateTime(1661568682L * 1000L))
+    }
+  }
+
   "Date#parseDateTimeO" should {
     "return correct value" in
       assert(

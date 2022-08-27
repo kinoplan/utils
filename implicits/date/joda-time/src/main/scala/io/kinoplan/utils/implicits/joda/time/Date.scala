@@ -7,6 +7,10 @@ import org.joda.time.format.DateTimeFormat
 
 object Date {
 
+  def fromUnixTimestamp(value: Int): DateTime = new DateTime(value * 1000L)
+
+  def fromUnixTimestamp(value: Long): DateTime = new DateTime(value * 1000L)
+
   def parseDateTime(pattern: String, value: String): Try[DateTime] =
     Try(DateTimeFormat.forPattern(pattern).parseDateTime(value))
 

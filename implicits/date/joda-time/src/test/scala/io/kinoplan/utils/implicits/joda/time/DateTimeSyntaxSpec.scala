@@ -16,6 +16,10 @@ class DateTimeSyntaxSpec extends AnyWordSpec {
     "return correct value" in assert(date.timestamp === 1654614414)
   }
 
+  "DateTimeSyntax#timestampLong" should {
+    "return correct value" in assert(date.timestampLong === 1654614414L)
+  }
+
   "DateTimeSyntax#`yyyy-MM-dd`" should {
     "return correct value" in assert(date.`yyyy-MM-dd` === "2022-06-07")
   }
