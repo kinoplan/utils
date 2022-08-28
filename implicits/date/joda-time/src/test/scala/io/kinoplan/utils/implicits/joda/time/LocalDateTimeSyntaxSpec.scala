@@ -2,23 +2,15 @@ package io.kinoplan.utils.implicits.joda.time
 
 import java.util.Locale
 
-import org.joda.time.DateTime
+import org.joda.time.LocalDateTime
 import org.scalatest.wordspec.AnyWordSpec
 
-import io.kinoplan.utils.implicits.joda.time.DateTimeSyntax.syntaxDateTimeOps
+import io.kinoplan.utils.implicits.joda.time.LocalDateTimeSyntax.syntaxLocalDateTimeOps
 
-class DateTimeSyntaxSpec extends AnyWordSpec {
+class LocalDateTimeSyntaxSpec extends AnyWordSpec {
   def setLocale(lang: String): Unit = Locale.setDefault(new Locale(lang))
 
-  val date = new DateTime("2022-06-07T16:06:54.786+01:00")
-
-  "timestamp" should {
-    "return correct value" in assert(date.timestamp === 1654614414)
-  }
-
-  "timestampLong" should {
-    "return correct value" in assert(date.timestampLong === 1654614414L)
-  }
+  val date = new LocalDateTime("2022-06-07T15:06:54.786")
 
   "`yyyy-MM-dd`" should {
     "return correct value" in assert(date.`yyyy-MM-dd` === "2022-06-07")

@@ -1,6 +1,6 @@
-ThisBuild / resolvers += "Artima Maven Repository".at("https://repo.artima.com/releases")
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.10.1")
 
-addSbtPlugin("com.artima.supersafe" % "sbtplugin" % "1.1.12")
+addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "1.2.0")
 
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "2.0.2")
 
