@@ -5,7 +5,7 @@ object Dependencies {
   object Versions {
     val playV          = "2.8.16"
     val reactivemongoV = "1.0.10"
-    val zioConfigV     = "3.0.0-RC9"
+    val zioConfigV     = "3.0.2"
   }
 
   import Versions._
