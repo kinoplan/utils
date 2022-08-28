@@ -3,9 +3,10 @@ package io.kinoplan.utils.implicits.joda.time
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 
-import io.kinoplan.utils.date.DatePatternExtension
+import io.kinoplan.utils.date.DateTimePatternExtension
 
-final private[implicits] class DateTimeOps(private val value: DateTime) extends DatePatternExtension {
+final private[implicits] class DateTimeOps(private val value: DateTime)
+    extends DateTimePatternExtension {
 
   @inline
   def timestamp: Int = timestampLong.toInt

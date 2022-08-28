@@ -36,49 +36,4 @@ trait DatePatternExtension {
   @inline
   def `MM/dd/yyyy`: String = toString(DatePattern.`MM/dd/yyyy`)
 
-  @inline
-  def `HH:mm:ss`: String = toString(DatePattern.`HH:mm:ss`)
-
-  @inline
-  def `HH:mm`: String = toString(DatePattern.`HH:mm`)
-
-  @inline
-  def `mm:ss`: String = toString(DatePattern.`mm:ss`)
-
-  @inline
-  def `yyyyMMddHHmmss`: String = toString(DatePattern.`yyyyMMddHHmmss`)
-
-  @inline
-  def `dd MMMM yyyy HH:mm`: String = toString(DatePattern.`dd MMMM yyyy HH:mm`)
-
-  @inline
-  def `dd.MM.yyyy HH:mm`: String = toString(DatePattern.`dd.MM.yyyy HH:mm`)
-
-  @inline
-  def `dd.MM.yyyy / HH:mm`: String = toString(DatePattern.`dd.MM.yyyy / HH:mm`)
-
-  @inline
-  def `dd.MM.yy HH:mm`: String = toString(DatePattern.`dd.MM.yy HH:mm`)
-
-  @inline
-  def `dd.MM.yyyy HH:mm:ss`: String = toString(DatePattern.`dd.MM.yyyy HH:mm:ss`)
-
-  @inline
-  def `dd-MM-yyyy HH:mm:ss`: String = toString(DatePattern.`dd-MM-yyyy HH:mm:ss`)
-
-  @inline
-  def `yyyy-MM-dd HH:mm:ss`: String = toString(DatePattern.`yyyy-MM-dd HH:mm:ss`)
-
-  @inline
-  def `yyyy-MM-dd HH:mm:ss.SSS`: String = toString(DatePattern.`yyyy-MM-dd HH:mm:ss.SSS`)
-
-  @inline
-  def `yyyy-MM-dd HH:mm`: String = toString(DatePattern.`yyyy-MM-dd HH:mm`)
-
-  @inline
-  def `yyyy-MM-dd'T'HH:mm:ss`: String = toString(DatePattern.`yyyy-MM-dd'T'HH:mm:ss`)
-
-  @inline
-  def `yyyy-MM-dd'T'HH:mm:ss.SSS`: String = toString(DatePattern.`yyyy-MM-dd'T'HH:mm:ss.SSS`)
-
 }
