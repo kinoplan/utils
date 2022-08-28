@@ -52,6 +52,14 @@ class CollectionSyntaxSpec extends AnyWordSpec with Matchers {
     }
   }
 
+  "CollectionHelper#mapIf" should {
+    "return correct value" in {
+      assert(commons.mapIf(_.number == 1)(_ => test5) === List(test5, test2, test3, test4))
+      assert(commons.mapIf(_.number == 4)(_ => test5) === commons)
+      assert(commons.mapIf(_.number == 3)(_ => test6) === List(test1, test2, test6, test6))
+    }
+  }
+
   "CollectionSyntax#intersectBy" should {
     "return correct value" in {
       assert(commons.intersectBy(_.number)(List()) === List())

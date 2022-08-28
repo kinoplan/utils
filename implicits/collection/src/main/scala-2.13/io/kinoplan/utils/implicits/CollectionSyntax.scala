@@ -20,11 +20,22 @@ final private[implicits] class CollectionOps[Repr, A, C](
     .fromSpecific(value)(it.++(container.view.filterNot(a => it.view.exists(f(_) == f(a)))))
 
   @inline
-  def filterIf[B >: A, That](cond: Boolean)(f: A => Boolean)(implicit
+  def filterIf[That](cond: Boolean)(f: A => Boolean)(implicit
     bf: BuildFrom[Repr, A, That]
   ): That = bf.fromSpecific(value)(
     if (cond) it.view.filter(f)
     else it.view
+  )
+
+  @inline
+  def mapIf[That](cond: A => Boolean)(f: A => A)(implicit
+    bf: BuildFrom[Repr, A, That]
+  ): That = bf.fromSpecific(value)(
+    it.view
+      .map(a =>
+        if (cond(a)) f(a)
+        else a
+      )
   )
 
   @inline
