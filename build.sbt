@@ -29,6 +29,15 @@ lazy val reactivemongoBsonAny = project
 
 // zzzzzzzzzzzzzzzzzzzz Implicits Modules zzzzzzzzzzzzzzzzzzzz
 
+lazy val implicitsAny = crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Pure)
+  .in(file("implicits/any"))
+  .configure(ModulesImplicits.anyProfile)
+  .jsConfigure(ProjectSettings.scalaJsProfile)
+
+lazy val implicitsAnyJs = implicitsAny.js
+lazy val implicitsAnyJvm = implicitsAny.jvm
+
 lazy val implicitsBoolean = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
   .in(file("implicits/boolean"))

@@ -3,6 +3,9 @@ import sbt.{Project, Test}
 
 object ModulesImplicits {
 
+  lazy val anyProfile: Project => Project =
+    _.configure(ProjectSettings.commonProfile).settings(name := "utils-implicits-any")
+
   lazy val booleanProfile: Project => Project =
     _.configure(ProjectSettings.commonProfile).settings(name := "utils-implicits-boolean")
 
