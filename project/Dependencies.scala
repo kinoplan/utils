@@ -11,7 +11,7 @@ object Dependencies {
   import Versions._
 
   // A -> Z
-  val jodaTime             = "joda-time"                   % "joda-time"              % "2.11.0"
+  val jodaTime             = "joda-time"                   % "joda-time"              % "2.11.1"
   val logback              = "ch.qos.logback"              % "logback-classic"        % "1.2.11"
   val logbackCore          = "ch.qos.logback"              % "logback-core"           % "1.2.11"
   val mockitoScala         = "org.scalatestplus"          %% "mockito-3-4"            % "3.2.10.0" % Test
