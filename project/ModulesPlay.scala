@@ -9,9 +9,9 @@ object ModulesPlay {
     .settings(
       libraryDependencies ++=
         Seq(
-          Dependencies.play          % Provided,
-          Dependencies.reactiveMongo % Provided,
-          Dependencies.scalatest
+          Dependencies.play              % Provided,
+          Dependencies.playReactiveMongo % Provided,
+          Dependencies.scalastic
         )
     )
 

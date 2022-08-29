@@ -20,6 +20,11 @@ object ModulesCommon {
     .settings(Test / parallelExecution := false)
     .settings(libraryDependencies ++= Seq(Dependencies.logback, Dependencies.scalaLogging))
 
+  lazy val reactivemongoBaseProfile: Project => Project = _
+    .configure(ProjectSettings.commonProfile)
+    .settings(name := "utils-reactivemongo-base")
+    .settings(libraryDependencies ++= Seq(Dependencies.reactiveMongo % Provided))
+
   lazy val reactivemongoBsonJodaTimeProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-reactivemongo-bson-joda-time")
