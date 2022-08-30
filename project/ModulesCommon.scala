@@ -1,10 +1,14 @@
 import sbt.Keys._
 import sbt.{Project, Provided, Test}
+import sbtcrossproject.CrossProject
+import scalajscrossproject.ScalaJSCrossPlugin.autoImport._
 
 object ModulesCommon {
 
-  lazy val dateProfile: Project => Project =
-    _.configure(ProjectSettings.commonProfile).settings(name := "utils-date")
+  lazy val dateProfile: CrossProject => CrossProject = _
+    .configure(ProjectSettings.commonProfile)
+    .jsConfigure(ProjectSettings.scalaJsProfile)
+    .settings(name := "utils-date")
 
   lazy val logbackConfigProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
