@@ -10,6 +10,9 @@ trait TimePatternExtension {
   def `HH:mm`: String = toString(TimePattern.`HH:mm`)
 
   @inline
+  def `HH_mm`: String = toString(TimePattern.`HH_mm`)
+
+  @inline
   def `mm:ss`: String = toString(TimePattern.`mm:ss`)
 
 }
