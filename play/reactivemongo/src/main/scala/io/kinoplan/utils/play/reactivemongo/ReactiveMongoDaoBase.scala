@@ -12,109 +12,9 @@ import reactivemongo.api.bson.{
   document
 }
 import reactivemongo.api.bson.collection.BSONCollection
-import reactivemongo.api.commands.WriteResult
 import reactivemongo.api.indexes.Index
 
 import io.kinoplan.utils.reactivemongo.base.{Queries, QueryBuilderSyntax, SmartIndex}
-
-protected trait ReactiveMongoDao[T] extends QueryBuilderSyntax {
-  def collection: Future[BSONCollection]
-
-  def smartEnsureIndexes(smartIndexes: Seq[SmartIndex], drop: Boolean = false)(implicit
-    position: Position
-  ): Future[Unit]
-
-  def count(selector: Option[BSONDocument] = None, limit: Option[Int] = None, skip: Int = 0)(
-    implicit
-    position: Position
-  ): Future[Long]
-
-  def countGrouped(groupBy: String, matchQuery: BSONDocument = document)(implicit
-    position: Position
-  ): Future[Map[String, Int]]
-
-  def findAll(implicit
-    r: BSONDocumentReader[T],
-    position: Position
-  ): Future[List[T]]
-
-  def findMany[M <: T](
-    selector: BSONDocument = document,
-    projection: Option[BSONDocument] = None,
-    sort: BSONDocument = document,
-    hint: Option[BSONDocument] = None,
-    skip: Int = 0,
-    limit: Int = -1
-  )(implicit
-    r: BSONDocumentReader[M],
-    position: Position
-  ): Future[List[M]]
-
-  def findManyByIds(ids: Set[BSONObjectID])(implicit
-    r: BSONDocumentReader[T],
-    position: Position
-  ): Future[List[T]]
-
-  def findOne(selector: BSONDocument = BSONDocument(), projection: Option[BSONDocument] = None)(
-    implicit
-    r: BSONDocumentReader[T],
-    position: Position
-  ): Future[Option[T]]
-
-  def findOneById(id: BSONObjectID)(implicit
-    r: BSONDocumentReader[T],
-    position: Position
-  ): Future[Option[T]]
-
-  def insertMany(values: List[T])(implicit
-    w: BSONDocumentWriter[T],
-    position: Position
-  ): Future[BSONCollection#MultiBulkWriteResult]
-
-  def insertOne(value: T)(implicit
-    w: BSONDocumentWriter[T],
-    position: Position
-  ): Future[WriteResult]
-
-  def update(q: BSONDocument, u: BSONDocument, multi: Boolean = false, upsert: Boolean = false)(
-    implicit
-    position: Position
-  ): Future[BSONCollection#UpdateWriteResult]
-
-  def updateMany(values: List[T], f: T => (BSONDocument, BSONDocument, Boolean, Boolean))(implicit
-    position: Position
-  ): Future[BSONCollection#MultiBulkWriteResult]
-
-  def upsert(q: BSONDocument, value: T)(implicit
-    w: BSONDocumentWriter[T],
-    position: Position
-  ): Future[BSONCollection#UpdateWriteResult]
-
-  def saveOne(q: BSONDocument, value: T, multi: Boolean, upsert: Boolean)(implicit
-    w: BSONDocumentWriter[T],
-    position: Position
-  ): Future[BSONCollection#UpdateWriteResult]
-
-  def saveMany(values: List[T], f: T => (BSONDocument, T, Boolean, Boolean))(implicit
-    w: BSONDocumentWriter[T],
-    position: Position
-  ): Future[BSONCollection#MultiBulkWriteResult]
-
-  def delete(q: BSONDocument)(implicit
-    position: Position
-  ): Future[WriteResult]
-
-  def deleteByIds(ids: Set[BSONObjectID])(implicit
-    ec: ExecutionContext,
-    position: Position
-  ): Future[WriteResult]
-
-  def deleteById(id: BSONObjectID)(implicit
-    ec: ExecutionContext,
-    position: Position
-  ): Future[WriteResult]
-
-}
 
 abstract class ReactiveMongoDaoBase[T](
   reactiveMongoApi: ReactiveMongoApi,
@@ -124,7 +24,7 @@ abstract class ReactiveMongoDaoBase[T](
   ec: ExecutionContext
 ) {
 
-  protected val dao: ReactiveMongoDao[T] = new ReactiveMongoDao[T] {
+  protected object dao extends QueryBuilderSyntax {
 
     def collection: Future[BSONCollection] = reactiveMongoApi
       .database
@@ -183,7 +83,7 @@ abstract class ReactiveMongoDaoBase[T](
     def findManyByIds(ids: Set[BSONObjectID])(implicit
       r: BSONDocumentReader[T],
       position: Position
-    ): Future[List[T]] = dao.findMany(BSONDocument("_id" -> BSONDocument("$in" -> ids)))
+    ): Future[List[T]] = findMany(BSONDocument("_id" -> BSONDocument("$in" -> ids)))
 
     def findOne(selector: BSONDocument = BSONDocument(), projection: Option[BSONDocument] = None)(
       implicit
@@ -198,13 +98,12 @@ abstract class ReactiveMongoDaoBase[T](
     def findOneById(id: BSONObjectID)(implicit
       r: BSONDocumentReader[T],
       position: Position
-    ): Future[Option[T]] = dao.findOne(BSONDocument("_id" -> id))
+    ): Future[Option[T]] = findOne(BSONDocument("_id" -> id))
 
     def insertMany(values: List[T])(implicit
       w: BSONDocumentWriter[T],
       position: Position
-    ): Future[BSONCollection#MultiBulkWriteResult] = dao
-      .collection
+    ) = collection
       .flatMap {
         Queries.insertManyQ(_)(values)
       }
@@ -213,8 +112,7 @@ abstract class ReactiveMongoDaoBase[T](
     def insertOne(value: T)(implicit
       w: BSONDocumentWriter[T],
       position: Position
-    ): Future[WriteResult] = dao
-      .collection
+    ) = collection
       .flatMap {
         Queries.insertOneQ(_)(value)
       }
@@ -223,7 +121,7 @@ abstract class ReactiveMongoDaoBase[T](
     def update(q: BSONDocument, u: BSONDocument, multi: Boolean = false, upsert: Boolean = false)(
       implicit
       position: Position
-    ): Future[BSONCollection#UpdateWriteResult] = collection
+    ) = collection
       .flatMap {
         Queries.updateQ(_)(q, u, multi = multi, upsert = upsert)
       }
@@ -231,7 +129,7 @@ abstract class ReactiveMongoDaoBase[T](
 
     def updateMany(values: List[T], f: T => (BSONDocument, BSONDocument, Boolean, Boolean))(implicit
       position: Position
-    ): Future[BSONCollection#MultiBulkWriteResult] = collection
+    ) = collection
       .flatMap {
         Queries.updateManyQ(_)(values, f)
       }
@@ -240,7 +138,7 @@ abstract class ReactiveMongoDaoBase[T](
     def upsert(q: BSONDocument, value: T)(implicit
       w: BSONDocumentWriter[T],
       position: Position
-    ): Future[BSONCollection#UpdateWriteResult] = collection
+    ) = collection
       .flatMap {
         Queries.upsertQ(_)(q, value)
       }
@@ -249,7 +147,7 @@ abstract class ReactiveMongoDaoBase[T](
     def saveOne(q: BSONDocument, value: T, multi: Boolean, upsert: Boolean)(implicit
       w: BSONDocumentWriter[T],
       position: Position
-    ): Future[BSONCollection#UpdateWriteResult] = collection
+    ) = collection
       .flatMap {
         Queries.saveQ(_)(q, value, multi = multi, upsert = upsert)
       }
@@ -258,7 +156,7 @@ abstract class ReactiveMongoDaoBase[T](
     def saveMany(values: List[T], f: T => (BSONDocument, T, Boolean, Boolean))(implicit
       w: BSONDocumentWriter[T],
       position: Position
-    ): Future[BSONCollection#MultiBulkWriteResult] = collection
+    ) = collection
       .flatMap {
         Queries.saveManyQ(_)(values, f)
       }
@@ -266,7 +164,7 @@ abstract class ReactiveMongoDaoBase[T](
 
     def delete(q: BSONDocument)(implicit
       position: Position
-    ): Future[WriteResult] = collection
+    ) = collection
       .flatMap {
         Queries.deleteQ(_)(q)
       }
@@ -275,8 +173,7 @@ abstract class ReactiveMongoDaoBase[T](
     def deleteByIds(ids: Set[BSONObjectID])(implicit
       ec: ExecutionContext,
       position: Position
-    ): Future[WriteResult] = dao
-      .collection
+    ) = collection
       .flatMap {
         Queries.deleteByIdsQ(_)(ids)
       }
@@ -285,8 +182,7 @@ abstract class ReactiveMongoDaoBase[T](
     def deleteById(id: BSONObjectID)(implicit
       ec: ExecutionContext,
       position: Position
-    ): Future[WriteResult] = dao
-      .collection
+    ) = collection
       .flatMap {
         Queries.deleteByIdQ(_)(id)
       }
@@ -312,22 +208,22 @@ abstract class ReactiveMongoDaoBase[T](
   def insertMany(values: List[T])(implicit
     w: BSONDocumentWriter[T],
     position: Position
-  ): Future[BSONCollection#MultiBulkWriteResult] = dao.insertMany(values)
+  ) = dao.insertMany(values)
 
   def insertOne(value: T)(implicit
     w: BSONDocumentWriter[T],
     position: Position
-  ): Future[WriteResult] = dao.insertOne(value)
+  ) = dao.insertOne(value)
 
   def deleteByIds(ids: Set[BSONObjectID])(implicit
     ec: ExecutionContext,
     position: Position
-  ): Future[WriteResult] = dao.deleteByIds(ids)
+  ) = dao.deleteByIds(ids)
 
   def deleteById(id: BSONObjectID)(implicit
     ec: ExecutionContext,
     position: Position
-  ): Future[WriteResult] = dao.deleteById(id)
+  ) = dao.deleteById(id)
 
   private def createIndexes(
     coll: BSONCollection,

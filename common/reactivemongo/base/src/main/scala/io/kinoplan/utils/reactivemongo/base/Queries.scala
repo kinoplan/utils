@@ -13,7 +13,6 @@ import reactivemongo.api.bson.{
   document
 }
 import reactivemongo.api.bson.collection.BSONCollection
-import reactivemongo.api.commands.WriteResult
 
 private[utils] object Queries extends QueryBuilderSyntax {
 
@@ -69,25 +68,23 @@ private[utils] object Queries extends QueryBuilderSyntax {
 
   def insertManyQ[T: BSONDocumentWriter](collection: BSONCollection)(values: List[T])(implicit
     ec: ExecutionContext
-  ): Future[BSONCollection#MultiBulkWriteResult] = collection.insert(ordered = false).many(values)
+  ) = collection.insert(ordered = false).many(values)
 
   def insertOneQ[T: BSONDocumentWriter](collection: BSONCollection)(value: T)(implicit
     ec: ExecutionContext
-  ): Future[WriteResult] = collection.insert(ordered = false).one(value)
+  ) = collection.insert(ordered = false).one(value)
 
   def updateQ(
     collection: BSONCollection
   )(q: BSONDocument, u: BSONDocument, multi: Boolean = false, upsert: Boolean = false)(implicit
     ec: ExecutionContext
-  ): Future[BSONCollection#UpdateWriteResult] = collection
-    .update(ordered = false)
-    .one(q, u, multi = multi, upsert = upsert)
+  ) = collection.update(ordered = false).one(q, u, multi = multi, upsert = upsert)
 
   def updateManyQ[T](
     collection: BSONCollection
   )(values: List[T], f: T => (BSONDocument, BSONDocument, Boolean, Boolean))(implicit
     ec: ExecutionContext
-  ): Future[BSONCollection#MultiBulkWriteResult] = {
+  ) = {
     val update = collection.update(ordered = false)
     val elements = Future.sequence(
       values
@@ -102,7 +99,7 @@ private[utils] object Queries extends QueryBuilderSyntax {
   def upsertQ[T: BSONDocumentWriter](collection: BSONCollection)(q: BSONDocument, u: T)(implicit
     ec: ExecutionContext,
     w: BSONDocumentWriter[T]
-  ): Future[BSONCollection#UpdateWriteResult] = w.writeTry(u) match {
+  ) = w.writeTry(u) match {
     case Success(bson) =>
       collection.update(ordered = false).one(q, u = bson -- "_id", multi = false, upsert = true)
     case Failure(ex) => throw ex
@@ -112,7 +109,7 @@ private[utils] object Queries extends QueryBuilderSyntax {
     collection: BSONCollection
   )(q: BSONDocument, u: T, multi: Boolean = false, upsert: Boolean = false)(implicit
     ec: ExecutionContext
-  ): Future[BSONCollection#UpdateWriteResult] = collection
+  ) = collection
     .update(ordered = false)
     .one(q, document("$set" -> u), multi = multi, upsert = upsert)
 
@@ -120,7 +117,7 @@ private[utils] object Queries extends QueryBuilderSyntax {
     collection: BSONCollection
   )(values: List[T], f: T => (BSONDocument, T, Boolean, Boolean))(implicit
     ec: ExecutionContext
-  ): Future[BSONCollection#MultiBulkWriteResult] = {
+  ) = {
     val update = collection.update(ordered = false)
     val elements = Future.sequence(
       values
@@ -134,16 +131,14 @@ private[utils] object Queries extends QueryBuilderSyntax {
 
   def deleteQ(collection: BSONCollection)(q: BSONDocument)(implicit
     ec: ExecutionContext
-  ): Future[WriteResult] = collection.delete(ordered = false).one(q)
+  ) = collection.delete(ordered = false).one(q)
 
   def deleteByIdQ(collection: BSONCollection)(id: BSONObjectID)(implicit
     ec: ExecutionContext
-  ): Future[WriteResult] = collection.delete(ordered = false).one(document("_id" -> id))
+  ) = collection.delete(ordered = false).one(document("_id" -> id))
 
   def deleteByIdsQ(collection: BSONCollection)(ids: Set[BSONObjectID])(implicit
     ec: ExecutionContext
-  ): Future[WriteResult] = collection
-    .delete(ordered = false)
-    .one(document("_id" -> document("$in" -> ids)))
+  ) = collection.delete(ordered = false).one(document("_id" -> document("$in" -> ids)))
 
 }
