@@ -19,6 +19,10 @@ lazy val scalaLogging = project
   .in(file("common/scala-logging"))
   .configure(ModulesCommon.scalaLoggingProfile)
 
+lazy val reactivemongoBase = project
+  .in(file("common/reactivemongo/base"))
+  .configure(ModulesCommon.reactivemongoBaseProfile)
+
 lazy val reactivemongoBsonJodaTime = project
   .in(file("common/reactivemongo/bson-joda-time"))
   .configure(ModulesCommon.reactivemongoBsonJodaTimeProfile)
@@ -28,6 +32,15 @@ lazy val reactivemongoBsonAny = project
   .configure(ModulesCommon.reactivemongoBsonAnyProfile)
 
 // zzzzzzzzzzzzzzzzzzzz Implicits Modules zzzzzzzzzzzzzzzzzzzz
+
+lazy val implicitsAny = crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Pure)
+  .in(file("implicits/any"))
+  .configure(ModulesImplicits.anyProfile)
+  .jsConfigure(ProjectSettings.scalaJsProfile)
+
+lazy val implicitsAnyJs = implicitsAny.js
+lazy val implicitsAnyJvm = implicitsAny.jvm
 
 lazy val implicitsBoolean = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
@@ -57,6 +70,7 @@ lazy val implicitsJodaTime = project
 lazy val playReactivemongo = project
   .in(file("play/reactivemongo"))
   .configure(ModulesPlay.reactivemongoProfile)
+  .dependsOn(reactivemongoBase)
 
 // zzzzzzzzzzzzzzzzzzzz ZIO Modules zzzzzzzzzzzzzzzzzzzz
 
