@@ -9,7 +9,7 @@ object ProjectSettings {
     .enablePlugins(ScalafixPlugin)
     .settings(
       crossScalaVersions := Seq("2.12.16", "2.13.8"),
-      scalaVersion := crossScalaVersions.value.last,
+      scalaVersion := crossScalaVersions.value.head,
       scalacOptions ~=
         (_.filterNot(
           Set(
