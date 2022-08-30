@@ -19,6 +19,10 @@ lazy val scalaLogging = project
   .in(file("common/scala-logging"))
   .configure(ModulesCommon.scalaLoggingProfile)
 
+lazy val reactivemongoBase = project
+  .in(file("common/reactivemongo/base"))
+  .configure(ModulesCommon.reactivemongoBaseProfile)
+
 lazy val reactivemongoBsonJodaTime = project
   .in(file("common/reactivemongo/bson-joda-time"))
   .configure(ModulesCommon.reactivemongoBsonJodaTimeProfile)
@@ -66,6 +70,7 @@ lazy val implicitsJodaTime = project
 lazy val playReactivemongo = project
   .in(file("play/reactivemongo"))
   .configure(ModulesPlay.reactivemongoProfile)
+  .dependsOn(reactivemongoBase)
 
 // zzzzzzzzzzzzzzzzzzzz ZIO Modules zzzzzzzzzzzzzzzzzzzz
 
