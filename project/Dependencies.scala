@@ -16,9 +16,11 @@ object Dependencies {
   val logbackCore          = "ch.qos.logback"              % "logback-core"           % "1.2.11"
   val mockitoScala         = "org.scalatestplus"          %% "mockito-3-4"            % "3.2.10.0" % Test
   val play                 = "com.typesafe.play"          %% "play"                   % playV
+  val playReactiveMongo    = "org.reactivemongo"          %% "play2-reactivemongo"    % s"$reactivemongoV-play28"
   val reactiveMongo        = "org.reactivemongo"          %% "reactivemongo"          % reactivemongoV
   val scalaLogging         = "com.typesafe.scala-logging" %% "scala-logging"          % "3.9.5"
   val scalatest            = "org.scalatest"              %% "scalatest"              % "3.2.13"   % Test
+  val scalastic            = "org.scalactic"              %% "scalactic"              % "3.2.13"
   val typesafeConfig       = "com.typesafe"                % "config"                 % "1.4.2"
   val zio                  = "dev.zio"                    %% "zio"                    % "2.0.0-RC6"
   val zioConfig            = "dev.zio"                    %% "zio-config"             % zioConfigV
