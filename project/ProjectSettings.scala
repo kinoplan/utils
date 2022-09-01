@@ -9,7 +9,7 @@ object ProjectSettings {
     .enablePlugins(ScalafixPlugin)
     .settings(
       crossScalaVersions := Seq("2.12.16", "2.13.8"),
-      scalaVersion := crossScalaVersions.value.head,
+      scalaVersion := crossScalaVersions.value.last,
       scalacOptions ~=
         (_.filterNot(
           Set(
@@ -25,7 +25,7 @@ object ProjectSettings {
         )),
       Test / fork := true,
       Test / javaOptions += "-Duser.timezone=UTC",
-      libraryDependencies ++= Seq(Dependencies.scalatest, Dependencies.mockitoScala),
+      libraryDependencies ++= Seq(Dependencies.scalatest.value, Dependencies.mockitoScala),
       coverageHighlighting := true
     )
 
