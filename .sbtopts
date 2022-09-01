@@ -1,3 +1,3 @@
--J-Xms512M
--J-Xmx1024M
+-J-Xms2G
+-J-Xmx3G
 -J-XX:+UseConcMarkSweepGC
