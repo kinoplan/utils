@@ -1,16 +1,29 @@
-package io.kinoplan.utils.implicits.joda.time
+package io.kinoplan.utils.implicits.java.time
 
-import java.util.Locale
+import java.time.{OffsetDateTime, ZoneOffset}
+import java.util.{Locale, TimeZone}
 
-import org.joda.time.LocalDateTime
 import org.scalatest.wordspec.AnyWordSpec
 
-import io.kinoplan.utils.implicits.joda.time.LocalDateTimeSyntax.syntaxLocalDateTimeOps
+import io.kinoplan.utils.implicits.java.time.OffsetDateTimeSyntax.syntaxOffsetDateTimeOps
 
-class LocalDateTimeSyntaxSpec extends AnyWordSpec {
+class OffsetDateTimeSyntaxSpec extends AnyWordSpec {
   def setLocale(lang: String): Unit = Locale.setDefault(Locale.forLanguageTag(lang))
 
-  val date = new LocalDateTime("2022-06-07T15:06:54.786")
+  TimeZone.setDefault(TimeZone.getTimeZone("Europe/Moscow"))
+
+  val date: OffsetDateTime = OffsetDateTime
+    .parse("2022-06-07T16:06:54.786+01:00")
+    .toInstant
+    .atOffset(ZoneOffset.UTC)
+
+  "timestamp" should {
+    "return correct value" in assert(date.timestamp === 1654614414)
+  }
+
+  "timestampLong" should {
+    "return correct value" in assert(date.timestampLong === 1654614414L)
+  }
 
   "`yyyy-MM-dd`" should {
     "return correct value" in assert(date.`yyyy-MM-dd` === "2022-06-07")

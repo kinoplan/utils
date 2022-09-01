@@ -10,7 +10,13 @@ trait DateTimePatternExtension extends DatePatternExtension with TimePatternExte
   def `dd MMMM yyyy HH:mm`: String = toString(DateTimePattern.`dd MMMM yyyy HH:mm`)
 
   @inline
+  def `dd MMMM yyyy, HH:mm`: String = toString(DateTimePattern.`dd MMMM yyyy, HH:mm`)
+
+  @inline
   def `dd.MM.yyyy HH:mm`: String = toString(DateTimePattern.`dd.MM.yyyy HH:mm`)
+
+  @inline
+  def `dd.MM.yyyy HH_mm`: String = toString(DateTimePattern.`dd.MM.yyyy HH_mm`)
 
   @inline
   def `dd.MM.yyyy / HH:mm`: String = toString(DateTimePattern.`dd.MM.yyyy / HH:mm`)
@@ -41,5 +47,8 @@ trait DateTimePatternExtension extends DatePatternExtension with TimePatternExte
 
   @inline
   def `yyyy-MM-dd'T'HH:mm:ss.SSS`: String = toString(DateTimePattern.`yyyy-MM-dd'T'HH:mm:ss.SSS`)
+
+  @inline
+  def `HH:mm:ss dd.MM.yyyy`: String = toString(DateTimePattern.`HH:mm:ss dd.MM.yyyy`)
 
 }

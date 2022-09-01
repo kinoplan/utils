@@ -5,11 +5,7 @@ ThisBuild / resolvers += "Artima Maven Repository".at("https://repo.artima.com/r
 lazy val date = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
   .in(file("common/date"))
-  .configure(ModulesCommon.dateProfile)
-  .jsConfigure(ProjectSettings.scalaJsProfile)
-
-lazy val dateJs = date.js
-lazy val dateJvm = date.jvm
+  .configureCross(ModulesCommon.dateProfile)
 
 lazy val logbackConfig = project
   .in(file("common/logback-config"))
@@ -36,34 +32,29 @@ lazy val reactivemongoBsonAny = project
 lazy val implicitsAny = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
   .in(file("implicits/any"))
-  .configure(ModulesImplicits.anyProfile)
-  .jsConfigure(ProjectSettings.scalaJsProfile)
-
-lazy val implicitsAnyJs = implicitsAny.js
-lazy val implicitsAnyJvm = implicitsAny.jvm
+  .configureCross(ModulesImplicits.anyProfile)
 
 lazy val implicitsBoolean = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
   .in(file("implicits/boolean"))
-  .configure(ModulesImplicits.booleanProfile)
-  .jsConfigure(ProjectSettings.scalaJsProfile)
-
-lazy val implicitsBooleanJs = implicitsBoolean.js
-lazy val implicitsBooleanJvm = implicitsBoolean.jvm
+  .configureCross(ModulesImplicits.booleanProfile)
 
 lazy val implicitsCollection = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
   .in(file("implicits/collection"))
-  .configure(ModulesImplicits.collectionProfile)
-  .jsConfigure(ProjectSettings.scalaJsProfile)
+  .configureCross(ModulesImplicits.collectionProfile)
 
-lazy val implicitsCollectionJs = implicitsCollection.js
-lazy val implicitsCollectionJvm = implicitsCollection.jvm
+lazy val implicitsJavaTime = crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Pure)
+  .in(file("implicits/date/java-time"))
+  .configureCross(ModulesImplicits.javaTimeProfile)
+  .jsConfigure(_.enablePlugins(ScalaJSJUnitPlugin))
+  .dependsOn(date)
 
 lazy val implicitsJodaTime = project
   .in(file("implicits/date/joda-time"))
   .configure(ModulesImplicits.jodaTimeProfile)
-  .dependsOn(dateJvm)
+  .dependsOn(date.jvm)
 
 // zzzzzzzzzzzzzzzzzzzz Play Modules zzzzzzzzzzzzzzzzzzzz
 
