@@ -22,7 +22,7 @@ object Dependencies {
   val scalatest            = "org.scalatest"              %% "scalatest"              % "3.2.13"   % Test
   val scalastic            = "org.scalactic"              %% "scalactic"              % "3.2.13"
   val typesafeConfig       = "com.typesafe"                % "config"                 % "1.4.2"
-  val zio                  = "dev.zio"                    %% "zio"                    % "2.0.2"
+  val zio                  = "dev.zio"                    %% "zio"                    % "2.0.0-RC6"
   val zioConfig            = "dev.zio"                    %% "zio-config"             % zioConfigV
   val zioConfigTypesafe    = "dev.zio"                    %% "zio-config-typesafe"    % zioConfigV
   val zioHttp              = "io.d11"                     %% "zhttp"                  % "2.0.0-RC9"
