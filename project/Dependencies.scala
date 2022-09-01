@@ -1,14 +1,22 @@
 import sbt._
+import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 
 object Dependencies {
 
   object Versions {
     val playV          = "2.8.16"
     val reactivemongoV = "1.0.10"
+    val scalaJavaTimeV = "2.3.0"
     val zioConfigV     = "3.0.0-RC9"
   }
 
   import Versions._
+
+  val localesFullDb     = Def.setting("io.github.cquiroz" %%% "locales-full-db" % "1.4.1")
+  val scalaJavaLocales  = Def.setting("io.github.cquiroz" %%% "scala-java-locales" % "1.4.1")
+  val scalaJavaTime     = Def.setting("io.github.cquiroz" %%% "scala-java-time" % scalaJavaTimeV)
+  val scalaJavaTimeZone = Def.setting("io.github.cquiroz" %%% "scala-java-time-tzdb" % scalaJavaTimeV)
+  val scalatest         = Def.setting("org.scalatest" %%% "scalatest" % "3.2.13" % Test)
 
   // A -> Z
   val jodaTime             = "joda-time"                   % "joda-time"              % "2.11.1"
@@ -19,7 +27,6 @@ object Dependencies {
   val playReactiveMongo    = "org.reactivemongo"          %% "play2-reactivemongo"    % s"$reactivemongoV-play28"
   val reactiveMongo        = "org.reactivemongo"          %% "reactivemongo"          % reactivemongoV
   val scalaLogging         = "com.typesafe.scala-logging" %% "scala-logging"          % "3.9.5"
-  val scalatest            = "org.scalatest"              %% "scalatest"              % "3.2.13"   % Test
   val scalastic            = "org.scalactic"              %% "scalactic"              % "3.2.13"
   val typesafeConfig       = "com.typesafe"                % "config"                 % "1.4.2"
   val zio                  = "dev.zio"                    %% "zio"                    % "2.0.0-RC6"
