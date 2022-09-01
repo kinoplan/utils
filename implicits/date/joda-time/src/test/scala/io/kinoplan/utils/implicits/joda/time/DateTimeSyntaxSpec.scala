@@ -8,7 +8,7 @@ import org.scalatest.wordspec.AnyWordSpec
 import io.kinoplan.utils.implicits.joda.time.DateTimeSyntax.syntaxDateTimeOps
 
 class DateTimeSyntaxSpec extends AnyWordSpec {
-  def setLocale(lang: String): Unit = Locale.setDefault(new Locale(lang))
+  def setLocale(lang: String): Unit = Locale.setDefault(Locale.forLanguageTag(lang))
 
   val date = new DateTime("2022-06-07T16:06:54.786+01:00")
 
@@ -38,6 +38,7 @@ class DateTimeSyntaxSpec extends AnyWordSpec {
 
   "`d MMMM`" should {
     "return correct value" in {
+      setLocale("ru")
       assert(date.`d MMMM` === "7 июня")
       setLocale("en")
       assert(date.`d MMMM` === "7 June")
@@ -114,8 +115,21 @@ class DateTimeSyntaxSpec extends AnyWordSpec {
     }
   }
 
+  "`dd MMMM yyyy, HH:mm`" should {
+    "return correct value" in {
+      assert(date.`dd MMMM yyyy, HH:mm` === "07 июня 2022, 15:06")
+      setLocale("en")
+      assert(date.`dd MMMM yyyy, HH:mm` === "07 June 2022, 15:06")
+      setLocale("ru")
+    }
+  }
+
   "`dd.MM.yyyy HH:mm`" should {
     "return correct value" in assert(date.`dd.MM.yyyy HH:mm` === "07.06.2022 15:06")
+  }
+
+  "`dd.MM.yyyy HH_mm`" should {
+    "return correct value" in assert(date.`dd.MM.yyyy HH_mm` === "07.06.2022 15_06")
   }
 
   "`dd.MM.yyyy / HH:mm`" should {
@@ -156,6 +170,10 @@ class DateTimeSyntaxSpec extends AnyWordSpec {
 
   "`yyyy-MM-dd'T'HH:mm:ss.SSS`" should {
     "return correct value" in assert(date.`yyyy-MM-dd'T'HH:mm:ss.SSS` === "2022-06-07T15:06:54.786")
+  }
+
+  "`HH:mm:ss dd.MM.yyyy`" should {
+    "return correct value" in assert(date.`HH:mm:ss dd.MM.yyyy` === "15:06:54 07.06.2022")
   }
 
 }
