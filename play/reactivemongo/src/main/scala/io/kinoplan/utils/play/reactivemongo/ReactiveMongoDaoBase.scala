@@ -14,7 +14,12 @@ import reactivemongo.api.bson.{
 import reactivemongo.api.bson.collection.BSONCollection
 import reactivemongo.api.indexes.Index
 
-import io.kinoplan.utils.reactivemongo.base.{Queries, QueryBuilderSyntax, SmartIndex}
+import io.kinoplan.utils.reactivemongo.base.{
+  BsonNoneAsNullProducer,
+  Queries,
+  QueryBuilderSyntax,
+  SmartIndex
+}
 
 abstract class ReactiveMongoDaoBase[T](
   reactiveMongoApi: ReactiveMongoApi,
@@ -24,7 +29,7 @@ abstract class ReactiveMongoDaoBase[T](
   ec: ExecutionContext
 ) {
 
-  protected object dao extends QueryBuilderSyntax {
+  protected object dao extends QueryBuilderSyntax with BsonNoneAsNullProducer {
 
     def collection: Future[BSONCollection] = reactiveMongoApi
       .database
