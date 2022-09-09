@@ -9,3 +9,5 @@ trait BsonHandlers {
   ): BSONValue = option.flatMap(writer.writeOpt).getOrElse(BSONNull)
 
 }
+
+object BsonHandlers extends BsonHandlers
