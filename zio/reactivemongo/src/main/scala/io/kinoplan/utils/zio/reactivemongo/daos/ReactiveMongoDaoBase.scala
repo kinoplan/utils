@@ -2,7 +2,6 @@ package io.kinoplan.utils.zio.reactivemongo.daos
 
 import reactivemongo.api.bson._
 import reactivemongo.api.bson.collection.BSONCollection
-import reactivemongo.api.commands.WriteResult
 import reactivemongo.api.indexes.Index
 import zio.{Task, ZIO}
 
@@ -68,91 +67,81 @@ abstract class ReactiveMongoDaoBase[T](reactiveMongoApi: ReactiveMongoApi, colle
 
   def insertMany(values: List[T])(implicit
     w: BSONDocumentWriter[T]
-  ): Task[BSONCollection#MultiBulkWriteResult] = for {
+  ) = for {
     coll <- collection
     result <- ZIO.fromFuture(implicit ec => insertManyQ(coll)(values))
   } yield result
 
   def insertOne(value: T)(implicit
     w: BSONDocumentWriter[T]
-  ): Task[WriteResult] = for {
+  ) = for {
     coll <- collection
     result <- ZIO.fromFuture(implicit ec => insertOneQ(coll)(value))
   } yield result
 
-  def update(
-    q: BSONDocument,
-    u: BSONDocument,
-    multi: Boolean = false,
-    upsert: Boolean = false
-  ): Task[BSONCollection#UpdateWriteResult] = for {
-    coll <- collection
-    result <- ZIO.fromFuture(implicit ec => updateQ(coll)(q, u, multi, upsert))
-  } yield result
+  def update(q: BSONDocument, u: BSONDocument, multi: Boolean = false, upsert: Boolean = false) =
+    for {
+      coll <- collection
+      result <- ZIO.fromFuture(implicit ec => updateQ(coll)(q, u, multi, upsert))
+    } yield result
 
-  def updateMany(
-    values: List[T],
-    f: T => (BSONDocument, BSONDocument, Boolean, Boolean)
-  ): Task[BSONCollection#MultiBulkWriteResult] = for {
+  def updateMany(values: List[T], f: T => (BSONDocument, BSONDocument, Boolean, Boolean)) = for {
     coll <- collection
     result <- ZIO.fromFuture(implicit ec => updateManyQ(coll)(values, f))
   } yield result
 
   def saveOne(q: BSONDocument, value: T, multi: Boolean, upsert: Boolean)(implicit
     w: BSONDocumentWriter[T]
-  ): Task[BSONCollection#UpdateWriteResult] = for {
+  ) = for {
     coll <- collection
     result <- ZIO.fromFuture(implicit ec => saveQ(coll)(q, value, multi, upsert))
   } yield result
 
   def saveOneWithoutId(q: BSONDocument, value: T)(implicit
     w: BSONDocumentWriter[T]
-  ): Task[BSONCollection#UpdateWriteResult] = for {
+  ) = for {
     coll <- collection
     result <- ZIO.fromFuture(implicit ec => saveWithoutIdQ(coll)(q, value))
   } yield result
 
   def saveMany(values: List[T], f: T => (BSONDocument, T, Boolean, Boolean))(implicit
     w: BSONDocumentWriter[T]
-  ): Task[BSONCollection#MultiBulkWriteResult] = for {
+  ) = for {
     coll <- collection
     result <- ZIO.fromFuture(implicit ec => saveManyQ(coll)(values, f))
   } yield result
 
-  def removeOne(q: BSONDocument): Task[WriteResult] = for {
+  def removeOne(q: BSONDocument) = for {
     coll <- collection
     result <- ZIO.fromFuture(implicit ec => removeOneQ(coll)(q))
   } yield result
 
-  private def createIndexes(
-    coll: BSONCollection,
-    smartIndexes: Seq[SmartIndex]
-  ): Task[Seq[Boolean]] = ZIO.foreach(smartIndexes)(smartIndex =>
-    ZIO.fromFuture(implicit ec =>
-      coll
-        .indexesManager
-        .ensure(
-          Index(
-            key = smartIndex.key.toSeq,
-            unique = smartIndex.unique,
-            background = smartIndex.background
+  private def createIndexes(coll: BSONCollection, smartIndexes: Seq[SmartIndex]): Task[Unit] = ZIO
+    .foreach(smartIndexes)(smartIndex =>
+      ZIO.fromFuture(implicit ec =>
+        coll
+          .indexesManager
+          .ensure(
+            Index(
+              key = smartIndex.key.toSeq,
+              unique = smartIndex.unique,
+              background = smartIndex.background
+            )
           )
-        )
-    )
-  )
-
-  private def dropIndexes(coll: BSONCollection, smartIndexes: Seq[SmartIndex]): Task[List[Int]] =
-    for {
-      indexes <- ZIO.fromFuture(implicit ec => coll.indexesManager.list())
-      filteredIndexNames = indexes
-        .filterNot(index =>
-          index.unique || smartIndexes.exists(_.key == index.key.toSet) ||
-          index.name.contains("_id_")
-        )
-        .flatMap(_.name)
-      result <- ZIO.foreach(filteredIndexNames)(indexName =>
-        ZIO.fromFuture(implicit ec => coll.indexesManager.drop(indexName))
       )
-    } yield result
+    )
+    .unit
+
+  private def dropIndexes(coll: BSONCollection, smartIndexes: Seq[SmartIndex]): Task[Unit] = for {
+    indexes <- ZIO.fromFuture(implicit ec => coll.indexesManager.list())
+    filteredIndexNames = indexes
+      .filterNot(index =>
+        index.unique || smartIndexes.exists(_.key == index.key.toSet) || index.name.contains("_id_")
+      )
+      .flatMap(_.name)
+    _ <- ZIO.foreachDiscard(filteredIndexNames)(indexName =>
+      ZIO.fromFuture(implicit ec => coll.indexesManager.drop(indexName))
+    )
+  } yield ()
 
 }
