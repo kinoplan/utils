@@ -25,7 +25,8 @@ object ProjectSettings {
         )),
       Test / fork := true,
       Test / javaOptions += "-Duser.timezone=UTC",
-      libraryDependencies ++= Seq(Dependencies.scalatest.value, Dependencies.mockitoScala),
+      libraryDependencies ++=
+        Seq(Dependencies.scalatest.value % Test, Dependencies.mockitoScala % Test),
       coverageHighlighting := true
     )
 
