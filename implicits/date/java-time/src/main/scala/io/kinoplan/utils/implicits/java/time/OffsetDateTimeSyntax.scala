@@ -1,6 +1,6 @@
 package io.kinoplan.utils.implicits.java.time
 
-import java.time.OffsetDateTime
+import java.time.{OffsetDateTime, ZoneId, ZoneOffset}
 import java.time.format.DateTimeFormatter
 
 import io.kinoplan.utils.date.DateTimePatternExtension
@@ -14,7 +14,16 @@ final private[implicits] class OffsetDateTimeOps(private val value: OffsetDateTi
   @inline
   def timestampLong: Long = value.toInstant.toEpochMilli / 1000
 
-  override def toString(pattern: String): String = DateTimeFormatter.ofPattern(pattern).format(value)
+  override def toString(pattern: String): String = {
+    val normalizedValue =
+      if (value.getOffset == ZoneOffset.UTC) {
+        val zoneId = ZoneId.systemDefault()
+        if (zoneId.getId == "GMT" || zoneId.getId == "UTC") value
+        else value.atZoneSameInstant(zoneId).toOffsetDateTime
+      } else value
+
+    DateTimeFormatter.ofPattern(pattern).format(normalizedValue)
+  }
 
 }
 
