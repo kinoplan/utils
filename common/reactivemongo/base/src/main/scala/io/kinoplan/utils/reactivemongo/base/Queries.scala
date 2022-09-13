@@ -9,7 +9,6 @@ import reactivemongo.api.bson.{
   BSONDocumentReader,
   BSONDocumentWriter,
   BSONObjectID,
-  BSONString,
   document
 }
 import reactivemongo.api.bson.collection.BSONCollection
@@ -35,9 +34,9 @@ private[utils] object Queries extends QueryBuilderSyntax {
 
     collection
       .aggregateWith[(String, Int)]() { framework =>
-        import framework.{Group, Match, SumAll}
+        import framework.{GroupField, Match, SumAll}
 
-        List(Match(matchQuery), Group(BSONString(s"$groupBy"))("count" -> SumAll))
+        List(Match(matchQuery), GroupField(groupBy)("count" -> SumAll))
       }
       .collect[Seq](-1, Cursor.FailOnError[Seq[(String, Int)]]())
       .map(_.toMap)
