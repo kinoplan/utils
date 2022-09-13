@@ -96,11 +96,11 @@ class OffsetDateTimeSyntaxSpec extends AnyWordSpec {
   }
 
   "`HH:mm:ss`" should {
-    "return correct value" in assert(date.`HH:mm:ss` === "15:06:54")
+    "return correct value" in assert(date.`HH:mm:ss` === "18:06:54")
   }
 
   "`HH:mm`" should {
-    "return correct value" in assert(date.`HH:mm` === "15:06")
+    "return correct value" in assert(date.`HH:mm` === "18:06")
   }
 
   "`mm:ss`" should {
@@ -108,77 +108,77 @@ class OffsetDateTimeSyntaxSpec extends AnyWordSpec {
   }
 
   "`yyyyMMddHHmmss`" should {
-    "return correct value" in assert(date.`yyyyMMddHHmmss` === "20220607150654")
+    "return correct value" in assert(date.`yyyyMMddHHmmss` === "20220607180654")
   }
 
   "`dd MMMM yyyy HH:mm`" should {
     "return correct value" in {
-      assert(date.`dd MMMM yyyy HH:mm` === "07 июня 2022 15:06")
+      assert(date.`dd MMMM yyyy HH:mm` === "07 июня 2022 18:06")
       setLocale("en")
-      assert(date.`dd MMMM yyyy HH:mm` === "07 June 2022 15:06")
+      assert(date.`dd MMMM yyyy HH:mm` === "07 June 2022 18:06")
       setLocale("ru")
     }
   }
 
   "`dd MMMM yyyy, HH:mm`" should {
     "return correct value" in {
-      assert(date.`dd MMMM yyyy, HH:mm` === "07 июня 2022, 15:06")
+      assert(date.`dd MMMM yyyy, HH:mm` === "07 июня 2022, 18:06")
       setLocale("en")
-      assert(date.`dd MMMM yyyy, HH:mm` === "07 June 2022, 15:06")
+      assert(date.`dd MMMM yyyy, HH:mm` === "07 June 2022, 18:06")
       setLocale("ru")
     }
   }
 
   "`dd.MM.yyyy HH:mm`" should {
-    "return correct value" in assert(date.`dd.MM.yyyy HH:mm` === "07.06.2022 15:06")
+    "return correct value" in assert(date.`dd.MM.yyyy HH:mm` === "07.06.2022 18:06")
   }
 
   "`dd.MM.yyyy HH_mm`" should {
-    "return correct value" in assert(date.`dd.MM.yyyy HH_mm` === "07.06.2022 15_06")
+    "return correct value" in assert(date.`dd.MM.yyyy HH_mm` === "07.06.2022 18_06")
   }
 
   "`dd.MM.yyyy / HH:mm`" should {
-    "return correct value" in assert(date.`dd.MM.yyyy / HH:mm` === "07.06.2022 / 15:06")
+    "return correct value" in assert(date.`dd.MM.yyyy / HH:mm` === "07.06.2022 / 18:06")
   }
 
   "`dd_MM_yyyy_HH_mm`" should {
-    "return correct value" in assert(date.`dd_MM_yyyy_HH_mm` === "07_06_2022_15_06")
+    "return correct value" in assert(date.`dd_MM_yyyy_HH_mm` === "07_06_2022_18_06")
   }
 
   "`dd.MM.yy HH:mm`" should {
-    "return correct value" in assert(date.`dd.MM.yy HH:mm` === "07.06.22 15:06")
+    "return correct value" in assert(date.`dd.MM.yy HH:mm` === "07.06.22 18:06")
   }
 
   "`dd.MM.yyyy HH:mm:ss`" should {
-    "return correct value" in assert(date.`dd.MM.yyyy HH:mm:ss` === "07.06.2022 15:06:54")
+    "return correct value" in assert(date.`dd.MM.yyyy HH:mm:ss` === "07.06.2022 18:06:54")
   }
 
   "`dd-MM-yyyy HH:mm:ss`" should {
-    "return correct value" in assert(date.`dd-MM-yyyy HH:mm:ss` === "07-06-2022 15:06:54")
+    "return correct value" in assert(date.`dd-MM-yyyy HH:mm:ss` === "07-06-2022 18:06:54")
   }
 
   "`yyyy-MM-dd HH:mm:ss`" should {
-    "return correct value" in assert(date.`yyyy-MM-dd HH:mm:ss` === "2022-06-07 15:06:54")
+    "return correct value" in assert(date.`yyyy-MM-dd HH:mm:ss` === "2022-06-07 18:06:54")
   }
 
   "`yyyy-MM-dd HH:mm:ss.SSS`" should {
-    "return correct value" in assert(date.`yyyy-MM-dd HH:mm:ss.SSS` === "2022-06-07 15:06:54.786")
+    "return correct value" in assert(date.`yyyy-MM-dd HH:mm:ss.SSS` === "2022-06-07 18:06:54.786")
   }
 
   "`yyyy-MM-dd HH:mm`" should {
-    "return correct value" in assert(date.`yyyy-MM-dd HH:mm` === "2022-06-07 15:06")
+    "return correct value" in assert(date.`yyyy-MM-dd HH:mm` === "2022-06-07 18:06")
   }
 
   "`yyyy-MM-dd'T'HH:mm:ss`" should {
-    "return correct value" in assert(date.`yyyy-MM-dd'T'HH:mm:ss` === "2022-06-07T15:06:54")
+    "return correct value" in assert(date.`yyyy-MM-dd'T'HH:mm:ss` === "2022-06-07T18:06:54")
   }
 
   "`yyyy-MM-dd'T'HH:mm:ss.SSS`" should {
-    "return correct value" in assert(date.`yyyy-MM-dd'T'HH:mm:ss.SSS` === "2022-06-07T15:06:54.786")
+    "return correct value" in assert(date.`yyyy-MM-dd'T'HH:mm:ss.SSS` === "2022-06-07T18:06:54.786")
   }
 
   "`HH:mm:ss dd.MM.yyyy`" should {
-    "return correct value" in assert(date.`HH:mm:ss dd.MM.yyyy` === "15:06:54 07.06.2022")
+    "return correct value" in assert(date.`HH:mm:ss dd.MM.yyyy` === "18:06:54 07.06.2022")
   }
 
 }
