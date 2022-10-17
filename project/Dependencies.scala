@@ -16,7 +16,7 @@ object Dependencies {
   val scalaJavaLocales  = Def.setting("io.github.cquiroz" %%% "scala-java-locales" % "1.4.1")
   val scalaJavaTime     = Def.setting("io.github.cquiroz" %%% "scala-java-time" % scalaJavaTimeV)
   val scalaJavaTimeZone = Def.setting("io.github.cquiroz" %%% "scala-java-time-tzdb" % scalaJavaTimeV)
-  val scalatest         = Def.setting("org.scalatest" %%% "scalatest" % "3.2.13" % Test)
+  val scalatest         = Def.setting("org.scalatest" %%% "scalatest" % "3.2.14" % Test)
 
   // A -> Z
   val jodaTime             = "joda-time"                   % "joda-time"              % "2.11.2"
