@@ -27,7 +27,7 @@ object Dependencies {
   val playReactiveMongo    = "org.reactivemongo"          %% "play2-reactivemongo"    % s"$reactivemongoV-play28"
   val reactiveMongo        = "org.reactivemongo"          %% "reactivemongo"          % reactivemongoV
   val scalaLogging         = "com.typesafe.scala-logging" %% "scala-logging"          % "3.9.5"
-  val scalastic            = "org.scalactic"              %% "scalactic"              % "3.2.13"
+  val scalastic            = "org.scalactic"              %% "scalactic"              % "3.2.14"
   val typesafeConfig       = "com.typesafe"                % "config"                 % "1.4.2"
   val zio                  = "dev.zio"                    %% "zio"                    % "2.0.0-RC6"
   val zioConfig            = "dev.zio"                    %% "zio-config"             % zioConfigV
