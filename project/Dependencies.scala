@@ -4,7 +4,7 @@ import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 object Dependencies {
 
   object Versions {
-    val playV          = "2.8.16"
+    val playV          = "2.8.18"
     val reactivemongoV = "1.0.10"
     val scalaJavaTimeV = "2.4.0"
     val zioConfigV     = "3.0.0-RC9"
