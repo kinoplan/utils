@@ -3,6 +3,11 @@ import sbt.{Project, Provided}
 
 object ModulesPlay {
 
+  lazy val filtersLoggingProfile: Project => Project = _
+    .configure(ProjectSettings.commonProfile)
+    .settings(name := "utils-play-filters-logging")
+    .settings(libraryDependencies ++= Seq(Dependencies.play % Provided, Dependencies.scalatestPlay))
+
   lazy val reactivemongoProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-play-reactivemongo")
