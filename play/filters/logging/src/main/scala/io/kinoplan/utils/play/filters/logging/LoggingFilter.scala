@@ -11,6 +11,7 @@ import play.api.{ConfigLoader, Configuration, MarkerContext}
 import play.api.http.{MimeTypes, Status}
 import play.api.mvc._
 
+import io.kinoplan.utils.play.request.RequestMapContext
 import io.kinoplan.utils.scala.logging.Loggable
 import io.kinoplan.utils.scala.logging.context.MapContext
 

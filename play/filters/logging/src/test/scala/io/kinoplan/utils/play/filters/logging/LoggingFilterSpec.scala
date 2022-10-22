@@ -22,6 +22,7 @@ import play.api.mvc._
 import play.api.test._
 
 import io.kinoplan.utils.play.filters.logging.kit.ListAppenderSyntax
+import io.kinoplan.utils.play.request.RequestMapContext
 import io.kinoplan.utils.scala.logging.context.MapContext
 
 class LoggingFilterSpec
