@@ -58,6 +58,11 @@ lazy val implicitsJodaTime = project
 
 // zzzzzzzzzzzzzzzzzzzz Play Modules zzzzzzzzzzzzzzzzzzzz
 
+lazy val playFiltersLogging = project
+  .in(file("play/filters/logging"))
+  .configure(ModulesPlay.filtersLoggingProfile)
+  .dependsOn(scalaLogging)
+
 lazy val playReactivemongo = project
   .in(file("play/reactivemongo"))
   .configure(ModulesPlay.reactivemongoProfile)
