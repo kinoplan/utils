@@ -58,15 +58,25 @@ lazy val implicitsJodaTime = project
 
 // zzzzzzzzzzzzzzzzzzzz Play Modules zzzzzzzzzzzzzzzzzzzz
 
+lazy val playErrorHandler = project
+  .in(file("play/error-handler"))
+  .configure(ModulesPlay.errorHandlerProfile)
+  .dependsOn(scalaLogging, playRequestMapContext, playFiltersLogging % "test->test")
+
 lazy val playFiltersLogging = project
   .in(file("play/filters/logging"))
   .configure(ModulesPlay.filtersLoggingProfile)
-  .dependsOn(scalaLogging)
+  .dependsOn(scalaLogging, playRequestMapContext)
 
 lazy val playReactivemongo = project
   .in(file("play/reactivemongo"))
   .configure(ModulesPlay.reactivemongoProfile)
   .dependsOn(reactivemongoBase)
+
+lazy val playRequestMapContext = project
+  .in(file("play/request/map-context"))
+  .configure(ModulesPlay.requestMapContextProfile)
+  .dependsOn(scalaLogging)
 
 // zzzzzzzzzzzzzzzzzzzz ZIO Modules zzzzzzzzzzzzzzzzzzzz
 

@@ -1,6 +1,4 @@
-package io.kinoplan.utils.play.filters.logging
-
-import java.util.UUID
+package io.kinoplan.utils.play.request
 
 import play.api.libs.typedmap.TypedKey
 import play.api.mvc.RequestHeader
@@ -48,7 +46,7 @@ trait RequestMapContext {
       .get(Keys.MapContextTypedKey)
       .getOrElse {
         val internalRequestId = attrs.get(RequestAttrKey.Id).getOrElse(0L).toHexString.toUpperCase
-        val requestId = headers.get(Headers.RequestIdHeader).getOrElse(UUID.randomUUID().toString)
+        val requestId = headers.get(Headers.RequestIdHeader).getOrElse(internalRequestId)
         val realIp = request.headers.get(Headers.RequestRealIp).getOrElse(request.remoteAddress)
 
         MapContext(
