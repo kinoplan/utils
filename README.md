@@ -36,6 +36,7 @@ libraryDependencies ++= Seq(
   "io.kinoplan" %% "utils-implicits-java-time" % ${version}, // JVM and Scala.js
   "io.kinoplan" %% "utils-implicits-joda-time" % ${version}, // JVM only
   // play
+  "io.kinoplan" %% "utils-play-filters-logging" % ${version}, // JVM only
   "io.kinoplan" %% "utils-play-reactivemongo" % ${version}, // JVM only
   // zio
   "io.kinoplan" %% "utils-zio-http-healthcheck" % ${version}, // JVM only
