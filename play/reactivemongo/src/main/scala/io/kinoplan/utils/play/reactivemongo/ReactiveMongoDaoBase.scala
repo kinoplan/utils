@@ -272,7 +272,7 @@ abstract class ReactiveMongoDaoBase[T](
       position: Position
     ): Future[A] = future.recoverWith { case ex: Throwable =>
       val diagnosticInfo = s"At (${position.fileName}:${position.lineNumber})"
-      if (ex.getMessage.startsWith(diagnosticInfo)) Future.failed(ex)
+      if (ex.getMessage != null && ex.getMessage.startsWith(diagnosticInfo)) Future.failed(ex)
       else Future.failed(new Throwable(diagnosticInfo + " " + ex.getMessage, ex))
     }
 
