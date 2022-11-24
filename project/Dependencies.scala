@@ -12,8 +12,8 @@ object Dependencies {
 
   import Versions._
 
-  val localesFullDb     = Def.setting("io.github.cquiroz" %%% "locales-full-db" % "1.4.1")
-  val scalaJavaLocales  = Def.setting("io.github.cquiroz" %%% "scala-java-locales" % "1.4.1")
+  val localesFullDb     = Def.setting("io.github.cquiroz" %%% "locales-full-db" % "1.5.0")
+  val scalaJavaLocales  = Def.setting("io.github.cquiroz" %%% "scala-java-locales" % "1.5.0")
   val scalaJavaTime     = Def.setting("io.github.cquiroz" %%% "scala-java-time" % scalaJavaTimeV)
   val scalaJavaTimeZone = Def.setting("io.github.cquiroz" %%% "scala-java-time-tzdb" % scalaJavaTimeV)
   val scalatest         = Def.setting("org.scalatest" %%% "scalatest" % "3.2.14" % Test)
