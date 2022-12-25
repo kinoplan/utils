@@ -19,21 +19,23 @@ object Dependencies {
   val scalatest         = Def.setting("org.scalatest" %%% "scalatest" % "3.2.14" % Test)
 
   // A -> Z
-  val jodaTime             = "joda-time"                   % "joda-time"              % "2.12.2"
-  val logback              = "ch.qos.logback"              % "logback-classic"        % "1.2.11"
-  val logbackCore          = "ch.qos.logback"              % "logback-core"           % "1.2.11"
-  val mockitoScala         = "org.scalatestplus"          %% "mockito-3-4"            % "3.2.10.0" % Test
-  val play                 = "com.typesafe.play"          %% "play"                   % playV
-  val playReactiveMongo    = "org.reactivemongo"          %% "play2-reactivemongo"    % s"$reactivemongoV-play28"
-  val reactiveMongo        = "org.reactivemongo"          %% "reactivemongo"          % reactivemongoV
-  val scalaLogging         = "com.typesafe.scala-logging" %% "scala-logging"          % "3.9.5"
-  val scalastic            = "org.scalactic"              %% "scalactic"              % "3.2.14"
-  val scalatestPlay        = "org.scalatestplus.play"     %% "scalatestplus-play"     % "5.1.0"    % Test
-  val typesafeConfig       = "com.typesafe"                % "config"                 % "1.4.2"
-  val zio                  = "dev.zio"                    %% "zio"                    % "2.0.0-RC6"
-  val zioConfig            = "dev.zio"                    %% "zio-config"             % zioConfigV
-  val zioConfigTypesafe    = "dev.zio"                    %% "zio-config-typesafe"    % zioConfigV
-  val zioHttp              = "io.d11"                     %% "zhttp"                  % "2.0.0-RC9"
-  val zioMetricsPrometheus = "dev.zio"                    %% "zio-metrics-prometheus" % "2.0.0-RC6"
-  val zioPrelude           = "dev.zio"                    %% "zio-prelude"            % "1.0.0-RC14"
+  val jacksonModule        = "com.fasterxml.jackson.module" %% "jackson-module-scala"   % "2.14.1"
+  val jodaTime             = "joda-time"                     % "joda-time"              % "2.12.2"
+  val logback              = "ch.qos.logback"                % "logback-classic"        % "1.2.11"
+  val logbackCore          = "ch.qos.logback"                % "logback-core"           % "1.2.11"
+  val mockitoScala         = "org.scalatestplus"            %% "mockito-3-4"            % "3.2.10.0" % Test
+  val play                 = "com.typesafe.play"            %% "play"                   % playV
+  val playReactiveMongo    = "org.reactivemongo"            %% "play2-reactivemongo"    % s"$reactivemongoV-play28"
+  val reactiveMongo        = "org.reactivemongo"            %% "reactivemongo"          % reactivemongoV
+  val redisson             = "org.redisson"                  % "redisson"               % "3.19.0"
+  val scalaLogging         = "com.typesafe.scala-logging"   %% "scala-logging"          % "3.9.5"
+  val scalastic            = "org.scalactic"                %% "scalactic"              % "3.2.14"
+  val scalatestPlay        = "org.scalatestplus.play"       %% "scalatestplus-play"     % "5.1.0"    % Test
+  val typesafeConfig       = "com.typesafe"                  % "config"                 % "1.4.2"
+  val zio                  = "dev.zio"                      %% "zio"                    % "2.0.0-RC6"
+  val zioConfig            = "dev.zio"                      %% "zio-config"             % zioConfigV
+  val zioConfigTypesafe    = "dev.zio"                      %% "zio-config-typesafe"    % zioConfigV
+  val zioHttp              = "io.d11"                       %% "zhttp"                  % "2.0.0-RC9"
+  val zioMetricsPrometheus = "dev.zio"                      %% "zio-metrics-prometheus" % "2.0.0-RC6"
+  val zioPrelude           = "dev.zio"                      %% "zio-prelude"            % "1.0.0-RC14"
 }
