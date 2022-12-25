@@ -31,6 +31,11 @@ lazy val redissonCore = project
   .in(file("common/redisson/core"))
   .configure(ModulesCommon.redissonProfile)
 
+lazy val redissonCodecCirce = project
+  .in(file("common/redisson/codec/circe"))
+  .configure(ModulesCommon.redissonCodecCirceProfile)
+  .dependsOn(redissonCore)
+
 // zzzzzzzzzzzzzzzzzzzz Implicits Modules zzzzzzzzzzzzzzzzzzzz
 
 lazy val implicitsAny = crossProject(JSPlatform, JVMPlatform)

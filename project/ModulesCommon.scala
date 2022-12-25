@@ -24,11 +24,6 @@ object ModulesCommon {
     .settings(Test / parallelExecution := false)
     .settings(libraryDependencies ++= Seq(Dependencies.logback, Dependencies.scalaLogging))
 
-  lazy val redissonProfile: Project => Project = _
-    .configure(ProjectSettings.commonProfile)
-    .settings(name := "utils-redisson-core")
-    .settings(libraryDependencies ++= Seq(Dependencies.redisson, Dependencies.jacksonModule))
-
   lazy val reactivemongoBaseProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-reactivemongo-base")
@@ -45,5 +40,18 @@ object ModulesCommon {
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-reactivemongo-bson-any")
     .settings(libraryDependencies ++= Seq(Dependencies.reactiveMongo % Provided))
+
+  lazy val redissonProfile: Project => Project = _
+    .configure(ProjectSettings.commonProfile)
+    .settings(name := "utils-redisson-core")
+    .settings(libraryDependencies ++= Seq(Dependencies.redisson, Dependencies.jacksonModule))
+
+  lazy val redissonCodecCirceProfile: Project => Project = _
+    .configure(ProjectSettings.commonProfile)
+    .settings(name := "utils-redisson-codec-circe")
+    .settings(
+      libraryDependencies ++=
+        Seq(Dependencies.circeCore % Provided, Dependencies.circeParser % Provided)
+    )
 
 }
