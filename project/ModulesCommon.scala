@@ -54,4 +54,9 @@ object ModulesCommon {
         Seq(Dependencies.circeCore % Provided, Dependencies.circeParser % Provided)
     )
 
+  lazy val redissonCodecPlayJsonProfile: Project => Project = _
+    .configure(ProjectSettings.commonProfile)
+    .settings(name := "utils-redisson-codec-play-json")
+    .settings(libraryDependencies ++= Seq(Dependencies.playJson % Provided))
+
 }
