@@ -4,6 +4,7 @@ import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 object Dependencies {
 
   object Versions {
+    val circeV         = "0.14.3"
     val playV          = "2.8.18"
     val reactivemongoV = "1.0.10"
     val scalaJavaTimeV = "2.4.0"
@@ -19,6 +20,8 @@ object Dependencies {
   val scalatest         = Def.setting("org.scalatest" %%% "scalatest" % "3.2.14" % Test)
 
   // A -> Z
+  val circeCore            = "io.circe"                     %% "circe-core"             % circeV
+  val circeParser          = "io.circe"                     %% "circe-parser"           % circeV
   val jacksonModule        = "com.fasterxml.jackson.module" %% "jackson-module-scala"   % "2.14.1"
   val jodaTime             = "joda-time"                     % "joda-time"              % "2.12.2"
   val logback              = "ch.qos.logback"                % "logback-classic"        % "1.2.11"
