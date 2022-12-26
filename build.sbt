@@ -27,6 +27,20 @@ lazy val reactivemongoBsonAny = project
   .in(file("common/reactivemongo/bson-any"))
   .configure(ModulesCommon.reactivemongoBsonAnyProfile)
 
+lazy val redissonCore = project
+  .in(file("common/redisson/core"))
+  .configure(ModulesCommon.redissonProfile)
+
+lazy val redissonCodecCirce = project
+  .in(file("common/redisson/codec/circe"))
+  .configure(ModulesCommon.redissonCodecCirceProfile)
+  .dependsOn(redissonCore)
+
+lazy val redissonCodecPlayJson = project
+  .in(file("common/redisson/codec/play-json"))
+  .configure(ModulesCommon.redissonCodecPlayJsonProfile)
+  .dependsOn(redissonCore)
+
 // zzzzzzzzzzzzzzzzzzzz Implicits Modules zzzzzzzzzzzzzzzzzzzz
 
 lazy val implicitsAny = crossProject(JSPlatform, JVMPlatform)
