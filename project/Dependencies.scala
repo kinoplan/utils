@@ -7,7 +7,7 @@ object Dependencies {
     val circeV         = "0.14.3"
     val playV          = "2.8.18"
     val reactivemongoV = "1.0.10"
-    val scalaJavaTimeV = "2.5.0"
+    val scalaJavaTimeV = "2.4.0"
     val zioConfigV     = "3.0.0-RC9"
   }
 
