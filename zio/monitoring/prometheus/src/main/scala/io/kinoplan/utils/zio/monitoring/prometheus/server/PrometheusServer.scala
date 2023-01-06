@@ -2,7 +2,7 @@ package io.kinoplan.utils.zio.monitoring.prometheus.server
 
 import io.prometheus.client.exporter.HTTPServer
 import zio.{Scope, ZIO}
-import zio.config.getConfig
+import zio.config.{ReadError, getConfig}
 import zio.metrics.prometheus.Registry
 import zio.metrics.prometheus.exporters.Exporters
 import zio.metrics.prometheus.helpers.{getCurrentRegistry, http, initializeDefaultExports, stopHttp}
@@ -25,11 +25,12 @@ object PrometheusServer {
 
   case class PrometheusHttpServer(httpServer: HTTPServer)
 
-  def start: ZIO[Any, Throwable, Nothing] = ZIO
+  def start: ZIO[Any, ReadError[String], Unit] = ZIO
     .acquireRelease(acquire)(release)
     .flatMap(server =>
       ZIO.logInfo(s"Prometheus server started on port: ${server.httpServer.getPort}") *> ZIO.never
     )
+    .catchAllCause(ZIO.logErrorCause(_))
     .provideSomeLayer(PrometheusConfig.live ++ Registry.live ++ Exporters.live ++ Scope.default)
 
 }
