@@ -94,9 +94,9 @@ lazy val playRequestMapContext = project
 
 // zzzzzzzzzzzzzzzzzzzz ZIO Modules zzzzzzzzzzzzzzzzzzzz
 
-lazy val zioHttpHealthcheck = project
-  .in(file("zio/http/healthcheck"))
-  .configure(ModulesZio.httpHealthcheckProfile)
+//lazy val zioHttpHealthcheck = project
+//  .in(file("zio/http/healthcheck"))
+//  .configure(ModulesZio.httpHealthcheckProfile)
 
 lazy val zioMonitoringPrometheus = project
   .in(file("zio/monitoring/prometheus"))
