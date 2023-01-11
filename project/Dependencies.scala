@@ -8,7 +8,7 @@ object Dependencies {
     val playV          = "2.8.18"
     val reactivemongoV = "1.0.10"
     val scalaJavaTimeV = "2.5.0"
-    val zioConfigV     = "3.0.6"
+    val zioConfigV     = "3.0.7"
   }
 
   import Versions._
