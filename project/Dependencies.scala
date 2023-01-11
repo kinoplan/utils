@@ -33,7 +33,7 @@ object Dependencies {
   val reactiveMongo        = "org.reactivemongo"            %% "reactivemongo"          % reactivemongoV
   val redisson             = "org.redisson"                  % "redisson"               % "3.19.1"
   val scalaLogging         = "com.typesafe.scala-logging"   %% "scala-logging"          % "3.9.5"
-  val scalastic            = "org.scalactic"                %% "scalactic"              % "3.2.14"
+  val scalastic            = "org.scalactic"                %% "scalactic"              % "3.2.15"
   val scalatestPlay        = "org.scalatestplus.play"       %% "scalatestplus-play"     % "5.1.0"    % Test
   val typesafeConfig       = "com.typesafe"                  % "config"                 % "1.4.2"
   val zio                  = "dev.zio"                      %% "zio"                    % "2.0.5"
