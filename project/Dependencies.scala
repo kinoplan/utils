@@ -8,7 +8,7 @@ object Dependencies {
     val playV          = "2.8.18"
     val reactivemongoV = "1.0.10"
     val scalaJavaTimeV = "2.5.0"
-    val zioConfigV     = "3.0.6"
+    val zioConfigV     = "3.0.7"
   }
 
   import Versions._
@@ -17,7 +17,7 @@ object Dependencies {
   val scalaJavaLocales  = Def.setting("io.github.cquiroz" %%% "scala-java-locales" % "1.5.1")
   val scalaJavaTime     = Def.setting("io.github.cquiroz" %%% "scala-java-time" % scalaJavaTimeV)
   val scalaJavaTimeZone = Def.setting("io.github.cquiroz" %%% "scala-java-time-tzdb" % scalaJavaTimeV)
-  val scalatest         = Def.setting("org.scalatest" %%% "scalatest" % "3.2.14" % Test)
+  val scalatest         = Def.setting("org.scalatest" %%% "scalatest" % "3.2.15" % Test)
 
   // A -> Z
   val circeCore            = "io.circe"                     %% "circe-core"             % circeV
@@ -31,9 +31,9 @@ object Dependencies {
   val playJson             = "com.typesafe.play"            %% "play-json"              % "2.9.3"
   val playReactiveMongo    = "org.reactivemongo"            %% "play2-reactivemongo"    % s"$reactivemongoV-play28"
   val reactiveMongo        = "org.reactivemongo"            %% "reactivemongo"          % reactivemongoV
-  val redisson             = "org.redisson"                  % "redisson"               % "3.19.0"
+  val redisson             = "org.redisson"                  % "redisson"               % "3.19.1"
   val scalaLogging         = "com.typesafe.scala-logging"   %% "scala-logging"          % "3.9.5"
-  val scalastic            = "org.scalactic"                %% "scalactic"              % "3.2.14"
+  val scalastic            = "org.scalactic"                %% "scalactic"              % "3.2.15"
   val scalatestPlay        = "org.scalatestplus.play"       %% "scalatestplus-play"     % "5.1.0"    % Test
   val typesafeConfig       = "com.typesafe"                  % "config"                 % "1.4.2"
   val zio                  = "dev.zio"                      %% "zio"                    % "2.0.5"
