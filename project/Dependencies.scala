@@ -24,8 +24,8 @@ object Dependencies {
   val circeParser          = "io.circe"                     %% "circe-parser"           % circeV
   val jacksonModule        = "com.fasterxml.jackson.module" %% "jackson-module-scala"   % "2.14.1"
   val jodaTime             = "joda-time"                     % "joda-time"              % "2.12.2"
-  val logback              = "ch.qos.logback"                % "logback-classic"        % "1.2.11"
-  val logbackCore          = "ch.qos.logback"                % "logback-core"           % "1.2.11"
+  val logback              = "ch.qos.logback"                % "logback-classic"        % "1.4.5"
+  val logbackCore          = "ch.qos.logback"                % "logback-core"           % "1.4.5"
   val mockitoScala         = "org.scalatestplus"            %% "mockito-3-4"            % "3.2.10.0" % Test
   val play                 = "com.typesafe.play"            %% "play"                   % playV
   val playJson             = "com.typesafe.play"            %% "play-json"              % "2.9.3"
