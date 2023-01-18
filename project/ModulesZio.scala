@@ -1,5 +1,5 @@
 import sbt.Keys._
-import sbt.Project
+import sbt.{Project, Provided}
 
 object ModulesZio {
 

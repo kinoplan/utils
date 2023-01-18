@@ -6,6 +6,7 @@ import reactivemongo.api.{AsyncDriver, DB, MongoConnection}
 import reactivemongo.api.MongoConnection.ParsedURIWithDB
 import zio.{Task, ZIO, ZLayer}
 
+import io.kinoplan.utils.IntegrationCheck
 import io.kinoplan.utils.zio.reactivemongo.config.MongoConfig
 
 trait ReactiveMongoApi {
@@ -28,6 +29,8 @@ private case class ReactiveMongoApiLive(
 
   override def database: Task[DB] = ZIO.succeed(mongoDb)
 
+  override val checkServiceName: String = s"reactivemongo.${mongoDb.name}"
+
   override def checkAvailability: Task[Boolean] = ZIO.fromFuture(implicit ec => mongoDb.ping())
 
 }
@@ -46,7 +49,9 @@ object ReactiveMongoApi {
         asyncDriver.connect(mongoParsedUri, Some(mongoParsedUri.db), strictMode = false)
       )
       mongoDb <- ZIO.fromFuture(implicit ec => mongoConnection.database(mongoParsedUri.db))
-    } yield dbName -> ReactiveMongoApiLive(mongoParsedUri, mongoConnection, mongoDb, asyncDriver)
+      reactiveMongoApi = ReactiveMongoApiLive(mongoParsedUri, mongoConnection, mongoDb, asyncDriver)
+      integrationCheck = Set(reactiveMongoApi.asInstanceOf[IntegrationCheck[Task]])
+    } yield (dbName -> reactiveMongoApi, integrationCheck)
   ).uninterruptible
 
   private def release(api: ReactiveMongoApi) = (
@@ -58,11 +63,12 @@ object ReactiveMongoApi {
 
   def make(
     dbName: String
-  ): ZLayer[AsyncDriver with MongoConfig, Throwable, (String, ReactiveMongoApi)] = ZLayer.scoped(
-    ZIO.acquireRelease(acquire(dbName)) { case (_, api) =>
-      release(api)
-    }
-  )
+  ): ZLayer[AsyncDriver with MongoConfig, Throwable, ((String, ReactiveMongoApi), Set[IntegrationCheck[Task]])] =
+    ZLayer.scoped(
+      ZIO.acquireRelease(acquire(dbName)) { case ((_, api), _) =>
+        release(api)
+      }
+    )
 
   def getAt(dbName: String): ZIO[Map[String, ReactiveMongoApi], Throwable, ReactiveMongoApi] = ZIO
     .serviceAt[ReactiveMongoApi](dbName)
