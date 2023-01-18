@@ -7,6 +7,11 @@ lazy val date = crossProject(JSPlatform, JVMPlatform)
   .in(file("common/date"))
   .configureCross(ModulesCommon.dateProfile)
 
+lazy val integrationCheck = crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Pure)
+  .in(file("common/integration-check"))
+  .configureCross(ModulesCommon.integrationCheckProfile)
+
 lazy val logbackConfig = project
   .in(file("common/logback-config"))
   .configure(ModulesCommon.logbackConfigProfile)

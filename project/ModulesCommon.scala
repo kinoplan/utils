@@ -10,6 +10,11 @@ object ModulesCommon {
     .jsConfigure(ProjectSettings.scalaJsProfile)
     .settings(name := "utils-date")
 
+  lazy val integrationCheckProfile: CrossProject => CrossProject = _
+    .configure(ProjectSettings.commonProfile)
+    .jsConfigure(ProjectSettings.scalaJsProfile)
+    .settings(name := "utils-integration-check")
+
   lazy val logbackConfigProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-logback-config")
