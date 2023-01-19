@@ -1,5 +1,6 @@
-package io.kinoplan.utils.zio.reactivemongo.api
+package io.kinoplan.utils
 
 trait IntegrationCheck[F[_]] {
+  val checkServiceName: String
   def checkAvailability: F[Boolean]
 }

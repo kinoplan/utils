@@ -7,6 +7,11 @@ lazy val date = crossProject(JSPlatform, JVMPlatform)
   .in(file("common/date"))
   .configureCross(ModulesCommon.dateProfile)
 
+lazy val integrationCheck = crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Pure)
+  .in(file("common/integration-check"))
+  .configureCross(ModulesCommon.integrationCheckProfile)
+
 lazy val logbackConfig = project
   .in(file("common/logback-config"))
   .configure(ModulesCommon.logbackConfigProfile)
@@ -98,6 +103,12 @@ lazy val playRequestMapContext = project
 //  .in(file("zio/http/healthcheck"))
 //  .configure(ModulesZio.httpHealthcheckProfile)
 
+lazy val zioIntegrationCheck = crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Pure)
+  .in(file("zio/integration-check"))
+  .configure(ModulesZio.integrationCheckProfile)
+  .dependsOn(integrationCheck)
+
 lazy val zioMonitoringPrometheus = project
   .in(file("zio/monitoring/prometheus"))
   .configure(ModulesZio.monitoringPrometheusProfile)
@@ -105,6 +116,7 @@ lazy val zioMonitoringPrometheus = project
 lazy val zioReactivemongo = project
   .in(file("zio/reactivemongo"))
   .configure(ModulesZio.reactivemongoProfile)
+  .dependsOn(zioIntegrationCheck.jvm)
 
 // format: off
 inThisBuild(

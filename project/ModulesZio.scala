@@ -1,5 +1,5 @@
 import sbt.Keys._
-import sbt.Project
+import sbt.{Project, Provided}
 
 object ModulesZio {
 
@@ -7,6 +7,11 @@ object ModulesZio {
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-zio-http-healthcheck")
     .settings(libraryDependencies ++= Seq(Dependencies.zio, Dependencies.zioHttp))
+
+  lazy val integrationCheckProfile: Project => Project = _
+    .configure(ProjectSettings.commonProfile, ProjectSettings.scalaJsProfile)
+    .settings(name := "utils-zio-integration-check")
+    .settings(libraryDependencies ++= Seq(Dependencies.zio))
 
   lazy val monitoringPrometheusProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
