@@ -1,12 +1,23 @@
 import sbt.Keys._
-import sbt.{Project, Provided}
+import sbt.Project
 
 object ModulesZio {
 
-  lazy val httpHealthcheckProfile: Project => Project = _
-    .configure(ProjectSettings.commonProfile)
-    .settings(name := "utils-zio-http-healthcheck")
-    .settings(libraryDependencies ++= Seq(Dependencies.zio, Dependencies.zioHttp))
+  lazy val http4sHealthcheckProfile: Project => Project = _
+    .configure(ProjectSettings.commonProfile, ProjectSettings.kindProjectorProfile)
+    .settings(name := "utils-zio-http4s-healthcheck")
+    .settings(
+      libraryDependencies ++=
+        Seq(
+          Dependencies.http4sBlazeServer,
+          Dependencies.http4sDsl,
+          Dependencies.zio,
+          Dependencies.zioInteropCats,
+          Dependencies.zioConfig,
+          Dependencies.zioConfigTypesafe,
+          Dependencies.zioConfigMagnolia
+        )
+    )
 
   lazy val integrationCheckProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile, ProjectSettings.scalaJsProfile)

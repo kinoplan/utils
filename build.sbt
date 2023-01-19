@@ -99,9 +99,10 @@ lazy val playRequestMapContext = project
 
 // zzzzzzzzzzzzzzzzzzzz ZIO Modules zzzzzzzzzzzzzzzzzzzz
 
-//lazy val zioHttpHealthcheck = project
-//  .in(file("zio/http/healthcheck"))
-//  .configure(ModulesZio.httpHealthcheckProfile)
+lazy val zioHttp4sHealthCheck = project
+  .in(file("zio/http4s/healthcheck"))
+  .configure(ModulesZio.http4sHealthcheckProfile)
+  .dependsOn(zioIntegrationCheck.jvm)
 
 lazy val zioIntegrationCheck = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
