@@ -31,4 +31,7 @@ object ProjectSettings {
 
   lazy val scalaJsProfile: Project => Project = _.settings(Test / fork := false)
 
+  lazy val kindProjectorProfile: Project => Project =
+    _.settings(addCompilerPlugin(Dependencies.kindProjector.cross(CrossVersion.full)))
+
 }
