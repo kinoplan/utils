@@ -22,8 +22,11 @@ object Dependencies {
   // A -> Z
   val circeCore            = "io.circe"                     %% "circe-core"             % circeV
   val circeParser          = "io.circe"                     %% "circe-parser"           % circeV
+  val http4sBlazeServer    = "org.http4s"                   %% "http4s-blaze-server"    % "0.23.13"
+  val http4sDsl            = "org.http4s"                   %% "http4s-dsl"             % "0.23.18"
   val jacksonModule        = "com.fasterxml.jackson.module" %% "jackson-module-scala"   % "2.14.1"
   val jodaTime             = "joda-time"                     % "joda-time"              % "2.12.2"
+  val kindProjector        = "org.typelevel"                %% "kind-projector"         % "0.13.2"
   val logback              = "ch.qos.logback"                % "logback-classic"        % "1.2.11"
   val logbackCore          = "ch.qos.logback"                % "logback-core"           % "1.2.11"
   val mockitoScala         = "org.scalatestplus"            %% "mockito-3-4"            % "3.2.10.0" % Test
@@ -39,7 +42,8 @@ object Dependencies {
   val zio                  = "dev.zio"                      %% "zio"                    % "2.0.6"
   val zioConfig            = "dev.zio"                      %% "zio-config"             % zioConfigV
   val zioConfigTypesafe    = "dev.zio"                      %% "zio-config-typesafe"    % zioConfigV
-  val zioHttp              = "io.d11"                       %% "zhttp"                  % "2.0.0-RC10"
+  val zioConfigMagnolia    = "dev.zio"                      %% "zio-config-magnolia"    % zioConfigV
+  val zioInteropCats       = "dev.zio"                      %% "zio-interop-cats"       % "23.0.0.0"
   val zioMetricsPrometheus = "dev.zio"                      %% "zio-metrics-prometheus" % "2.0.1"
   val zioPrelude           = "dev.zio"                      %% "zio-prelude"            % "1.0.0-RC16"
 }
