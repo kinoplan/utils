@@ -31,7 +31,7 @@ object Dependencies {
   val logbackCore          = "ch.qos.logback"                % "logback-core"           % "1.2.11"
   val mockitoScala         = "org.scalatestplus"            %% "mockito-3-4"            % "3.2.10.0" % Test
   val play                 = "com.typesafe.play"            %% "play"                   % playV
-  val playJson             = "com.typesafe.play"            %% "play-json"              % "2.9.3"
+  val playJson             = "com.typesafe.play"            %% "play-json"              % "2.9.4"
   val playReactiveMongo    = "org.reactivemongo"            %% "play2-reactivemongo"    % s"$reactivemongoV-play28"
   val reactiveMongo        = "org.reactivemongo"            %% "reactivemongo"          % reactivemongoV
   val redisson             = "org.redisson"                  % "redisson"               % "3.19.1"
