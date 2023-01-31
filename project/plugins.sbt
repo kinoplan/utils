@@ -4,7 +4,7 @@ addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "1.2.0")
 
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "2.0.6")
 
-addSbtPlugin("io.github.davidgregory084" % "sbt-tpolecat" % "0.4.2")
+addSbtPlugin("io.github.davidgregory084" % "sbt-tpolecat" % "0.4.1")
 
 addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.10.4")
 
