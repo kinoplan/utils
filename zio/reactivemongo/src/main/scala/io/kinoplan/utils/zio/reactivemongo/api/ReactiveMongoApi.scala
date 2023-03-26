@@ -11,27 +11,29 @@ import io.kinoplan.utils.zio.reactivemongo.config.MongoConfig
 
 trait ReactiveMongoApi {
   def driver: AsyncDriver
-  def connection: Task[MongoConnection]
+  def connection: MongoConnection
   def database: Task[DB]
 }
 
-private case class ReactiveMongoApiLive(
+case class ReactiveMongoApiLive(
+  asyncDriver: AsyncDriver,
   mongoParsedUri: ParsedURIWithDB,
-  mongoConnection: MongoConnection,
-  mongoDb: DB,
-  asyncDriver: AsyncDriver
+  mongoConnection: MongoConnection
 ) extends ReactiveMongoApi
       with IntegrationCheck[Task] {
 
-  override val driver: AsyncDriver = asyncDriver
+  lazy val checkServiceName: String = s"reactivemongo.${mongoParsedUri.db}"
 
-  override val connection: Task[MongoConnection] = ZIO.succeed(mongoConnection)
+  lazy val driver: AsyncDriver = asyncDriver
 
-  override def database: Task[DB] = ZIO.succeed(mongoDb)
+  lazy val connection: MongoConnection = mongoConnection
 
-  override val checkServiceName: String = s"reactivemongo.${mongoDb.name}"
+  def database: Task[DB] = ZIO.fromFuture(implicit ec => connection.database(mongoParsedUri.db))
 
-  override def checkAvailability: Task[Boolean] = ZIO.fromFuture(implicit ec => mongoDb.ping())
+  def checkAvailability: Task[Boolean] = for {
+    db <- database
+    status <- ZIO.fromFuture(implicit ec => db.ping())
+  } yield status
 
 }
 
@@ -45,21 +47,18 @@ object ReactiveMongoApi {
         .fromOption(mongoConfig.databases.find(_.current(dbName)).map(_.uri))
         .orElseFail(new Throwable(s"mongodb database with name $dbName not found"))
       mongoParsedUri <- ZIO.fromFuture(implicit ec => MongoConnection.fromStringWithDB(uri))
-      mongoConnection <- ZIO.fromFuture(_ =>
+      connection <- ZIO.fromFuture(_ =>
         asyncDriver.connect(mongoParsedUri, Some(mongoParsedUri.db), strictMode = false)
       )
-      mongoDb <- ZIO.fromFuture(implicit ec => mongoConnection.database(mongoParsedUri.db))
-      reactiveMongoApi = ReactiveMongoApiLive(mongoParsedUri, mongoConnection, mongoDb, asyncDriver)
+      reactiveMongoApi = ReactiveMongoApiLive(asyncDriver, mongoParsedUri, connection)
       integrationCheck = Set(reactiveMongoApi.asInstanceOf[IntegrationCheck[Task]])
     } yield (dbName -> reactiveMongoApi, integrationCheck)
   ).uninterruptible
 
-  private def release(api: ReactiveMongoApi) = (
-    for {
-      mongoConnection <- api.connection
-      _ <- ZIO.fromFuture(_ => mongoConnection.close()(10.seconds))
-    } yield ()
-  ).orDie.unit
+  private def release(api: ReactiveMongoApi) = ZIO
+    .fromFuture(_ => api.connection.close()(10.seconds))
+    .orDie
+    .unit
 
   def make(
     dbName: String

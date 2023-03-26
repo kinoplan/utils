@@ -15,7 +15,7 @@ import io.kinoplan.utils.zio.reactivemongo.syntax.ReactiveMongoSyntax
 abstract class ReactiveMongoDaoBase[T](reactiveMongoApi: ReactiveMongoApi, collectionName: String)
     extends ReactiveMongoSyntax {
 
-  val collection: Task[BSONCollection] = reactiveMongoApi.database.map(_.collection(collectionName))
+  def collection: Task[BSONCollection] = reactiveMongoApi.database.map(_.collection(collectionName))
 
   @nowarn("msg=discarded non-Unit value")
   protected def smartEnsureIndexes(smartIndexes: Seq[SmartIndex], drop: Boolean = false): Unit =
