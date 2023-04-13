@@ -1,5 +1,5 @@
 pull_request_rules:
-  - name: assign and label scala-steward pull requests
+  - name: automatic assign and label for scala-steward pull requests
     conditions:
       - author=scala-steward
     actions:
@@ -7,7 +7,7 @@ pull_request_rules:
         users: [kazievab]
       label:
         add: [dependencies]
-  - name: automatically merge scala-steward pull requests
+  - name: automatic merge for scala-steward pull requests
     conditions:
       - author=scala-steward
       - "body~=(labels:.*semver-patch.*)|(labels:.*semver-minor.*)"
