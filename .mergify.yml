@@ -1,5 +1,5 @@
 pull_request_rules:
-  - name: assign and label scala-steward's PRs
+  - name: automatic assign and label for scala-steward pull requests
     conditions:
       - author=scala-steward
     actions:
@@ -7,12 +7,22 @@ pull_request_rules:
         users: [kazievab]
       label:
         add: [dependencies]
-  - name: automatically merge scala-steward's PRs
+  - name: automatic merge for scala-steward pull requests
     conditions:
       - author=scala-steward
-      - body~=labels:.*semver-patch.*
+      - "body~=(labels:.*semver-patch.*)|(labels:.*semver-minor.*)"
       - check-success~=Build and Test \(ubuntu-latest, 2\.12\.\d+, adopt@1.8\)
       - check-success~=Build and Test \(ubuntu-latest, 2\.13\.\d+, adopt@1.8\)
     actions:
       merge:
         method: squash
+  - name: automatic merge for dependabot pull requests
+    conditions:
+      - author=dependabot[bot]
+      - "body~=(labels:.*semver-patch.*)|(labels:.*semver-minor.*)"
+      - check-success~=Build and Test \(ubuntu-latest, 2\.12\.\d+, adopt@1.8\)
+      - check-success~=Build and Test \(ubuntu-latest, 2\.13\.\d+, adopt@1.8\)
+    actions:
+      merge:
+        method: squash
+ 
