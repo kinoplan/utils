@@ -39,11 +39,11 @@ object Dependencies {
   val scalastic            = "org.scalactic"                %% "scalactic"              % "3.2.15"
   val scalatestPlay        = "org.scalatestplus.play"       %% "scalatestplus-play"     % "5.1.0"    % Test
   val typesafeConfig       = "com.typesafe"                  % "config"                 % "1.4.2"
-  val zio                  = "dev.zio"                      %% "zio"                    % "2.0.11"
+  val zio                  = "dev.zio"                      %% "zio"                    % "2.0.12"
   val zioConfig            = "dev.zio"                      %% "zio-config"             % zioConfigV
   val zioConfigTypesafe    = "dev.zio"                      %% "zio-config-typesafe"    % zioConfigV
   val zioConfigMagnolia    = "dev.zio"                      %% "zio-config-magnolia"    % zioConfigV
-  val zioInteropCats       = "dev.zio"                      %% "zio-interop-cats"       % "23.0.0.2"
+  val zioInteropCats       = "dev.zio"                      %% "zio-interop-cats"       % "23.0.0.3"
   val zioMetricsPrometheus = "dev.zio"                      %% "zio-metrics-prometheus" % "2.0.1"
   val zioPrelude           = "dev.zio"                      %% "zio-prelude"            % "1.0.0-RC18"
 }
