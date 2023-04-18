@@ -119,6 +119,10 @@ lazy val zioReactivemongo = project
   .configure(ModulesZio.reactivemongoProfile)
   .dependsOn(zioIntegrationCheck.jvm)
 
+lazy val zioSttpLoggingSlf4j = project
+  .in(file("zio/sttp/logging/slf4j"))
+  .configure(ModulesZio.sttpLoggingSlf4jProfile)
+
 // format: off
 inThisBuild(
   List(
