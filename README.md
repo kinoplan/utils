@@ -52,6 +52,7 @@ libraryDependencies ++= Seq(
   "io.kinoplan" %% "utils-zio-monitoring-prometheus" % ${version}, // JVM only
   "io.kinoplan" %% "utils-zio-reactivemongo" % ${version}, // JVM only
   "io.kinoplan" %% "utils-zio-sttp-slf4j-backend" % ${version}, // JVM only
+  "io.kinoplan" %% "utils-zio-tapir-server" % ${version}, // JVM and Scala.js
 )
 ```
 
