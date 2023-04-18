@@ -11,7 +11,7 @@ import org.typelevel.ci._
 
 object CustomRequestId {
 
-  val requestIdHeader = ci"X-Request-ID"
+  private[middleware] val requestIdHeader = ci"X-Request-ID"
 
   def apply[G[_], F[_]](fk: F ~> G, headerName: CIString = requestIdHeader, genReqId: F[String])(
     http: Http[G, F]

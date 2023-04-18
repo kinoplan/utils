@@ -56,4 +56,13 @@ object ModulesZio {
     .settings(name := "utils-zio-sttp-slf4j-backend")
     .settings(libraryDependencies ++= Seq(Dependencies.sttpSlf4jBackend, Dependencies.zio % Provided))
 
+  lazy val tapirServerProfile: Project => Project = _
+    .configure(
+      ProjectSettings.commonProfile,
+      ProjectSettings.scalaJsProfile,
+      ProjectSettings.kindProjectorProfile
+    )
+    .settings(name := "utils-zio-tapir-server")
+    .settings(libraryDependencies ++= Seq(Dependencies.tapirServer, Dependencies.zio % Provided))
+
 }

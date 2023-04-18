@@ -128,6 +128,11 @@ lazy val zioSttpLoggingSlf4j = project
   .in(file("zio/sttp/logging/slf4j"))
   .configure(ModulesZio.sttpLoggingSlf4jProfile)
 
+lazy val zioTapirServer = crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Pure)
+  .in(file("zio/tapir/server"))
+  .configure(ModulesZio.tapirServerProfile)
+
 // format: off
 inThisBuild(
   List(
