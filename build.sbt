@@ -7,6 +7,11 @@ lazy val date = crossProject(JSPlatform, JVMPlatform)
   .in(file("common/date"))
   .configureCross(ModulesCommon.dateProfile)
 
+lazy val http4sServer = crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Pure)
+  .in(file("common/http4s/server"))
+  .configureCross(ModulesCommon.http4sServerProfile)
+
 lazy val integrationCheck = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
   .in(file("common/integration-check"))

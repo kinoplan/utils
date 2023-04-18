@@ -26,6 +26,7 @@ Here is the complete list of published artifacts:
 libraryDependencies ++= Seq(
   // base
   "io.kinoplan" %% "utils-date" % ${version}, // JVM and Scala.js
+  "io.kinoplan" %% "utils-http4s-server" % ${version}, // JVM and Scala.js
   "io.kinoplan" %% "utils-integration-check" % ${version}, // JVM and Scala.js
   "io.kinoplan" %% "utils-logback-config" % ${version}, // JVM only
   "io.kinoplan" %% "utils-scala-logging" % ${version}, // JVM only
