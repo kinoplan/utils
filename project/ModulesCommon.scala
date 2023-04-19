@@ -10,6 +10,12 @@ object ModulesCommon {
     .jsConfigure(ProjectSettings.scalaJsProfile)
     .settings(name := "utils-date")
 
+  lazy val http4sServerProfile: CrossProject => CrossProject = _
+    .configure(ProjectSettings.commonProfile)
+    .jsConfigure(ProjectSettings.scalaJsProfile)
+    .settings(name := "utils-http4s-server")
+    .settings(libraryDependencies ++= Seq(Dependencies.http4sServer))
+
   lazy val integrationCheckProfile: CrossProject => CrossProject = _
     .configure(ProjectSettings.commonProfile)
     .jsConfigure(ProjectSettings.scalaJsProfile)
