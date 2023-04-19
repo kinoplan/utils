@@ -26,6 +26,7 @@ Here is the complete list of published artifacts:
 libraryDependencies ++= Seq(
   // base
   "io.kinoplan" %% "utils-date" % ${version}, // JVM and Scala.js
+  "io.kinoplan" %% "utils-http4s-server" % ${version}, // JVM and Scala.js
   "io.kinoplan" %% "utils-integration-check" % ${version}, // JVM and Scala.js
   "io.kinoplan" %% "utils-logback-config" % ${version}, // JVM only
   "io.kinoplan" %% "utils-scala-logging" % ${version}, // JVM only
@@ -50,6 +51,8 @@ libraryDependencies ++= Seq(
   "io.kinoplan" %% "utils-zio-http4s-healthcheck" % ${version}, // JVM only
   "io.kinoplan" %% "utils-zio-monitoring-prometheus" % ${version}, // JVM only
   "io.kinoplan" %% "utils-zio-reactivemongo" % ${version}, // JVM only
+  "io.kinoplan" %% "utils-zio-sttp-slf4j-backend" % ${version}, // JVM only
+  "io.kinoplan" %% "utils-zio-tapir-server" % ${version}, // JVM and Scala.js
 )
 ```
 

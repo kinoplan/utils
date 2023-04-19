@@ -1,5 +1,5 @@
-import sbt.Keys._
-import sbt.Project
+import sbt.Keys.*
+import sbt.{Project, Provided}
 
 object ModulesZio {
 
@@ -50,5 +50,19 @@ object ModulesZio {
           Dependencies.zioPrelude
         )
     )
+
+  lazy val sttpLoggingSlf4jProfile: Project => Project = _
+    .configure(ProjectSettings.commonProfile)
+    .settings(name := "utils-zio-sttp-slf4j-backend")
+    .settings(libraryDependencies ++= Seq(Dependencies.sttpSlf4jBackend, Dependencies.zio % Provided))
+
+  lazy val tapirServerProfile: Project => Project = _
+    .configure(
+      ProjectSettings.commonProfile,
+      ProjectSettings.scalaJsProfile,
+      ProjectSettings.kindProjectorProfile
+    )
+    .settings(name := "utils-zio-tapir-server")
+    .settings(libraryDependencies ++= Seq(Dependencies.tapirServer, Dependencies.zio % Provided))
 
 }

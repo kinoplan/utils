@@ -7,6 +7,11 @@ lazy val date = crossProject(JSPlatform, JVMPlatform)
   .in(file("common/date"))
   .configureCross(ModulesCommon.dateProfile)
 
+lazy val http4sServer = crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Pure)
+  .in(file("common/http4s/server"))
+  .configureCross(ModulesCommon.http4sServerProfile)
+
 lazy val integrationCheck = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
   .in(file("common/integration-check"))
@@ -118,6 +123,15 @@ lazy val zioReactivemongo = project
   .in(file("zio/reactivemongo"))
   .configure(ModulesZio.reactivemongoProfile)
   .dependsOn(zioIntegrationCheck.jvm)
+
+lazy val zioSttpLoggingSlf4j = project
+  .in(file("zio/sttp/logging/slf4j"))
+  .configure(ModulesZio.sttpLoggingSlf4jProfile)
+
+lazy val zioTapirServer = crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Pure)
+  .in(file("zio/tapir/server"))
+  .configure(ModulesZio.tapirServerProfile)
 
 // format: off
 inThisBuild(
