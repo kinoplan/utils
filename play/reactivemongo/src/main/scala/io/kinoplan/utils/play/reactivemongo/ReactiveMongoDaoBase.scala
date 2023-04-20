@@ -40,10 +40,10 @@ abstract class ReactiveMongoDaoBase[T](
     ): Future[Unit] = (
       for {
         coll <- collection
-        _ <- createIndexes(coll, smartIndexes)
         _ <-
           if (drop) dropIndexes(coll, smartIndexes)
           else Future.successful(List.empty[Int])
+        _ <- createIndexes(coll, smartIndexes)
       } yield ()
     ).withDiagnostic
 
@@ -283,8 +283,10 @@ abstract class ReactiveMongoDaoBase[T](
         .ensure(
           Index(
             key = smartIndex.key.toSeq,
+            name = smartIndex.name,
             unique = smartIndex.unique,
-            background = smartIndex.background
+            background = smartIndex.background,
+            partialFilter = smartIndex.partialFilter
           )
         )
     }
@@ -298,8 +300,11 @@ abstract class ReactiveMongoDaoBase[T](
         Future.sequence(
           indexes
             .filterNot(index =>
-              index.unique || smartIndexes.exists(_.key == index.key.toSet) ||
-              index.name.contains("_id_")
+              smartIndexes.exists(smartIndex =>
+                smartIndex.key == index.key.toSet &&
+                ((smartIndex.name.nonEmpty && smartIndex.name.exists(index.name.contains(_))) ||
+                smartIndex.name.isEmpty)
+              ) || index.name.contains("_id_")
             )
             .flatMap(_.name)
             .map { indexName =>
