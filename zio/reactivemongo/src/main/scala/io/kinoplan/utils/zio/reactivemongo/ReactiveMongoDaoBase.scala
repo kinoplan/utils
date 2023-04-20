@@ -34,8 +34,8 @@ abstract class ReactiveMongoDaoBase[T](
             (
               for {
                 coll <- collection
-                _ <- createIndexes(coll, smartIndexes)
                 _ <- dropIndexes(coll, smartIndexes).when(clearDiff).unit
+                _ <- createIndexes(coll, smartIndexes)
               } yield ()
             ).tapError(ex =>
               ZIO.logError(
@@ -210,8 +210,10 @@ abstract class ReactiveMongoDaoBase[T](
             .ensure(
               Index(
                 key = smartIndex.key.toSeq,
+                name = smartIndex.name,
                 unique = smartIndex.unique,
-                background = smartIndex.background
+                background = smartIndex.background,
+                partialFilter = smartIndex.partialFilter
               )
             )
         )
@@ -222,10 +224,18 @@ abstract class ReactiveMongoDaoBase[T](
       indexes <- ZIO.fromFuture(implicit ec => coll.indexesManager.list())
       filteredIndexNames = indexes
         .filterNot(index =>
-          index.unique || smartIndexes.exists(_.key == index.key.toSet) ||
-          index.name.contains("_id_")
+          smartIndexes.exists(smartIndex =>
+            smartIndex.key == index.key.toSet &&
+            ((smartIndex.name.nonEmpty && smartIndex.name.exists(index.name.contains(_))) ||
+            smartIndex.name.isEmpty)
+          ) || index.name.contains("_id_")
         )
         .flatMap(_.name)
+      _ <- ZIO
+        .logInfo(
+          s"Index names in collection ${coll.name} to drop ${filteredIndexNames.mkString(",")}"
+        )
+        .when(filteredIndexNames.nonEmpty)
       _ <- ZIO.foreachDiscard(filteredIndexNames)(indexName =>
         ZIO.fromFuture(implicit ec => coll.indexesManager.drop(indexName))
       )
