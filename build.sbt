@@ -122,7 +122,7 @@ lazy val zioMonitoringPrometheus = project
 lazy val zioReactivemongo = project
   .in(file("zio/reactivemongo"))
   .configure(ModulesZio.reactivemongoProfile)
-  .dependsOn(zioIntegrationCheck.jvm)
+  .dependsOn(zioIntegrationCheck.jvm, reactivemongoBase)
 
 lazy val zioSttpLoggingSlf4j = project
   .in(file("zio/sttp/logging/slf4j"))
