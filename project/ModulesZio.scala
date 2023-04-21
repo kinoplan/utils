@@ -46,8 +46,7 @@ object ModulesZio {
           Dependencies.reactiveMongo,
           Dependencies.zio,
           Dependencies.zioConfig,
-          Dependencies.zioConfigTypesafe,
-          Dependencies.zioPrelude
+          Dependencies.zioConfigTypesafe
         )
     )
 

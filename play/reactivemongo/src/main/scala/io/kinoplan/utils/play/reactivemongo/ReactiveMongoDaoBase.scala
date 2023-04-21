@@ -4,6 +4,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 import org.scalactic.source.Position
 import play.modules.reactivemongo.ReactiveMongoApi
+import reactivemongo.api.{FailoverStrategy, ReadConcern, ReadPreference}
 import reactivemongo.api.bson.{
   BSONDocument,
   BSONDocumentReader,
@@ -19,7 +20,9 @@ import io.kinoplan.utils.reactivemongo.base.{BsonNoneAsNullProducer, Queries, Sm
 abstract class ReactiveMongoDaoBase[T](
   reactiveMongoApi: ReactiveMongoApi,
   collectionName: String,
-  diagnostic: Boolean = true
+  diagnostic: Boolean = true,
+  failoverStrategyO: Option[FailoverStrategy] = None,
+  readPreferenceO: Option[ReadPreference] = None
 )(implicit
   ec: ExecutionContext
 ) extends BsonNoneAsNullProducer {
@@ -28,41 +31,56 @@ abstract class ReactiveMongoDaoBase[T](
 
     def collection: Future[BSONCollection] = reactiveMongoApi
       .database
-      .map(_.collection(collectionName))
+      .map(db =>
+        failoverStrategyO.fold(db.collection(collectionName))(db.collection(collectionName, _))
+      )
 
     def smartEnsureIndexes(smartIndexes: Seq[SmartIndex], drop: Boolean = false)(implicit
       position: Position
     ): Future[Unit] = (
       for {
         coll <- collection
-        _ <- createIndexes(coll, smartIndexes)
         _ <-
           if (drop) dropIndexes(coll, smartIndexes)
           else Future.successful(List.empty[Int])
+        _ <- createIndexes(coll, smartIndexes)
       } yield ()
     ).withDiagnostic
 
-    def count(selector: Option[BSONDocument] = None, limit: Option[Int] = None, skip: Int = 0)(
-      implicit
+    def count(
+      selector: Option[BSONDocument] = None,
+      limit: Option[Int] = None,
+      skip: Int = 0,
+      readConcern: Option[ReadConcern] = None,
+      readPreference: Option[ReadPreference] = None
+    )(implicit
       position: Position
     ): Future[Long] = collection
       .flatMap {
-        Queries.countQ(_)(selector, limit, skip)
+        Queries.countQ(_)(selector, limit, skip, readConcern, readPreference)
       }
       .withDiagnostic
 
-    def countGrouped(groupBy: String, matchQuery: BSONDocument = document)(implicit
+    def countGrouped(
+      groupBy: String,
+      matchQuery: BSONDocument = document,
+      readConcern: Option[ReadConcern] = None,
+      readPreference: Option[ReadPreference] = None
+    )(implicit
       position: Position
     ): Future[Map[String, Int]] = collection
       .flatMap {
-        Queries.countGroupedQ(_)(groupBy, matchQuery)
+        Queries.countGroupedQ(_)(groupBy, matchQuery, readConcern, readPreference)
       }
       .withDiagnostic
 
-    def findAll(implicit
+    def findAll(
+      readConcern: Option[ReadConcern] = None,
+      readPreference: ReadPreference = readPreferenceO.getOrElse(ReadPreference.secondaryPreferred)
+    )(implicit
       r: BSONDocumentReader[T],
       position: Position
-    ): Future[List[T]] = findMany()
+    ): Future[List[T]] = findMany(readConcern = readConcern, readPreference = readPreference)
 
     def findMany[M <: T](
       selector: BSONDocument = document,
@@ -70,35 +88,55 @@ abstract class ReactiveMongoDaoBase[T](
       sort: BSONDocument = document,
       hint: Option[BSONDocument] = None,
       skip: Int = 0,
-      limit: Int = -1
+      limit: Int = -1,
+      readConcern: Option[ReadConcern] = None,
+      readPreference: ReadPreference = readPreferenceO.getOrElse(ReadPreference.secondaryPreferred)
     )(implicit
       r: BSONDocumentReader[M],
       position: Position
     ): Future[List[M]] = collection
       .flatMap {
-        Queries.findManyQ(_)(selector, projection, sort, hint, skip, limit)
+        Queries
+          .findManyQ(_)(selector, projection, sort, hint, skip, limit, readConcern, readPreference)
       }
       .withDiagnostic
 
-    def findManyByIds(ids: Set[BSONObjectID])(implicit
+    def findManyByIds(
+      ids: Set[BSONObjectID],
+      readConcern: Option[ReadConcern] = None,
+      readPreference: ReadPreference = readPreferenceO.getOrElse(ReadPreference.secondaryPreferred)
+    )(implicit
       r: BSONDocumentReader[T],
       position: Position
-    ): Future[List[T]] = findMany(BSONDocument("_id" -> BSONDocument("$in" -> ids)))
+    ): Future[List[T]] = findMany(
+      BSONDocument("_id" -> BSONDocument("$in" -> ids)),
+      readConcern = readConcern,
+      readPreference = readPreference
+    )
 
-    def findOne(selector: BSONDocument = BSONDocument(), projection: Option[BSONDocument] = None)(
-      implicit
+    def findOne(
+      selector: BSONDocument = BSONDocument(),
+      projection: Option[BSONDocument] = None,
+      readConcern: Option[ReadConcern] = None,
+      readPreference: ReadPreference = readPreferenceO.getOrElse(ReadPreference.secondaryPreferred)
+    )(implicit
       r: BSONDocumentReader[T],
       position: Position
     ): Future[Option[T]] = collection
       .flatMap {
-        Queries.findOneQ(_)(selector, projection)
+        Queries.findOneQ(_)(selector, projection, readConcern, readPreference)
       }
       .withDiagnostic
 
-    def findOneById(id: BSONObjectID)(implicit
+    def findOneById(
+      id: BSONObjectID,
+      readConcern: Option[ReadConcern] = None,
+      readPreference: ReadPreference = readPreferenceO.getOrElse(ReadPreference.secondaryPreferred)
+    )(implicit
       r: BSONDocumentReader[T],
       position: Position
-    ): Future[Option[T]] = findOne(BSONDocument("_id" -> id))
+    ): Future[Option[T]] =
+      findOne(BSONDocument("_id" -> id), readConcern = readConcern, readPreference = readPreference)
 
     def insertMany(values: List[T])(implicit
       w: BSONDocumentWriter[T],
@@ -144,7 +182,7 @@ abstract class ReactiveMongoDaoBase[T](
       }
       .withDiagnostic
 
-    def saveOne(q: BSONDocument, value: T, multi: Boolean, upsert: Boolean)(implicit
+    def saveOne(q: BSONDocument, value: T, multi: Boolean = false, upsert: Boolean = true)(implicit
       w: BSONDocumentWriter[T],
       position: Position
     ) = collection
@@ -190,20 +228,30 @@ abstract class ReactiveMongoDaoBase[T](
 
   }
 
-  def findAll(implicit
+  def findAll(
+    readConcern: Option[ReadConcern] = None,
+    readPreference: ReadPreference = readPreferenceO.getOrElse(ReadPreference.secondaryPreferred)
+  )(implicit
     r: BSONDocumentReader[T],
     position: Position
-  ): Future[List[T]] = dao.findAll
+  ): Future[List[T]] = dao.findAll(readConcern, readPreference)
 
-  def findManyByIds(ids: Set[BSONObjectID])(implicit
+  def findManyByIds(
+    readConcern: Option[ReadConcern] = None,
+    readPreference: ReadPreference = readPreferenceO.getOrElse(ReadPreference.secondaryPreferred)
+  )(ids: Set[BSONObjectID])(implicit
     r: BSONDocumentReader[T],
     position: Position
-  ): Future[List[T]] = dao.findManyByIds(ids)
+  ): Future[List[T]] = dao.findManyByIds(ids, readConcern, readPreference)
 
-  def findOneById(id: BSONObjectID)(implicit
+  def findOneById(
+    id: BSONObjectID,
+    readConcern: Option[ReadConcern] = None,
+    readPreference: ReadPreference = readPreferenceO.getOrElse(ReadPreference.secondaryPreferred)
+  )(implicit
     r: BSONDocumentReader[T],
     position: Position
-  ): Future[Option[T]] = dao.findOneById(id)
+  ): Future[Option[T]] = dao.findOneById(id, readConcern, readPreference)
 
   def insertMany(values: List[T])(implicit
     w: BSONDocumentWriter[T],
@@ -235,8 +283,10 @@ abstract class ReactiveMongoDaoBase[T](
         .ensure(
           Index(
             key = smartIndex.key.toSeq,
+            name = smartIndex.name,
             unique = smartIndex.unique,
-            background = smartIndex.background
+            background = smartIndex.background,
+            partialFilter = smartIndex.partialFilter
           )
         )
     }
@@ -250,8 +300,11 @@ abstract class ReactiveMongoDaoBase[T](
         Future.sequence(
           indexes
             .filterNot(index =>
-              index.unique || smartIndexes.exists(_.key == index.key.toSet) ||
-              index.name.contains("_id_")
+              smartIndexes.exists(smartIndex =>
+                smartIndex.key == index.key.toSet &&
+                ((smartIndex.name.nonEmpty && smartIndex.name.exists(index.name.contains(_))) ||
+                smartIndex.name.isEmpty)
+              ) || index.name.contains("_id_")
             )
             .flatMap(_.name)
             .map { indexName =>

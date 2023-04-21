@@ -3,7 +3,7 @@ package io.kinoplan.utils.reactivemongo.base
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
-import reactivemongo.api.Cursor
+import reactivemongo.api.{Cursor, ReadConcern, ReadPreference}
 import reactivemongo.api.bson.{
   BSONDocument,
   BSONDocumentReader,
@@ -15,13 +15,30 @@ import reactivemongo.api.bson.collection.BSONCollection
 
 private[utils] object Queries extends QueryBuilderSyntax {
 
-  def countQ(
-    collection: BSONCollection
-  )(selector: Option[BSONDocument] = None, limit: Option[Int] = None, skip: Int = 0)(implicit
+  def countQ(collection: BSONCollection)(
+    selector: Option[BSONDocument] = None,
+    limit: Option[Int] = None,
+    skip: Int = 0,
+    readConcern: Option[ReadConcern] = None,
+    readPreference: Option[ReadPreference] = None
+  )(implicit
     ec: ExecutionContext
-  ): Future[Long] = collection.count(selector, limit, skip)
+  ): Future[Long] = (readConcern, readPreference) match {
+    case (Some(readConcern), Some(readPreference)) => collection
+        .count(selector, limit, skip, readConcern = readConcern, readPreference = readPreference)
+    case (Some(readConcern), None) =>
+      collection.count(selector, limit, skip, readConcern = readConcern)
+    case (None, Some(readPreference)) =>
+      collection.count(selector, limit, skip, readPreference = readPreference)
+    case _ => collection.count(selector, limit, skip)
+  }
 
-  def countGroupedQ(collection: BSONCollection)(groupBy: String, matchQuery: BSONDocument)(implicit
+  def countGroupedQ(collection: BSONCollection)(
+    groupBy: String,
+    matchQuery: BSONDocument,
+    readConcern: Option[ReadConcern] = None,
+    readPreference: Option[ReadPreference] = None
+  )(implicit
     ec: ExecutionContext
   ): Future[Map[String, Int]] = {
     implicit val resultTupleReader: BSONDocumentReader[(String, Int)] = BSONDocumentReader
@@ -32,14 +49,34 @@ private[utils] object Queries extends QueryBuilderSyntax {
         } yield groupId -> count
       )
 
-    collection
-      .aggregateWith[(String, Int)]() { framework =>
-        import framework.{GroupField, Match, SumAll}
+    (
+      (readConcern, readPreference) match {
+        case (Some(readConcern), Some(readPreference)) => collection
+            .aggregateWith[(String, Int)](readConcern = readConcern, readPreference = readPreference) {
+              framework =>
+                import framework.{GroupField, Match, SumAll}
 
-        List(Match(matchQuery), GroupField(groupBy)("count" -> SumAll))
+                List(Match(matchQuery), GroupField(groupBy)("count" -> SumAll))
+            }
+        case (Some(readConcern), None) => collection
+            .aggregateWith[(String, Int)](readConcern = readConcern) { framework =>
+              import framework.{GroupField, Match, SumAll}
+
+              List(Match(matchQuery), GroupField(groupBy)("count" -> SumAll))
+            }
+        case (None, Some(readPreference)) => collection
+            .aggregateWith[(String, Int)](readPreference = readPreference) { framework =>
+              import framework.{GroupField, Match, SumAll}
+
+              List(Match(matchQuery), GroupField(groupBy)("count" -> SumAll))
+            }
+        case _ => collection.aggregateWith[(String, Int)]() { framework =>
+            import framework.{GroupField, Match, SumAll}
+
+            List(Match(matchQuery), GroupField(groupBy)("count" -> SumAll))
+          }
       }
-      .collect[Seq](-1, Cursor.FailOnError[Seq[(String, Int)]]())
-      .map(_.toMap)
+    ).collect[Seq](-1, Cursor.FailOnError[Seq[(String, Int)]]()).map(_.toMap)
   }
 
   def findManyQ[T: BSONDocumentReader](collection: BSONCollection)(
@@ -48,7 +85,9 @@ private[utils] object Queries extends QueryBuilderSyntax {
     sort: BSONDocument = document,
     hint: Option[BSONDocument] = None,
     skip: Int = 0,
-    limit: Int = -1
+    limit: Int = -1,
+    readConcern: Option[ReadConcern] = None,
+    readPreference: ReadPreference = ReadPreference.secondaryPreferred
   )(implicit
     ec: ExecutionContext
   ): Future[List[T]] = {
@@ -56,14 +95,22 @@ private[utils] object Queries extends QueryBuilderSyntax {
     val queryBuilderWithHint = hint
       .fold(queryBuilder)(specification => queryBuilder.hint(collection.hint(specification)))
 
-    queryBuilderWithHint.all[T](limit)
+    queryBuilderWithHint.all[T](limit, readConcern = readConcern, readPreference = readPreference)
   }
 
-  def findOneQ[T: BSONDocumentReader](
-    collection: BSONCollection
-  )(selector: BSONDocument = BSONDocument(), projection: Option[BSONDocument] = None)(implicit
+  def findOneQ[T: BSONDocumentReader](collection: BSONCollection)(
+    selector: BSONDocument = BSONDocument(),
+    projection: Option[BSONDocument] = None,
+    readConcern: Option[ReadConcern] = None,
+    readPreference: ReadPreference = ReadPreference.secondaryPreferred
+  )(implicit
     ec: ExecutionContext
-  ): Future[Option[T]] = collection.find(selector, projection).one[T]
+  ): Future[Option[T]] = {
+    val queryBuilder = collection.find(selector, projection)
+    val queryBuilderWithReadConcern = readConcern.fold(queryBuilder)(queryBuilder.readConcern(_))
+
+    queryBuilderWithReadConcern.one[T](readPreference = readPreference)
+  }
 
   def insertManyQ[T: BSONDocumentWriter](collection: BSONCollection)(values: List[T])(implicit
     ec: ExecutionContext

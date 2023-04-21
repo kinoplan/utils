@@ -8,7 +8,7 @@ object Dependencies {
     val playV          = "2.8.19"
     val reactivemongoV = "1.0.10"
     val scalaJavaTimeV = "2.5.0"
-    val sttpV          = "3.8.13"
+    val sttpV          = "3.8.15"
     val tapirV         = "1.2.12"
     val zioConfigV     = "3.0.7"
   }
@@ -51,5 +51,4 @@ object Dependencies {
   val zioConfigMagnolia    = "dev.zio"                       %% "zio-config-magnolia"    % zioConfigV
   val zioInteropCats       = "dev.zio"                       %% "zio-interop-cats"       % "23.0.0.4"
   val zioMetricsPrometheus = "dev.zio"                       %% "zio-metrics-prometheus" % "2.0.1"
-  val zioPrelude           = "dev.zio"                       %% "zio-prelude"            % "1.0.0-RC18"
 }

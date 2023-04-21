@@ -1,4 +1,4 @@
-package io.kinoplan.utils.zio.reactivemongo.api
+package io.kinoplan.utils.zio.reactivemongo
 
 import scala.concurrent.duration.DurationInt
 

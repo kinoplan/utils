@@ -1,11 +1,11 @@
-package io.kinoplan.utils.zio.reactivemongo.api.driver
+package io.kinoplan.utils.zio.reactivemongo.driver
 
 import scala.concurrent.duration.DurationInt
 
 import reactivemongo.api.AsyncDriver
 import zio.{TaskLayer, ZIO, ZLayer}
 
-object AsyncDriverResource {
+private[reactivemongo] object AsyncDriverResource {
   private def acquire = ZIO.attempt(AsyncDriver())
 
   private def release(asyncDriver: AsyncDriver) = ZIO
