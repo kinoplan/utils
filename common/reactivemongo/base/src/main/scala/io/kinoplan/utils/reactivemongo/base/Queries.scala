@@ -102,14 +102,16 @@ private[utils] object Queries extends QueryBuilderSyntax {
     selector: BSONDocument = BSONDocument(),
     projection: Option[BSONDocument] = None,
     readConcern: Option[ReadConcern] = None,
-    readPreference: ReadPreference = ReadPreference.secondaryPreferred
+    readPreference: Option[ReadPreference] = None
   )(implicit
     ec: ExecutionContext
   ): Future[Option[T]] = {
     val queryBuilder = collection.find(selector, projection)
     val queryBuilderWithReadConcern = readConcern.fold(queryBuilder)(queryBuilder.readConcern(_))
 
-    queryBuilderWithReadConcern.one[T](readPreference = readPreference)
+    readPreference.fold(queryBuilderWithReadConcern.one[T])(rp =>
+      queryBuilderWithReadConcern.one[T](readPreference = rp)
+    )
   }
 
   def insertManyQ[T: BSONDocumentWriter](collection: BSONCollection)(values: List[T])(implicit

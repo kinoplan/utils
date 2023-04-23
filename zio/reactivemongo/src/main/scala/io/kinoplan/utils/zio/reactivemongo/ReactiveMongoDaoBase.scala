@@ -122,7 +122,7 @@ abstract class ReactiveMongoDaoBase[T](
       selector: BSONDocument = BSONDocument(),
       projection: Option[BSONDocument] = None,
       readConcern: Option[ReadConcern] = None,
-      readPreference: ReadPreference = readPreferenceO.getOrElse(ReadPreference.secondaryPreferred)
+      readPreference: Option[ReadPreference] = readPreferenceO
     )(implicit
       r: BSONDocumentReader[T]
     ): Task[Option[T]] = for {
@@ -135,7 +135,7 @@ abstract class ReactiveMongoDaoBase[T](
     def findOneById(
       id: BSONObjectID,
       readConcern: Option[ReadConcern] = None,
-      readPreference: ReadPreference = readPreferenceO.getOrElse(ReadPreference.secondaryPreferred)
+      readPreference: Option[ReadPreference] = readPreferenceO
     )(implicit
       r: BSONDocumentReader[T]
     ): Task[Option[T]] =
