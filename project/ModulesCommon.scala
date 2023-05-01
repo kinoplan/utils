@@ -40,6 +40,11 @@ object ModulesCommon {
     .settings(name := "utils-reactivemongo-base")
     .settings(libraryDependencies ++= Seq(Dependencies.reactiveMongo % Provided))
 
+  lazy val reactivemongoBsonAnyProfile: Project => Project = _
+    .configure(ProjectSettings.commonProfile)
+    .settings(name := "utils-reactivemongo-bson-any")
+    .settings(libraryDependencies ++= Seq(Dependencies.reactiveMongo % Provided))
+
   lazy val reactivemongoBsonJodaTimeProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-reactivemongo-bson-joda-time")
@@ -47,10 +52,12 @@ object ModulesCommon {
       libraryDependencies ++= Seq(Dependencies.reactiveMongo % Provided, Dependencies.jodaTime)
     )
 
-  lazy val reactivemongoBsonAnyProfile: Project => Project = _
+  lazy val reactivemongoBsonRefinedProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
-    .settings(name := "utils-reactivemongo-bson-any")
-    .settings(libraryDependencies ++= Seq(Dependencies.reactiveMongo % Provided))
+    .settings(name := "utils-reactivemongo-bson-refined")
+    .settings(
+      libraryDependencies ++= Seq(Dependencies.reactiveMongo % Provided, Dependencies.refined)
+    )
 
   lazy val redissonProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)

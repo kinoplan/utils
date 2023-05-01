@@ -24,9 +24,9 @@ object ProjectSettings {
             "-Ywarn-infer-any"
           )
         )),
+      tpolecatExcludeOptions += ScalacOptions.warnNonUnitStatement,
       Test / fork := true,
       Test / javaOptions += "-Duser.timezone=UTC",
-      tpolecatExcludeOptions += ScalacOptions.warnNonUnitStatement,
       libraryDependencies ++= Seq(Dependencies.scalatest.value, Dependencies.mockitoScala),
       coverageHighlighting := true
     )
