@@ -9,7 +9,7 @@ object Dependencies {
     val reactivemongoV = "1.0.10"
     val scalaJavaTimeV = "2.5.0"
     val sttpV          = "3.8.15"
-    val tapirV         = "1.2.13"
+    val tapirV         = "1.3.0"
     val zioConfigV     = "3.0.7"
   }
 
@@ -38,7 +38,7 @@ object Dependencies {
   val playJson             = "com.typesafe.play"             %% "play-json"              % "2.9.4"
   val playReactiveMongo    = "org.reactivemongo"             %% "play2-reactivemongo"    % s"$reactivemongoV-play28"
   val reactiveMongo        = "org.reactivemongo"             %% "reactivemongo"          % reactivemongoV
-  val redisson             = "org.redisson"                   % "redisson"               % "3.20.1"
+  val redisson             = "org.redisson"                   % "redisson"               % "3.21.0"
   val scalaLogging         = "com.typesafe.scala-logging"    %% "scala-logging"          % "3.9.5"
   val scalastic            = "org.scalactic"                 %% "scalactic"              % "3.2.15"
   val scalatestPlay        = "org.scalatestplus.play"        %% "scalatestplus-play"     % "5.1.0"    % Test
@@ -49,6 +49,6 @@ object Dependencies {
   val zioConfig            = "dev.zio"                       %% "zio-config"             % zioConfigV
   val zioConfigTypesafe    = "dev.zio"                       %% "zio-config-typesafe"    % zioConfigV
   val zioConfigMagnolia    = "dev.zio"                       %% "zio-config-magnolia"    % zioConfigV
-  val zioInteropCats       = "dev.zio"                       %% "zio-interop-cats"       % "23.0.0.4"
+  val zioInteropCats       = "dev.zio"                       %% "zio-interop-cats"       % "23.0.0.5"
   val zioMetricsPrometheus = "dev.zio"                       %% "zio-metrics-prometheus" % "2.0.1"
 }
