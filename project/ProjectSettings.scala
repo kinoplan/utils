@@ -2,6 +2,7 @@ import sbt.Keys._
 import sbt._
 import scalafix.sbt.ScalafixPlugin
 import scoverage.ScoverageKeys._
+import _root_.io.github.davidgregory084.TpolecatPlugin.autoImport._
 
 object ProjectSettings {
 
@@ -23,6 +24,7 @@ object ProjectSettings {
             "-Ywarn-infer-any"
           )
         )),
+      tpolecatExcludeOptions += ScalacOptions.warnNonUnitStatement,
       Test / fork := true,
       Test / javaOptions += "-Duser.timezone=UTC",
       libraryDependencies ++= Seq(Dependencies.scalatest.value, Dependencies.mockitoScala),

@@ -1,4 +1,4 @@
-import sbt.Keys.*
+import sbt.Keys._
 import sbt.{Project, Provided}
 
 object ModulesZio {

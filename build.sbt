@@ -29,13 +29,17 @@ lazy val reactivemongoBase = project
   .in(file("common/reactivemongo/base"))
   .configure(ModulesCommon.reactivemongoBaseProfile)
 
+lazy val reactivemongoBsonAny = project
+  .in(file("common/reactivemongo/bson-any"))
+  .configure(ModulesCommon.reactivemongoBsonAnyProfile)
+
 lazy val reactivemongoBsonJodaTime = project
   .in(file("common/reactivemongo/bson-joda-time"))
   .configure(ModulesCommon.reactivemongoBsonJodaTimeProfile)
 
-lazy val reactivemongoBsonAny = project
-  .in(file("common/reactivemongo/bson-any"))
-  .configure(ModulesCommon.reactivemongoBsonAnyProfile)
+lazy val reactivemongoBsonRefined = project
+  .in(file("common/reactivemongo/bson-refined"))
+  .configure(ModulesCommon.reactivemongoBsonRefinedProfile)
 
 lazy val redissonCore = project
   .in(file("common/redisson/core"))
