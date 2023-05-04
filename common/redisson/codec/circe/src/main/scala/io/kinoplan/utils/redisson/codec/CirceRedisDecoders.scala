@@ -8,3 +8,5 @@ trait CirceRedisDecoders {
     parser.parse(_).flatMap(_.as[T]).toTry
 
 }
+
+object CirceRedisDecoders extends CirceRedisDecoders
