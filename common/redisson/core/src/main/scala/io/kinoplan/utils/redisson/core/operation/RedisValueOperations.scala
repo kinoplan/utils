@@ -8,8 +8,8 @@ import org.redisson.api.{RAtomicLong, RBucket, RedissonClient}
 import org.redisson.client.codec.StringCodec
 
 import io.kinoplan.utils.redisson.MapSyntax.syntaxMapOps
+import io.kinoplan.utils.redisson.base.codec.{RedisDecoder, RedisEncoder}
 import io.kinoplan.utils.redisson.core.JavaDecoders._
-import io.kinoplan.utils.redisson.core.codec.{RedisDecoder, RedisEncoder}
 import io.kinoplan.utils.redisson.crossCollectionConverters._
 
 trait RedisValueOperations {

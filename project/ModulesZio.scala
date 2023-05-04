@@ -59,6 +59,18 @@ object ModulesZio {
     .settings(name := "utils-zio-reactivemongo")
     .settings(libraryDependencies ++= Seq(Libraries.reactiveMongo, Libraries.zio.value))
 
+  lazy val redissonProfile: Project => Project = _
+    .configure(
+      ProjectSettings.commonProfile,
+      ProjectSettings.macroProfile,
+      ProjectSettings.shadingProfile(Shades.zioConfig)
+    )
+    .settings(name := "utils-zio-redisson")
+    .settings(
+      libraryDependencies ++=
+        Seq(Libraries.jacksonModule, Libraries.redisson, Libraries.zio.value, Libraries.zioMacros)
+    )
+
   lazy val sttpLoggingSlf4jProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-zio-sttp-slf4j-backend")
