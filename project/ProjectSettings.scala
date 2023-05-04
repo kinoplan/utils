@@ -23,6 +23,7 @@ object ProjectSettings {
     .settings(
       tpolecatExcludeOptions :=
         Set(
+//          ScalacOptions.fatalWarnings,
           ScalacOptions.warnError,
           ScalacOptions.warnUnusedParams,
           ScalacOptions.warnUnusedPatVars,

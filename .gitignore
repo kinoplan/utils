@@ -13,3 +13,6 @@ yarn.lock
 .DS_Store
 null
 /.java-version
+.vscode
+project/metals.sbt
+project/project

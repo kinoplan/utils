@@ -9,18 +9,19 @@ wants all of its channels (GitHub, etc.) to be inclusive environments.
 
 You will need the following tools:
 
-*   [Git][git]
-*   [Java 8][java-8]
-*   [SBT][sbt]
+* [Git][git]
+* [Java 8][java-8]
+* [SBT][sbt]
+* [Docker][docker]
 
 ## Workflow
 
-1.  Create your own [fork][fork-and-pull] of the repository
-    and work in a local branch based on `main`
-2.  Write code
-3.  [Write tests](#write-tests)
-4.  Run `sbt format` (or `sbt fix` and `sbt fmt` sequentially) before creating the pull request
-5.  [Submit a pull request](#submit-a-pull-request)
+1. Create your own [fork][fork-and-pull] of the repository
+   and work in a local branch based on `main`
+2. Write code
+3. [Write tests](#write-tests)
+4. Run `sbt format` (or `sbt fix` and `sbt fmt` sequentially) before creating the pull request
+5. [Submit a pull request](#submit-a-pull-request)
 
 ## Formatting
 
@@ -41,29 +42,29 @@ Make sure to run `sbt fmt` to ensure code formatting.
 We use [remark-lint][remark-lint] to format the markdown according to the rules described in `.remarkrc`.
 If you have made any changes to one of the markdown files, run the formatting as follows:
 
-1.  Install [remark-cli][remark-cli]: `npm install -g remark-cli`
-2.  Install [remark-preset-lint-recommended][remark-preset-lint-recommended]: `npm install remark-preset-lint-recommended`
-3.  Run formatting: `remark . -o`
+1. Install [remark-cli][remark-cli]: `npm install -g remark-cli`
+2. Install [remark-preset-lint-recommended][remark-preset-lint-recommended]: `npm install remark-preset-lint-recommended`
+3. Run formatting: `remark . -o`
 
 ## Write tests
 
 Project uses testing library [ScalaTest][scalatest], and organizes tests according to the following guidelines:
 
-*   An assertion in regular tests should be written with `assert` and `===`.
+* An assertion in regular tests should be written with `assert` and `===`.
 
 ## Submit a pull request
 
-*   Pull requests should be submitted from a separate branch (e.g. using
-    `git checkout -b "username/fix-123"`).
-*   In general we discourage force pushing to an active pull-request branch that other people are
-    commenting on or contributing to, and suggest using `git merge master` during development. Once
-    development is complete, use `git rebase master` and force push to [clean up the history][squash].
-*   The first line of a commit message should be no more than 72 characters long (to accommodate
-    formatting in various environments).
-*   Commit messages should general use the present tense, normal sentence capitalization, and no final
-    punctuation.
-*   If a pull request decreases code coverage more than by 5%, please file an issue to make sure that
-    tests get added.
+* Pull requests should be submitted from a separate branch (e.g. using
+  `git checkout -b "username/fix-123"`).
+* In general we discourage force pushing to an active pull-request branch that other people are
+  commenting on or contributing to, and suggest using `git merge master` during development. Once
+  development is complete, use `git rebase master` and force push to [clean up the history][squash].
+* The first line of a commit message should be no more than 72 characters long (to accommodate
+  formatting in various environments).
+* Commit messages should general use the present tense, normal sentence capitalization, and no final
+  punctuation.
+* If a pull request decreases code coverage more than by 5%, please file an issue to make sure that
+  tests get added.
 
 ## Publish a Release (note for maintainers)
 
@@ -108,3 +109,5 @@ then make the corrections and try again.
 [sbt]: http://www.scala-sbt.org/
 
 [squash]: http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html
+
+[docker]: https://www.docker.com/

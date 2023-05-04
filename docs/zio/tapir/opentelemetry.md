@@ -3,6 +3,7 @@
 This module provides an integration of `zio-opentelemetry` with `tapir`.
 
 ## Installation
+
 Add the following line to the `libraryDependencies` in your `build.sbt`:
 
 ```scala
@@ -12,6 +13,7 @@ Add the following line to the `libraryDependencies` in your `build.sbt`:
 the dependency already comes with all necessary dependencies including `tapir` and `zio-opentelemetry`
 
 ## Usage
+
 Provide `TracingInterceptor` to your `TapirMiddleware`, for example:
 
 ```scala

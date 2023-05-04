@@ -1,8 +1,8 @@
 package io.kinoplan.utils.redisson.codec
 
-trait RedisEncoder[T] {
-  def encode(value: T): String
-}
+import io.kinoplan.utils.redisson.codec.base.BaseRedisEncoder
+
+trait RedisEncoder[T] extends BaseRedisEncoder[T, String]
 
 object RedisEncoder {
 
