@@ -37,6 +37,7 @@ object Dependencies {
     val zioPrelude              = Def.setting("dev.zio" %%% "zio-prelude" % "1.0.0-RC40")
     val zioTest                 = Def.setting("dev.zio" %%% "zio-test" % zioV)
     val zioTestSbt              = Def.setting("dev.zio" %%% "zio-test-sbt" % zioV)
+    val zioStreams              = Def.setting("dev.zio" %%% "zio-streams" % zioV)
 
     // A -> Z
     val http4sBlazeServer                = "org.http4s"                    %% "http4s-blaze-server"                    % "0.23.17"
@@ -51,6 +52,7 @@ object Dependencies {
     val kindProjector                    = "org.typelevel"                 %% "kind-projector"                         % "0.13.3"
     val logbackClassic                   = "ch.qos.logback"                 % "logback-classic"                        % logbackV
     val logbackCore                      = "ch.qos.logback"                 % "logback-core"                           % logbackV
+    val macroParadise                    = "org.scalamacros"                % "paradise"                               % "2.1.1"
     val micrometerRegistryPrometheus     = "io.micrometer"                  % "micrometer-registry-prometheus"         % "1.14.6"
     val mockitoScala                     = "org.scalatestplus"             %% "mockito-3-4"                            % "3.2.10.0" % Test
     val openTelemetryApi                 = "io.opentelemetry"               % "opentelemetry-api"                      % openTelemetryV
@@ -81,6 +83,7 @@ object Dependencies {
     val sttpZio                          = "com.softwaremill.sttp.client3" %% "zio"                                    % sttpV
     val tapirServer                      = "com.softwaremill.sttp.tapir"   %% "tapir-server"                           % tapirV
     val testContainersMongodb            = "org.testcontainers"             % "mongodb"                                % "1.21.0"   % Test
+    val testContainersRedis              = "com.redis"                      % "testcontainers-redis"                   % "2.2.4"    % Test
     val typesafeConfig                   = "com.typesafe"                   % "config"                                 % "1.4.3"
     val zioConfig                        = "dev.zio"                       %% "zio-config"                             % zioConfigV
     val zioConfigMagnolia                = "dev.zio"                       %% "zio-config-magnolia"                    % zioConfigV
