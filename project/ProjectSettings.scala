@@ -30,7 +30,8 @@ object ProjectSettings {
           ScalacOptions.warnDeadCode,
           ScalacOptions.lintInferAny,
           ScalacOptions.warnUnusedExplicits,
-          ScalacOptions.warnNonUnitStatement
+          ScalacOptions.warnNonUnitStatement,
+          ScalacOptions.fatalWarnings
         ),
       Test / tpolecatExcludeOptions ++=
         Set(ScalacOptions.privateWarnDeadCode, ScalacOptions.warnNonUnitStatement),
@@ -76,6 +77,22 @@ object ProjectSettings {
       (Compile / sourceDirectory).value / path,
     Test / unmanagedSourceDirectories +=
       (Test / sourceDirectory).value / path
+  )
+
+  lazy val macroProfile: Project => Project = _.settings(
+    libraryDependencies ++= {
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, n)) if n <= 12 =>
+          List(compilerPlugin(Libraries.macroParadise.cross(CrossVersion.full)))
+        case _ => Nil
+      }
+    },
+    Compile / scalacOptions ++= {
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, n)) if n <= 12 => Nil
+        case _                       => List("-Ymacro-annotations")
+      }
+    }
   )
 
 }

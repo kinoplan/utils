@@ -12,6 +12,7 @@ You will need the following tools:
 *   [Git][git]
 *   [Java 8][java-8]
 *   [SBT][sbt]
+*   [Docker][docker]
 
 ## Workflow
 
@@ -108,3 +109,5 @@ then make the corrections and try again.
 [sbt]: http://www.scala-sbt.org/
 
 [squash]: http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html
+
+[docker]: https://www.docker.com/
