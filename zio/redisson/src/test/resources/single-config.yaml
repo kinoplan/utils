@@ -1,0 +1,33 @@
+---
+singleServerConfig:
+  idleConnectionTimeout: 20000
+  connectTimeout: 15000
+  timeout: 5000
+  subscriptionTimeout: 10000
+  retryAttempts: 5
+  retryInterval: 1500
+  credentialsReapplyInterval: 0
+  subscriptionsPerConnection: 10
+  clientName: "native-single-test"
+  address: "redis://127.0.0.1:6379"
+  subscriptionConnectionMinimumIdleSize: 2
+  subscriptionConnectionPoolSize: 100
+  connectionMinimumIdleSize: 48
+  connectionPoolSize: 128
+  database: 1
+  dnsMonitoringInterval: 10000
+lazyInitialization: true
+threads: 32
+nettyThreads: 64
+codec: !<org.redisson.codec.KryoCodec> {}
+transportMode: "NIO"
+lockWatchdogTimeout: 60000
+lockWatchdogBatchSize: 200
+checkLockSyncedSlaves: false
+slavesSyncTimeout: 2000
+reliableTopicWatchdogTimeout: 300000
+useScriptCache: false
+minCleanUpDelay: 10
+maxCleanUpDelay: 2000
+cleanUpKeysAmount: 150
+useThreadClassLoader: false

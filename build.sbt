@@ -23,9 +23,9 @@ lazy val rawAllAggregates = chimneyZioPrelude.projectRefs ++ circeReactivemongoB
   playFiltersLogging.projectRefs ++ playReactivemongo.projectRefs ++
   playRequestMapContext.projectRefs ++ zioHttp4sHealthCheck.projectRefs ++
   zioIntegrationCheck.projectRefs ++ zioMonitoringPrometheus.projectRefs ++
-  zioOpenTelemetry.projectRefs ++ zioReactivemongo.projectRefs ++ zioSttpLoggingSlf4j.projectRefs ++
-  zioSttpOpenTelemetry.projectRefs ++ zioTapirServer.projectRefs ++
-  zioTapirOpenTelemetry.projectRefs
+  zioOpenTelemetry.projectRefs ++ zioReactivemongo.projectRefs ++ zioRedisson.projectRefs ++
+  zioSttpLoggingSlf4j.projectRefs ++ zioSttpOpenTelemetry.projectRefs ++
+  zioTapirServer.projectRefs ++ zioTapirOpenTelemetry.projectRefs
 
 lazy val allAggregates = rawAllAggregates
 
@@ -429,6 +429,12 @@ lazy val zioReactivemongo = projectMatrix
   .jvmPlatform(ProjectSettings.scala2Versions)
   .configure(ModulesZio.reactivemongoProfile)
   .dependsOn(zioIntegrationCheck, reactivemongoBase)
+
+lazy val zioRedisson = projectMatrix
+  .in(file("zio/redisson"))
+  .jvmPlatform(ProjectSettings.scala2Versions)
+  .configure(ModulesZio.redissonProfile)
+  .dependsOn(crossCollection, zioIntegrationCheck, redissonCodecBase)
 
 lazy val zioSttpLoggingSlf4j = projectMatrix
   .in(file("zio/sttp/logging/slf4j"))

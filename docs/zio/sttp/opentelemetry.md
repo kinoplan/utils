@@ -5,6 +5,7 @@ The module is a copy of
 ```scala
 "com.softwaremill.sttp.client3" %% "opentelemetry-tracing-zio-backend" % ${version}
 ```
+
 but with early support
 
 ```scala
@@ -12,6 +13,7 @@ but with early support
 ```
 
 ## Installation
+
 Add the following line to the `libraryDependencies` in your `build.sbt`:
 
 ```scala
@@ -21,6 +23,7 @@ Add the following line to the `libraryDependencies` in your `build.sbt`:
 the dependency already comes with all necessary dependencies including `sttp` and `zio-opentelemetry`
 
 ## Usage
+
 Provide `OpenTelemetryTracingZioBackend` to your `SttpBackend` ZIO Layer, for example:
 
 ```scala
@@ -55,4 +58,5 @@ object SttpBackendService {
 
 }
 ```
+
 You can also implement your own `OpenTelemetryZioTracer`.

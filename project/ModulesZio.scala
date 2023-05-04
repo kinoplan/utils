@@ -1,6 +1,6 @@
 import Dependencies.{Libraries, Shades}
 import sbt.Keys.*
-import sbt.{Project, Provided}
+import sbt.*
 
 object ModulesZio {
 
@@ -58,6 +58,25 @@ object ModulesZio {
     .configure(ProjectSettings.commonProfile, ProjectSettings.shadingProfile(Shades.zioConfig))
     .settings(name := "utils-zio-reactivemongo")
     .settings(libraryDependencies ++= Seq(Libraries.reactiveMongo % Provided, Libraries.zio.value))
+
+  lazy val redissonProfile: Project => Project = _
+    .configure(
+      ProjectSettings.commonProfile,
+      ProjectSettings.zioTestProfile,
+      ProjectSettings.shadingProfile(Shades.zioConfig)
+    )
+    .settings(name := "utils-zio-redisson")
+    .settings(Test / testOptions += Tests.Filter(_.endsWith("MainSpec")))
+    .settings(
+      libraryDependencies ++=
+        Seq(
+          Libraries.logbackClassic % Test,
+          Libraries.redisson,
+          Libraries.testContainersRedis,
+          Libraries.zio.value,
+          Libraries.zioStreams.value
+        )
+    )
 
   lazy val sttpLoggingSlf4jProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
