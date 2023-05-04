@@ -2,7 +2,7 @@ package io.kinoplan.utils.redisson.codec
 
 import io.circe.{Decoder, parser}
 
-import io.kinoplan.utils.redisson.core.codec.RedisDecoder
+import io.kinoplan.utils.redisson.base.codec.RedisDecoder
 
 trait CirceRedisDecoders {
 

@@ -36,4 +36,20 @@ object ProjectSettings {
   lazy val kindProjectorProfile: Project => Project =
     _.settings(addCompilerPlugin(Dependencies.kindProjector.cross(CrossVersion.full)))
 
+  lazy val macroProfile: Project => Project = _.settings(
+    libraryDependencies ++= {
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, n)) if n <= 12 =>
+          List(compilerPlugin(Dependencies.macroParadise.cross(CrossVersion.full)))
+        case _ => Nil
+      }
+    },
+    Compile / scalacOptions ++= {
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, n)) if n <= 12 => Nil
+        case _                       => List("-Ymacro-annotations")
+      }
+    }
+  )
+
 }

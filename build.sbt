@@ -64,19 +64,24 @@ lazy val reactivemongoBsonRefined = project
   .in(file("common/reactivemongo/bson-refined"))
   .configure(ModulesCommon.reactivemongoBsonRefinedProfile)
 
+lazy val redissonBase = project
+  .in(file("common/redisson/base"))
+  .configure(ModulesCommon.redissonBaseProfile)
+
 lazy val redissonCore = project
   .in(file("common/redisson/core"))
   .configure(ModulesCommon.redissonProfile)
+  .dependsOn(redissonBase)
 
 lazy val redissonCodecCirce = project
   .in(file("common/redisson/codec/circe"))
   .configure(ModulesCommon.redissonCodecCirceProfile)
-  .dependsOn(redissonCore)
+  .dependsOn(redissonBase)
 
 lazy val redissonCodecPlayJson = project
   .in(file("common/redisson/codec/play-json"))
   .configure(ModulesCommon.redissonCodecPlayJsonProfile)
-  .dependsOn(redissonCore)
+  .dependsOn(redissonBase)
 
 // zzzzzzzzzzzzzzzzzzzz Implicits Modules zzzzzzzzzzzzzzzzzzzz
 
@@ -150,6 +155,11 @@ lazy val zioReactivemongo = project
   .in(file("zio/reactivemongo"))
   .configure(ModulesZio.reactivemongoProfile)
   .dependsOn(zioIntegrationCheck.jvm, reactivemongoBase)
+
+lazy val zioRedisson = project
+  .in(file("zio/redisson"))
+  .configure(ModulesZio.redissonProfile)
+  .dependsOn(zioIntegrationCheck.jvm, redissonBase)
 
 lazy val zioSttpLoggingSlf4j = project
   .in(file("zio/sttp/logging/slf4j"))

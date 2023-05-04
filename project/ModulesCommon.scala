@@ -93,10 +93,13 @@ object ModulesCommon {
       libraryDependencies ++= Seq(Dependencies.reactiveMongo % Provided, Dependencies.refined)
     )
 
+  lazy val redissonBaseProfile: Project => Project =
+    _.configure(ProjectSettings.commonProfile).settings(name := "utils-redisson-base")
+
   lazy val redissonProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-redisson-core")
-    .settings(libraryDependencies ++= Seq(Dependencies.redisson, Dependencies.jacksonModule))
+    .settings(libraryDependencies ++= Seq(Dependencies.jacksonModule, Dependencies.redisson))
 
   lazy val redissonCodecCirceProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)

@@ -10,6 +10,7 @@ object Dependencies {
     val scalaJavaTimeV = "2.5.0"
     val sttpV          = "3.9.1"
     val tapirV         = "1.9.4"
+    val zioV           = "2.0.19"
     val zioConfigV     = "3.0.7"
   }
 
@@ -35,6 +36,7 @@ object Dependencies {
   val kindProjector        = "org.typelevel"                 %% "kind-projector"         % "0.13.2"
   val logback              = "ch.qos.logback"                 % "logback-classic"        % "1.2.13"
   val logbackCore          = "ch.qos.logback"                 % "logback-core"           % "1.2.13"
+  val macroParadise        = "org.scalamacros"                % "paradise"               % "2.1.1"
   val mockitoScala         = "org.scalatestplus"             %% "mockito-3-4"            % "3.2.10.0" % Test
   val play                 = "com.typesafe.play"             %% "play"                   % playV
   val playJson             = "com.typesafe.play"             %% "play-json"              % "2.10.3"
@@ -49,10 +51,12 @@ object Dependencies {
   val sttpSlf4jBackend     = "com.softwaremill.sttp.client3" %% "slf4j-backend"          % sttpV
   val tapirServer          = "com.softwaremill.sttp.tapir"   %% "tapir-server"           % tapirV
   val typesafeConfig       = "com.typesafe"                   % "config"                 % "1.4.3"
-  val zio                  = "dev.zio"                       %% "zio"                    % "2.0.19"
+  val zio                  = "dev.zio"                       %% "zio"                    % zioV
   val zioConfig            = "dev.zio"                       %% "zio-config"             % zioConfigV
   val zioConfigTypesafe    = "dev.zio"                       %% "zio-config-typesafe"    % zioConfigV
   val zioConfigMagnolia    = "dev.zio"                       %% "zio-config-magnolia"    % zioConfigV
   val zioInteropCats       = "dev.zio"                       %% "zio-interop-cats"       % "23.0.0.8"
+  val zioMacros            = "dev.zio"                       %% "zio-macros"             % zioV
   val zioMetricsPrometheus = "dev.zio"                       %% "zio-metrics-prometheus" % "2.0.1"
+
 }

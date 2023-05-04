@@ -1,4 +1,6 @@
-import sbt.Keys._
+import coursier.ShadingPlugin
+import coursier.ShadingPlugin.autoImport.shadedDependencies
+import sbt.Keys.*
 import sbt.{Project, Provided}
 
 object ModulesZio {
@@ -48,6 +50,25 @@ object ModulesZio {
           Dependencies.zioConfig,
           Dependencies.zioConfigTypesafe
         )
+    )
+
+  lazy val redissonProfile: Project => Project = _
+    .enablePlugins(ShadingPlugin)
+    .configure(ProjectSettings.commonProfile, ProjectSettings.macroProfile)
+    .settings(name := "utils-zio-redisson")
+    .settings(
+      libraryDependencies ++=
+        Seq(
+          Dependencies.jacksonModule,
+          Dependencies.redisson,
+          Dependencies.zio,
+          Dependencies.zioConfig,
+          Dependencies.zioConfigTypesafe,
+          Dependencies.zioConfigMagnolia,
+          Dependencies.zioMacros
+        ),
+      shadedDependencies ++=
+        Set(Dependencies.zioConfig, Dependencies.zioConfigTypesafe, Dependencies.zioConfigMagnolia)
     )
 
   lazy val sttpLoggingSlf4jProfile: Project => Project = _

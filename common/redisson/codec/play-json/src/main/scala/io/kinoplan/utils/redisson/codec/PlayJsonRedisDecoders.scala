@@ -4,7 +4,7 @@ import scala.util.Try
 
 import play.api.libs.json.{Json, Reads}
 
-import io.kinoplan.utils.redisson.core.codec.RedisDecoder
+import io.kinoplan.utils.redisson.base.codec.RedisDecoder
 
 trait PlayJsonRedisDecoders {
 
