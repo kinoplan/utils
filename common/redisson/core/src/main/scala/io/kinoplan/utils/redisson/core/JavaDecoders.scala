@@ -4,7 +4,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 import org.redisson.api.StreamMessageId
 
-import io.kinoplan.utils.redisson.core.codec.RedisDecoder
+import io.kinoplan.utils.redisson.base.codec.RedisDecoder
 import io.kinoplan.utils.redisson.crossCollectionConverters._
 
 object JavaDecoders {

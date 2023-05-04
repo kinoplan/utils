@@ -46,6 +46,7 @@ object Dependencies {
     val kindProjector                    = "org.typelevel"                 %% "kind-projector"                         % "0.13.3"
     val logbackClassic                   = "ch.qos.logback"                 % "logback-classic"                        % logbackV
     val logbackCore                      = "ch.qos.logback"                 % "logback-core"                           % logbackV
+    val macroParadise                    = "org.scalamacros"                % "paradise"                               % "2.1.1"
     val micrometerRegistryPrometheus     = "io.micrometer"                  % "micrometer-registry-prometheus"         % "1.13.6"
     val mockitoScala                     = "org.scalatestplus"             %% "mockito-3-4"                            % "3.2.10.0" % Test
     val openTelemetryExporterOtlp        = "io.opentelemetry"               % "opentelemetry-exporter-otlp"            % openTelemetryV
@@ -57,7 +58,7 @@ object Dependencies {
     val playReactiveMongo                = "org.reactivemongo"             %% "play2-reactivemongo"                    % s"$reactivemongoV-play28"
     val prometheusExporterHttpServer     = "io.prometheus"                  % "prometheus-metrics-exporter-httpserver" % "1.3.2"
     val reactiveMongo                    = "org.reactivemongo"             %% "reactivemongo"                          % reactivemongoV
-    val redisson                         = "org.redisson"                   % "redisson"                               % "3.24.2"
+    val redisson                         = "org.redisson"                   % "redisson"                               % "3.35.0"
     val refined                          = "eu.timepit"                    %% "refined"                                % "0.11.2"
     val scalaCollectionCompat            = "org.scala-lang.modules"        %% "scala-collection-compat"                % "2.12.0"
     val scalaLogging                     = "com.typesafe.scala-logging"    %% "scala-logging"                          % "3.9.5"
@@ -68,6 +69,7 @@ object Dependencies {
     val sttpZio                          = "com.softwaremill.sttp.client3" %% "zio"                                    % sttpV
     val tapirServer                      = "com.softwaremill.sttp.tapir"   %% "tapir-server"                           % tapirV
     val typesafeConfig                   = "com.typesafe"                   % "config"                                 % "1.4.3"
+    val zioMacros                        = "dev.zio"                       %% "zio-macros"                             % zioV
     val zioConfig                        = "dev.zio"                       %% "zio-config"                             % zioConfigV
     val zioConfigMagnolia                = "dev.zio"                       %% "zio-config-magnolia"                    % zioConfigV
     val zioConfigEnumeratum              = "dev.zio"                       %% "zio-config-enumeratum"                  % zioConfigV
