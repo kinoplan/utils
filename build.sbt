@@ -430,6 +430,12 @@ lazy val zioReactivemongo = projectMatrix
   .configure(ModulesZio.reactivemongoProfile)
   .dependsOn(zioIntegrationCheck, reactivemongoBase)
 
+lazy val zioRedisson = projectMatrix
+  .in(file("zio/redisson"))
+  .jvmPlatform(ProjectSettings.scala2Versions)
+  .configure(ModulesZio.redissonProfile)
+  .dependsOn(crossCollection, zioIntegrationCheck, redissonCodecBase)
+
 lazy val zioSttpLoggingSlf4j = projectMatrix
   .in(file("zio/sttp/logging/slf4j"))
   .jvmPlatform(ProjectSettings.scala2Versions)
