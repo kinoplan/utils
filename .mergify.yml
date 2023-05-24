@@ -18,7 +18,7 @@ pull_request_rules:
         method: squash
   - name: automatic merge for dependabot pull requests
     conditions:
-      - author=dependabot[bot]
+      - author=dependabot
       - "body~=(labels:.*semver-patch.*)|(labels:.*semver-minor.*)"
       - check-success~=Build and Test \(ubuntu-latest, 2\.12\.\d+, adopt@1.8\)
       - check-success~=Build and Test \(ubuntu-latest, 2\.13\.\d+, adopt@1.8\)
