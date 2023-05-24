@@ -19,7 +19,6 @@ pull_request_rules:
   - name: automatic merge for dependabot pull requests
     conditions:
       - author=dependabot[bot]
-      - "body~=(labels:.*semver-patch.*)|(labels:.*semver-minor.*)"
       - check-success~=Build and Test \(ubuntu-latest, 2\.12\.\d+, adopt@1.8\)
       - check-success~=Build and Test \(ubuntu-latest, 2\.13\.\d+, adopt@1.8\)
     actions:
