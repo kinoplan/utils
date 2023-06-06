@@ -28,7 +28,7 @@ object Dependencies {
   val http4sBlazeServer    = "org.http4s"                    %% "http4s-blaze-server"    % "0.23.15"
   val http4sDsl            = "org.http4s"                    %% "http4s-dsl"             % "0.23.19"
   val http4sServer         = "org.http4s"                    %% "http4s-server"          % "0.23.19"
-  val jacksonModule        = "com.fasterxml.jackson.module"  %% "jackson-module-scala"   % "2.15.1"
+  val jacksonModule        = "com.fasterxml.jackson.module"  %% "jackson-module-scala"   % "2.15.2"
   val jodaTime             = "joda-time"                      % "joda-time"              % "2.12.5"
   val kindProjector        = "org.typelevel"                 %% "kind-projector"         % "0.13.2"
   val logback              = "ch.qos.logback"                 % "logback-classic"        % "1.2.12"
@@ -46,7 +46,7 @@ object Dependencies {
   val sttpSlf4jBackend     = "com.softwaremill.sttp.client3" %% "slf4j-backend"          % sttpV
   val tapirServer          = "com.softwaremill.sttp.tapir"   %% "tapir-server"           % tapirV
   val typesafeConfig       = "com.typesafe"                   % "config"                 % "1.4.2"
-  val zio                  = "dev.zio"                       %% "zio"                    % "2.0.13"
+  val zio                  = "dev.zio"                       %% "zio"                    % "2.0.14"
   val zioConfig            = "dev.zio"                       %% "zio-config"             % zioConfigV
   val zioConfigTypesafe    = "dev.zio"                       %% "zio-config-typesafe"    % zioConfigV
   val zioConfigMagnolia    = "dev.zio"                       %% "zio-config-magnolia"    % zioConfigV
