@@ -9,7 +9,7 @@ object ProjectSettings {
   lazy val commonProfile: Project => Project = _
     .enablePlugins(ScalafixPlugin)
     .settings(
-      crossScalaVersions := Seq("2.12.17", "2.13.11"),
+      crossScalaVersions := Seq("2.12.17", "2.13.10"),
       scalaVersion := crossScalaVersions.value.last,
       scalacOptions ~=
         (_.filterNot(
