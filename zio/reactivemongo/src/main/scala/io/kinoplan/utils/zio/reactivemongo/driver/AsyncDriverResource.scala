@@ -3,15 +3,19 @@ package io.kinoplan.utils.zio.reactivemongo.driver
 import scala.concurrent.duration.DurationInt
 
 import reactivemongo.api.AsyncDriver
-import zio.{TaskLayer, ZIO, ZLayer}
+import zio.{Scope, ULayer, ZIO, ZLayer}
 
 private[reactivemongo] object AsyncDriverResource {
-  private def acquire = ZIO.attempt(AsyncDriver())
 
-  private def release(asyncDriver: AsyncDriver) = ZIO
-    .fromFuture(implicit ec => asyncDriver.close(10.seconds))
-    .orDie
-    .unit
+  private def make: ZIO[Scope, Nothing, AsyncDriver] = ZIO
+    .succeed(AsyncDriver())
+    .withFinalizer(asyncDriver =>
+      ZIO
+        .fromFuture(implicit ec => asyncDriver.close(10.seconds))
+        .timeout(zio.Duration.fromSeconds(10))
+        .orDie
+    )
 
-  val live: TaskLayer[AsyncDriver] = ZLayer.scoped(ZIO.acquireRelease(acquire)(release))
+  val live: ULayer[AsyncDriver] = ZLayer.scoped(make)
+
 }
