@@ -12,7 +12,7 @@ object Reactivemongo {
   def live(dbNames: String*): ZLayer[Any, Throwable, ZIntegration[Map[String, ReactiveMongoApi]]] =
     AsyncDriverResource.live ++ MongoConfig.live(dbNames) >>>
       ZLayer
-        .foreach(dbNames)(ReactiveMongoApi.make)
+        .foreach(dbNames)(ReactiveMongoApi.live)
         .map(env =>
           ZIntegration.environment(
             env
