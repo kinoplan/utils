@@ -9,7 +9,7 @@ object Dependencies {
     val reactivemongoV = "1.0.10"
     val scalaJavaTimeV = "2.5.0"
     val sttpV          = "3.8.15"
-    val tapirV         = "1.5.5"
+    val tapirV         = "1.6.0"
     val zioConfigV     = "3.0.7"
   }
 
@@ -26,8 +26,8 @@ object Dependencies {
   val circeCore            = "io.circe"                      %% "circe-core"             % circeV
   val circeParser          = "io.circe"                      %% "circe-parser"           % circeV
   val http4sBlazeServer    = "org.http4s"                    %% "http4s-blaze-server"    % "0.23.15"
-  val http4sDsl            = "org.http4s"                    %% "http4s-dsl"             % "0.23.21"
-  val http4sServer         = "org.http4s"                    %% "http4s-server"          % "0.23.21"
+  val http4sDsl            = "org.http4s"                    %% "http4s-dsl"             % "0.23.22"
+  val http4sServer         = "org.http4s"                    %% "http4s-server"          % "0.23.22"
   val jacksonModule        = "com.fasterxml.jackson.module"  %% "jackson-module-scala"   % "2.15.2"
   val jodaTime             = "joda-time"                      % "joda-time"              % "2.12.5"
   val kindProjector        = "org.typelevel"                 %% "kind-projector"         % "0.13.2"
