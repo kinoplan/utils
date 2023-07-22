@@ -50,6 +50,6 @@ object Dependencies {
   val zioConfig            = "dev.zio"                       %% "zio-config"             % zioConfigV
   val zioConfigTypesafe    = "dev.zio"                       %% "zio-config-typesafe"    % zioConfigV
   val zioConfigMagnolia    = "dev.zio"                       %% "zio-config-magnolia"    % zioConfigV
-  val zioInteropCats       = "dev.zio"                       %% "zio-interop-cats"       % "23.0.0.8"
+  val zioInteropCats       = "dev.zio"                       %% "zio-interop-cats"       % "23.0.0.6"
   val zioMetricsPrometheus = "dev.zio"                       %% "zio-metrics-prometheus" % "2.0.1"
 }
