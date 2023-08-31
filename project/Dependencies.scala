@@ -4,7 +4,7 @@ import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 object Dependencies {
 
   object Versions {
-    val circeV         = "0.14.5"
+    val circeV         = "0.14.6"
     val playV          = "2.8.20"
     val reactivemongoV = "1.0.10"
     val scalaJavaTimeV = "2.5.0"
