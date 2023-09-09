@@ -17,6 +17,12 @@ lazy val integrationCheck = crossProject(JSPlatform, JVMPlatform)
   .in(file("common/integration-check"))
   .configureCross(ModulesCommon.integrationCheckProfile)
 
+lazy val localesMinimalDb = crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Pure)
+  .enablePlugins(LocalesPlugin)
+  .in(file("common/locales-minimal-db"))
+  .configureCross(ModulesCommon.localesMinimalDbProfile)
+
 lazy val logbackConfig = project
   .in(file("common/logback-config"))
   .configure(ModulesCommon.logbackConfigProfile)
