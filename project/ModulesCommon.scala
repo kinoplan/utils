@@ -1,7 +1,9 @@
 import sbt.Keys._
+import locales.{CLDRVersion, LocalesFilter}
 import sbt.{Project, Provided, Test}
 import sbtcrossproject.CrossProject
 import scalajscrossproject.ScalaJSCrossPlugin.autoImport._
+import locales.LocalesPlugin.autoImport._
 
 object ModulesCommon {
 
@@ -20,6 +22,16 @@ object ModulesCommon {
     .configure(ProjectSettings.commonProfile)
     .jsConfigure(ProjectSettings.scalaJsProfile)
     .settings(name := "utils-integration-check")
+
+  lazy val localesMinimalDbProfile: CrossProject => CrossProject = _
+    .configure(ProjectSettings.commonProfile)
+    .jsConfigure(ProjectSettings.scalaJsProfile)
+    .settings(name := "utils-locales-minimal-db")
+    .settings(
+      cldrVersion := CLDRVersion.Version("43.1"), // http://unicode.org/Public/cldr/
+      localesFilter := LocalesFilter.Selection("ru", "en"),
+      libraryDependencies ++= Seq(Dependencies.scalaJavaLocales.value)
+    )
 
   lazy val logbackConfigProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
