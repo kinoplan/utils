@@ -20,7 +20,7 @@ object Dependencies {
   val scalaJavaLocales  = Def.setting("io.github.cquiroz" %%% "scala-java-locales" % "1.5.1")
   val scalaJavaTime     = Def.setting("io.github.cquiroz" %%% "scala-java-time" % scalaJavaTimeV)
   val scalaJavaTimeZone = Def.setting("io.github.cquiroz" %%% "scala-java-time-tzdb" % scalaJavaTimeV)
-  val scalatest         = Def.setting("org.scalatest" %%% "scalatest" % "3.2.16" % Test)
+  val scalatest         = Def.setting("org.scalatest" %%% "scalatest" % "3.2.17" % Test)
 
   // A -> Z
   val circeCore            = "io.circe"                      %% "circe-core"             % circeV
