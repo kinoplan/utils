@@ -20,7 +20,7 @@ object Dependencies {
   val scalaJavaLocales  = Def.setting("io.github.cquiroz" %%% "scala-java-locales" % "1.5.1")
   val scalaJavaTime     = Def.setting("io.github.cquiroz" %%% "scala-java-time" % scalaJavaTimeV)
   val scalaJavaTimeZone = Def.setting("io.github.cquiroz" %%% "scala-java-time-tzdb" % scalaJavaTimeV)
-  val scalatest         = Def.setting("org.scalatest" %%% "scalatest" % "3.2.16" % Test)
+  val scalatest         = Def.setting("org.scalatest" %%% "scalatest" % "3.2.17" % Test)
 
   // A -> Z
   val circeCore            = "io.circe"                      %% "circe-core"             % circeV
@@ -35,18 +35,18 @@ object Dependencies {
   val logbackCore          = "ch.qos.logback"                 % "logback-core"           % "1.2.12"
   val mockitoScala         = "org.scalatestplus"             %% "mockito-3-4"            % "3.2.10.0" % Test
   val play                 = "com.typesafe.play"             %% "play"                   % playV
-  val playJson             = "com.typesafe.play"             %% "play-json"              % "2.9.4"
+  val playJson             = "com.typesafe.play"             %% "play-json"              % "2.10.1"
   val playReactiveMongo    = "org.reactivemongo"             %% "play2-reactivemongo"    % s"$reactivemongoV-play28"
   val reactiveMongo        = "org.reactivemongo"             %% "reactivemongo"          % reactivemongoV
   val redisson             = "org.redisson"                   % "redisson"               % "3.21.3"
   val refined              = "eu.timepit"                    %% "refined"                % "0.11.0"
   val scalaLogging         = "com.typesafe.scala-logging"    %% "scala-logging"          % "3.9.5"
-  val scalastic            = "org.scalactic"                 %% "scalactic"              % "3.2.16"
+  val scalastic            = "org.scalactic"                 %% "scalactic"              % "3.2.17"
   val scalatestPlay        = "org.scalatestplus.play"        %% "scalatestplus-play"     % "5.1.0"    % Test
   val sttpSlf4jBackend     = "com.softwaremill.sttp.client3" %% "slf4j-backend"          % sttpV
   val tapirServer          = "com.softwaremill.sttp.tapir"   %% "tapir-server"           % tapirV
   val typesafeConfig       = "com.typesafe"                   % "config"                 % "1.4.2"
-  val zio                  = "dev.zio"                       %% "zio"                    % "2.0.16"
+  val zio                  = "dev.zio"                       %% "zio"                    % "2.0.17"
   val zioConfig            = "dev.zio"                       %% "zio-config"             % zioConfigV
   val zioConfigTypesafe    = "dev.zio"                       %% "zio-config-typesafe"    % zioConfigV
   val zioConfigMagnolia    = "dev.zio"                       %% "zio-config-magnolia"    % zioConfigV
