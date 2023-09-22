@@ -38,7 +38,7 @@ object Dependencies {
   val playJson             = "com.typesafe.play"             %% "play-json"              % "2.10.1"
   val playReactiveMongo    = "org.reactivemongo"             %% "play2-reactivemongo"    % s"$reactivemongoV-play28"
   val reactiveMongo        = "org.reactivemongo"             %% "reactivemongo"          % reactivemongoV
-  val redisson             = "org.redisson"                   % "redisson"               % "3.23.5"
+  val redisson             = "org.redisson"                   % "redisson"               % "3.21.3"
   val refined              = "eu.timepit"                    %% "refined"                % "0.11.0"
   val scalaLogging         = "com.typesafe.scala-logging"    %% "scala-logging"          % "3.9.5"
   val scalastic            = "org.scalactic"                 %% "scalactic"              % "3.2.17"
