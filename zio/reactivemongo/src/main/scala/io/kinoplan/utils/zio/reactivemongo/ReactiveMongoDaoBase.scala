@@ -155,11 +155,17 @@ abstract class ReactiveMongoDaoBase[T](
       result <- ZIO.fromFuture(implicit ec => Queries.insertOneQ(coll)(value))
     } yield result
 
-    def update(q: BSONDocument, u: BSONDocument, multi: Boolean = false, upsert: Boolean = false) =
-      for {
-        coll <- collection
-        result <- ZIO.fromFuture(implicit ec => Queries.updateQ(coll)(q, u, multi, upsert))
-      } yield result
+    def update(
+      q: BSONDocument,
+      u: BSONDocument,
+      multi: Boolean = false,
+      upsert: Boolean = false,
+      arrayFilters: Seq[BSONDocument] = Seq.empty[BSONDocument]
+    ) = for {
+      coll <- collection
+      result <- ZIO
+        .fromFuture(implicit ec => Queries.updateQ(coll)(q, u, multi, upsert, arrayFilters))
+    } yield result
 
     def updateMany(values: List[T], f: T => (BSONDocument, BSONDocument, Boolean, Boolean)) = for {
       coll <- collection
