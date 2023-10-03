@@ -122,11 +122,17 @@ private[utils] object Queries extends QueryBuilderSyntax {
     ec: ExecutionContext
   ) = collection.insert(ordered = false).one(value)
 
-  def updateQ(
-    collection: BSONCollection
-  )(q: BSONDocument, u: BSONDocument, multi: Boolean = false, upsert: Boolean = false)(implicit
+  def updateQ(collection: BSONCollection)(
+    q: BSONDocument,
+    u: BSONDocument,
+    multi: Boolean = false,
+    upsert: Boolean = false,
+    arrayFilters: Seq[BSONDocument] = Seq.empty
+  )(implicit
     ec: ExecutionContext
-  ) = collection.update(ordered = false).one(q, u, multi = multi, upsert = upsert)
+  ) = collection
+    .update(ordered = false)
+    .one(q, u, multi = multi, upsert = upsert, collation = None, arrayFilters = arrayFilters)
 
   def updateManyQ[T](
     collection: BSONCollection
