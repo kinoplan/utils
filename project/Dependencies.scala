@@ -45,7 +45,7 @@ object Dependencies {
   val scalatestPlay        = "org.scalatestplus.play"        %% "scalatestplus-play"     % "5.1.0"    % Test
   val sttpSlf4jBackend     = "com.softwaremill.sttp.client3" %% "slf4j-backend"          % sttpV
   val tapirServer          = "com.softwaremill.sttp.tapir"   %% "tapir-server"           % tapirV
-  val typesafeConfig       = "com.typesafe"                   % "config"                 % "1.4.2"
+  val typesafeConfig       = "com.typesafe"                   % "config"                 % "1.4.3"
   val zio                  = "dev.zio"                       %% "zio"                    % "2.0.18"
   val zioConfig            = "dev.zio"                       %% "zio-config"             % zioConfigV
   val zioConfigTypesafe    = "dev.zio"                       %% "zio-config-typesafe"    % zioConfigV
