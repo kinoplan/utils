@@ -9,7 +9,7 @@ object Dependencies {
     val reactivemongoV = "1.0.10"
     val scalaJavaTimeV = "2.5.0"
     val sttpV          = "3.9.0"
-    val tapirV         = "1.7.6"
+    val tapirV         = "1.8.1"
     val zioConfigV     = "3.0.7"
   }
 
@@ -28,7 +28,7 @@ object Dependencies {
   val http4sBlazeServer    = "org.http4s"                    %% "http4s-blaze-server"    % "0.23.15"
   val http4sDsl            = "org.http4s"                    %% "http4s-dsl"             % "0.23.23"
   val http4sServer         = "org.http4s"                    %% "http4s-server"          % "0.23.23"
-  val jacksonModule        = "com.fasterxml.jackson.module"  %% "jackson-module-scala"   % "2.15.2"
+  val jacksonModule        = "com.fasterxml.jackson.module"  %% "jackson-module-scala"   % "2.15.3"
   val jodaTime             = "joda-time"                      % "joda-time"              % "2.12.5"
   val kindProjector        = "org.typelevel"                 %% "kind-projector"         % "0.13.2"
   val logback              = "ch.qos.logback"                 % "logback-classic"        % "1.2.12"
