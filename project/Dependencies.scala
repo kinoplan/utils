@@ -9,7 +9,7 @@ object Dependencies {
     val reactivemongoV = "1.0.10"
     val scalaJavaTimeV = "2.5.0"
     val sttpV          = "3.9.0"
-    val tapirV         = "1.8.1"
+    val tapirV         = "1.8.2"
     val zioConfigV     = "3.0.7"
   }
 
@@ -45,7 +45,7 @@ object Dependencies {
   val scalatestPlay        = "org.scalatestplus.play"        %% "scalatestplus-play"     % "5.1.0"    % Test
   val sttpSlf4jBackend     = "com.softwaremill.sttp.client3" %% "slf4j-backend"          % sttpV
   val tapirServer          = "com.softwaremill.sttp.tapir"   %% "tapir-server"           % tapirV
-  val typesafeConfig       = "com.typesafe"                   % "config"                 % "1.4.2"
+  val typesafeConfig       = "com.typesafe"                   % "config"                 % "1.4.3"
   val zio                  = "dev.zio"                       %% "zio"                    % "2.0.18"
   val zioConfig            = "dev.zio"                       %% "zio-config"             % zioConfigV
   val zioConfigTypesafe    = "dev.zio"                       %% "zio-config-typesafe"    % zioConfigV
