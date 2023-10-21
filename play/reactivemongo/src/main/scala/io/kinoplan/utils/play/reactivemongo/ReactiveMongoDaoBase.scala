@@ -237,9 +237,10 @@ abstract class ReactiveMongoDaoBase[T](
   ): Future[List[T]] = dao.findAll(readConcern, readPreference)
 
   def findManyByIds(
+    ids: Set[BSONObjectID],
     readConcern: Option[ReadConcern] = None,
     readPreference: ReadPreference = readPreferenceO.getOrElse(ReadPreference.secondaryPreferred)
-  )(ids: Set[BSONObjectID])(implicit
+  )(implicit
     r: BSONDocumentReader[T],
     position: Position
   ): Future[List[T]] = dao.findManyByIds(ids, readConcern, readPreference)
