@@ -1,8 +1,9 @@
-import sbt.Keys._
-import sbt._
+import org.typelevel.sbt.tpolecat.TpolecatPlugin.autoImport.tpolecatExcludeOptions
+import org.typelevel.scalacoptions.ScalacOptions
+import sbt.Keys.*
+import sbt.*
 import scalafix.sbt.ScalafixPlugin
-import scoverage.ScoverageKeys._
-import _root_.io.github.davidgregory084.TpolecatPlugin.autoImport._
+import scoverage.ScoverageKeys.*
 
 object ProjectSettings {
 
@@ -11,20 +12,17 @@ object ProjectSettings {
     .settings(
       crossScalaVersions := Seq("2.12.18", "2.13.12"),
       scalaVersion := crossScalaVersions.value.last,
-      scalacOptions ~=
-        (_.filterNot(
-          Set(
-            "-Wdead-code",
-            "-Wunused:params",
-            "-Ywarn-dead-code",
-            "-Ywarn-unused:params",
-            "-Ywarn-unused:patvars",
-            "-Wunused:explicits",
-            "-Xlint:infer-any",
-            "-Ywarn-infer-any"
-          )
-        )),
-      tpolecatExcludeOptions += ScalacOptions.warnNonUnitStatement,
+      tpolecatExcludeOptions :=
+        Set(
+          ScalacOptions.warnError,
+          ScalacOptions.warnUnusedParams,
+          ScalacOptions.warnUnusedPatVars,
+          ScalacOptions.warnValueDiscard,
+          ScalacOptions.warnDeadCode,
+          ScalacOptions.lintInferAny,
+          ScalacOptions.warnUnusedExplicits,
+          ScalacOptions.warnNonUnitStatement
+        ),
       Test / fork := true,
       Test / javaOptions += "-Duser.timezone=UTC",
       libraryDependencies ++= Seq(Dependencies.scalatest.value, Dependencies.mockitoScala),
