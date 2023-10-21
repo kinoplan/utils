@@ -5,7 +5,12 @@ import java.util.concurrent.TimeUnit
 import scala.concurrent.{ExecutionContext, Future}
 
 import org.redisson.api.{PendingEntry, RStream, RedissonClient, StreamConsumer, StreamMessageId}
-import org.redisson.api.stream.{StreamAddArgs, StreamReadGroupArgs, StreamTrimArgs}
+import org.redisson.api.stream.{
+  StreamAddArgs,
+  StreamCreateGroupArgs,
+  StreamReadGroupArgs,
+  StreamTrimArgs
+}
 import org.redisson.client.codec.StringCodec
 
 import io.kinoplan.utils.redisson.core.JavaDecoders._
@@ -20,7 +25,7 @@ trait RedisStreamOperations {
     redissonClient.getStream[String, String](_, StringCodec.INSTANCE)
 
   protected def xGroupCreate(key: String, group: String): Future[Unit] = Future {
-    stream(key).createGroup(group)
+    stream(key).createGroup(StreamCreateGroupArgs.name(group))
   }
 
   protected def xAdd[T: RedisEncoder](key: String, kv: (String, T)): Future[StreamMessageId] =

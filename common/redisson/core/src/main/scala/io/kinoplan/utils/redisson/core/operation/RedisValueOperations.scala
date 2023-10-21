@@ -1,7 +1,6 @@
 package io.kinoplan.utils.redisson.core.operation
 
 import java.time.Duration
-import java.util.concurrent.TimeUnit
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -45,12 +44,12 @@ trait RedisValueOperations {
 
   protected def setEx[T: RedisEncoder](key: String, seconds: Long, value: T): Future[Unit] =
     Future {
-      bucket(key).set(RedisEncoder[T].encode(value), seconds, TimeUnit.SECONDS)
+      bucket(key).set(RedisEncoder[T].encode(value), Duration.ofSeconds(seconds))
     }
 
   protected def setExNx[T: RedisEncoder](key: String, seconds: Long, value: T): Future[Boolean] =
     Future {
-      bucket(key).setIfExists(RedisEncoder[T].encode(value), seconds, TimeUnit.SECONDS)
+      bucket(key).setIfExists(RedisEncoder[T].encode(value), Duration.ofSeconds(seconds))
     }
 
   protected def expire(key: String, seconds: Long): Future[Boolean] = Future {
