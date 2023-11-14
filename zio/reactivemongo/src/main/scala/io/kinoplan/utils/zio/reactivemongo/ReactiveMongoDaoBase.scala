@@ -76,7 +76,8 @@ abstract class ReactiveMongoDaoBase[T](
       readConcern: Option[ReadConcern] = None,
       readPreference: ReadPreference = readPreferenceO.getOrElse(ReadPreference.secondaryPreferred)
     )(implicit
-      r: BSONDocumentReader[T]
+      r: BSONDocumentReader[T],
+      enclosing: sourcecode.Enclosing.Machine
     ): Task[List[T]] = findMany(readConcern = readConcern, readPreference = readPreference)
 
     def findMany[M <: T](
@@ -89,7 +90,8 @@ abstract class ReactiveMongoDaoBase[T](
       readConcern: Option[ReadConcern] = None,
       readPreference: ReadPreference = readPreferenceO.getOrElse(ReadPreference.secondaryPreferred)
     )(implicit
-      r: BSONDocumentReader[M]
+      r: BSONDocumentReader[M],
+      enclosing: sourcecode.Enclosing.Machine
     ): Task[List[M]] = for {
       coll <- collection
       result <- ZIO.fromFuture(implicit ec =>
@@ -111,7 +113,8 @@ abstract class ReactiveMongoDaoBase[T](
       readConcern: Option[ReadConcern] = None,
       readPreference: ReadPreference = readPreferenceO.getOrElse(ReadPreference.secondaryPreferred)
     )(implicit
-      r: BSONDocumentReader[T]
+      r: BSONDocumentReader[T],
+      enclosing: sourcecode.Enclosing.Machine
     ): Task[List[T]] = findMany(
       BSONDocument("_id" -> BSONDocument("$in" -> ids)),
       readConcern = readConcern,
@@ -124,7 +127,8 @@ abstract class ReactiveMongoDaoBase[T](
       readConcern: Option[ReadConcern] = None,
       readPreference: Option[ReadPreference] = readPreferenceO
     )(implicit
-      r: BSONDocumentReader[T]
+      r: BSONDocumentReader[T],
+      enclosing: sourcecode.Enclosing.Machine
     ): Task[Option[T]] = for {
       coll <- collection
       result <- ZIO.fromFuture(implicit ec =>
@@ -137,7 +141,8 @@ abstract class ReactiveMongoDaoBase[T](
       readConcern: Option[ReadConcern] = None,
       readPreference: Option[ReadPreference] = readPreferenceO
     )(implicit
-      r: BSONDocumentReader[T]
+      r: BSONDocumentReader[T],
+      enclosing: sourcecode.Enclosing.Machine
     ): Task[Option[T]] =
       findOne(BSONDocument("_id" -> id), readConcern = readConcern, readPreference = readPreference)
 
