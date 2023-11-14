@@ -8,6 +8,7 @@ import reactivemongo.api.indexes.Index
 import zio.{Task, Unsafe, ZIO}
 
 import io.kinoplan.utils.reactivemongo.base.{
+  BsonDocumentSyntax,
   BsonNoneAsNullProducer,
   Queries,
   QueryComment,
@@ -20,7 +21,8 @@ abstract class ReactiveMongoDaoBase[T](
   autoCommentQueries: Boolean = true,
   failoverStrategyO: Option[FailoverStrategy] = None,
   readPreferenceO: Option[ReadPreference] = None
-) extends BsonNoneAsNullProducer {
+) extends BsonNoneAsNullProducer
+      with BsonDocumentSyntax {
 
   protected object dao {
 
@@ -260,14 +262,10 @@ abstract class ReactiveMongoDaoBase[T](
       )
     } yield ()
 
-    def getQueryComment(implicit
-      enclosing: sourcecode.Enclosing
-    ): String = QueryComment.make(enclosing)
-
     private def withQueryComment(implicit
       enclosing: sourcecode.Enclosing
     ): Option[String] =
-      if (autoCommentQueries) Some(getQueryComment)
+      if (autoCommentQueries) Some(QueryComment.make)
       else None
 
   }
