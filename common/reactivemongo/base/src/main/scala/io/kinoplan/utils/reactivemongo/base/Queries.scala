@@ -88,40 +88,41 @@ private[utils] object Queries extends QueryBuilderSyntax {
     skip: Int = 0,
     limit: Int = -1,
     readConcern: Option[ReadConcern] = None,
-    readPreference: ReadPreference = ReadPreference.secondaryPreferred
+    readPreference: ReadPreference = ReadPreference.secondaryPreferred,
+    comment: Option[String] = None
   )(implicit
-    ec: ExecutionContext,
-    enclosing: sourcecode.Enclosing.Machine
+    ec: ExecutionContext
   ): Future[List[T]] = {
     val queryBuilder = collection.find(selector, projection).sort(sort).skip(skip)
     val queryBuilderWithHint = hint
       .fold(queryBuilder)(specification => queryBuilder.hint(collection.hint(specification)))
+    val queryBuilderWithComment = comment.fold(queryBuilderWithHint)(queryBuilderWithHint.comment(_))
 
-    queryBuilderWithHint
-      .withSelfComment()
-      .all[T](limit, readConcern = readConcern, readPreference = readPreference)
+    queryBuilderWithComment.all[T](limit, readConcern = readConcern, readPreference = readPreference)
   }
 
   def findOneQ[T: BSONDocumentReader](collection: BSONCollection)(
     selector: BSONDocument = BSONDocument(),
     projection: Option[BSONDocument] = None,
     readConcern: Option[ReadConcern] = None,
-    readPreference: Option[ReadPreference] = None
+    readPreference: Option[ReadPreference] = None,
+    comment: Option[String] = None
   )(implicit
-    ec: ExecutionContext,
-    enclosing: sourcecode.Enclosing.Machine
+    ec: ExecutionContext
   ): Future[Option[T]] = {
     val queryBuilder = collection.find(selector, projection)
     val queryBuilderWithReadConcern = readConcern.fold(queryBuilder)(queryBuilder.readConcern(_))
+    val queryBuilderWithComment = comment
+      .fold(queryBuilderWithReadConcern)(queryBuilderWithReadConcern.comment(_))
 
-    readPreference.fold(queryBuilderWithReadConcern.withSelfComment().one[T])(rp =>
-      queryBuilderWithReadConcern.withSelfComment().one[T](readPreference = rp)
+    readPreference.fold(queryBuilderWithComment.one[T])(rp =>
+      queryBuilderWithComment.one[T](readPreference = rp)
     )
   }
 
   def insertManyQ[T: BSONDocumentWriter](collection: BSONCollection)(values: List[T])(implicit
     ec: ExecutionContext
-  ): Future[BSONCollection#MultiBulkWriteResult] = collection.insert(ordered = false).many(values)
+  ) = collection.insert(ordered = false).many(values)
 
   def insertOneQ[T: BSONDocumentWriter](collection: BSONCollection)(value: T)(implicit
     ec: ExecutionContext
@@ -135,7 +136,7 @@ private[utils] object Queries extends QueryBuilderSyntax {
     arrayFilters: Seq[BSONDocument] = Seq.empty
   )(implicit
     ec: ExecutionContext
-  ): Future[BSONCollection#UpdateWriteResult] = collection
+  ) = collection
     .update(ordered = false)
     .one(q, u, multi = multi, upsert = upsert, collation = None, arrayFilters = arrayFilters)
 
@@ -143,7 +144,7 @@ private[utils] object Queries extends QueryBuilderSyntax {
     collection: BSONCollection
   )(values: List[T], f: T => (BSONDocument, BSONDocument, Boolean, Boolean))(implicit
     ec: ExecutionContext
-  ): Future[BSONCollection#MultiBulkWriteResult] = {
+  ) = {
     val update = collection.update(ordered = false)
     val elements = Future.sequence(
       values
@@ -158,7 +159,7 @@ private[utils] object Queries extends QueryBuilderSyntax {
   def upsertQ[T: BSONDocumentWriter](collection: BSONCollection)(q: BSONDocument, u: T)(implicit
     ec: ExecutionContext,
     w: BSONDocumentWriter[T]
-  ): Future[BSONCollection#UpdateWriteResult] = w.writeTry(u) match {
+  ) = w.writeTry(u) match {
     case Success(bson) =>
       collection.update(ordered = false).one(q, u = bson -- "_id", multi = false, upsert = true)
     case Failure(ex) => throw ex
@@ -168,7 +169,7 @@ private[utils] object Queries extends QueryBuilderSyntax {
     collection: BSONCollection
   )(q: BSONDocument, u: T, multi: Boolean = false, upsert: Boolean = false)(implicit
     ec: ExecutionContext
-  ): Future[BSONCollection#UpdateWriteResult] = collection
+  ) = collection
     .update(ordered = false)
     .one(q, document("$set" -> u), multi = multi, upsert = upsert)
 
@@ -176,7 +177,7 @@ private[utils] object Queries extends QueryBuilderSyntax {
     collection: BSONCollection
   )(values: List[T], f: T => (BSONDocument, T, Boolean, Boolean))(implicit
     ec: ExecutionContext
-  ): Future[BSONCollection#MultiBulkWriteResult] = {
+  ) = {
     val update = collection.update(ordered = false)
     val elements = Future.sequence(
       values

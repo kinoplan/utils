@@ -24,13 +24,6 @@ private[utils] trait QueryBuilderSyntax {
       builderWithReadConcern.cursor[T](readPreference).collect[List](limit, err)
     }
 
-    def withSelfComment()(implicit
-      enclosing: sourcecode.Enclosing.Machine
-    ): BSONCollection#QueryBuilder = {
-      val comment = s"requested by ${enclosing.value}"
-      builder.comment(comment)
-    }
-
   }
 
 }
