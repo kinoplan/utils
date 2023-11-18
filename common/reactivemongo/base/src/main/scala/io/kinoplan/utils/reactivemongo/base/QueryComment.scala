@@ -1,6 +1,6 @@
 package io.kinoplan.utils.reactivemongo.base
 
-private[utils] object QueryComment {
+object QueryComment {
 
   /** @param enclosing
     *   the name of the nearest enclosing definition: val, class, whatever, prefixed by the names of
@@ -10,6 +10,6 @@ private[utils] object QueryComment {
     */
   def make(implicit
     enclosing: sourcecode.Enclosing
-  ): String = s"requested by $enclosing"
+  ): String = s"requested by ${enclosing.value}"
 
 }
