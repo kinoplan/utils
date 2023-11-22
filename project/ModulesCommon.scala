@@ -89,6 +89,6 @@ object ModulesCommon {
   lazy val redissonCodecPlayJsonProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-redisson-codec-play-json")
-    .settings(libraryDependencies ++= Seq(Dependencies.playJson))
+    .settings(libraryDependencies ++= Seq(Dependencies.playJson % Provided))
 
 }
