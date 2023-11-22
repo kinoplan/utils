@@ -9,7 +9,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         scala: [2.12.18, 2.13.12]
-        java: ["zulu:8.0.392"]
+        java: ["zulu:8.0.392", "temurin:1.17.0.9"]
     runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout current branch
@@ -24,7 +24,11 @@ jobs:
         jvm: ${{ matrix.java }}
 
     - name: Test
-      run: sbt ++${{ matrix.scala }} clean coverage test scalafmtCheckAll scalafmtSbtCheck "scalafixAll --check"
+      run: |
+        if [[ "${{ matrix.java }}" =~ ^temurin:1\.17(\.[0-9]+)* ]]; then
+          export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS --add-opens=java.base/java.lang=ALL-UNNAMED";
+        fi;
+        sbt ++${{ matrix.scala }} clean coverage test scalafmtCheckAll scalafmtSbtCheck "scalafixAll --check"
 
     - name: Coverage
       run: sbt ++${{ matrix.scala }} coverageReport
