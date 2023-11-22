@@ -9,7 +9,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         scala: [2.12.18, 2.13.12]
-        java: [zulu:8.0.392]
+        java: ["zulu:8.0.392"]
     runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout current branch
