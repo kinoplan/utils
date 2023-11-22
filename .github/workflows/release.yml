@@ -17,18 +17,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: olafurpg/setup-scala@v14
-      - name: Cache dependencies
-        uses: actions/cache@v3.3.2
+      - uses: coursier/cache-action@v6
+      - uses: coursier/setup-action@v1
         with:
-          path: ~/.cache/coursier/v1
-          key: ${{ runner.os }}-coursier-${{ hashFiles('build.sbt') }}-${{ hashFiles('project/*.scala') }}
-          restore-keys: ${{ runner.os }}-coursier-
-      - name: Cache .sbt
-        uses: actions/cache@v3.3.2
-        with:
-          path: ~/.sbt
-          key: ${{ runner.os }}-sbt-${{ hashFiles('build.sbt') }}-${{ hashFiles('project/*.scala') }}
-          restore-keys: ${{ runner.os }}-sbt-
+          jvm: "zulu:8.0.392"
       - name: Publish
         run: sbt clean ci-release
