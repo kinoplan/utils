@@ -9,28 +9,19 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         scala: [2.12.18, 2.13.12]
-        java: [adopt@1.8]
+        java: [zulu:8.0.392]
     runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout current branch
       uses: actions/checkout@v4
 
-    - name: Set up Java and Scala
-      uses: olafurpg/setup-scala@v14
-      with:
-        java-version: ${{ matrix.java }}
+    - name: Cache build
+      uses: coursier/cache-action@v6
 
-    - name: Cache sbt
-      uses: actions/cache@v3.3.2
+    - name: Install coursier
+      uses: coursier/setup-action@v1
       with:
-        path: |
-          ~/.sbt
-          ~/.ivy2/cache
-          ~/.coursier/cache/v1
-          ~/.cache/coursier/v1
-          ~/AppData/Local/Coursier/Cache/v1
-          ~/Library/Caches/Coursier/v1
-        key: ${{ runner.os }}-sbt-cache-v2-${{ hashFiles('**/*.sbt') }}-${{ hashFiles('project/build.properties') }}
+        jvm: ${{ matrix.java }}
 
     - name: Test
       run: sbt ++${{ matrix.scala }} clean coverage test scalafmtCheckAll scalafmtSbtCheck "scalafixAll --check"
