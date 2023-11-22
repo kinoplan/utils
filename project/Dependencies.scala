@@ -28,7 +28,6 @@ object Dependencies {
   val http4sBlazeServer    = "org.http4s"                    %% "http4s-blaze-server"    % "0.23.15"
   val http4sDsl            = "org.http4s"                    %% "http4s-dsl"             % "0.23.24"
   val http4sServer         = "org.http4s"                    %% "http4s-server"          % "0.23.24"
-  val jacksonModule        = "com.fasterxml.jackson.module"  %% "jackson-module-scala"   % "2.16.0"
   val jodaTime             = "joda-time"                      % "joda-time"              % "2.12.5"
   val kindProjector        = "org.typelevel"                 %% "kind-projector"         % "0.13.2"
   val logback              = "ch.qos.logback"                 % "logback-classic"        % "1.2.12"
