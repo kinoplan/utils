@@ -7,22 +7,14 @@ import reactivemongo.api.commands.WriteResult
 import reactivemongo.api.indexes.Index
 import zio.{Task, Unsafe, ZIO}
 
-import io.kinoplan.utils.reactivemongo.base.{
-  BsonDocumentSyntax,
-  BsonNoneAsNullProducer,
-  Queries,
-  QueryComment,
-  SmartIndex
-}
+import io.kinoplan.utils.reactivemongo.base.{BsonNoneAsNullProducer, Queries, SmartIndex}
 
 abstract class ReactiveMongoDaoBase[T](
   reactiveMongoApi: ReactiveMongoApi,
   collectionName: String,
-  autoCommentQueries: Boolean = true,
   failoverStrategyO: Option[FailoverStrategy] = None,
   readPreferenceO: Option[ReadPreference] = None
-) extends BsonNoneAsNullProducer
-      with BsonDocumentSyntax {
+) extends BsonNoneAsNullProducer {
 
   protected object dao {
 
@@ -84,8 +76,7 @@ abstract class ReactiveMongoDaoBase[T](
       readConcern: Option[ReadConcern] = None,
       readPreference: ReadPreference = readPreferenceO.getOrElse(ReadPreference.secondaryPreferred)
     )(implicit
-      r: BSONDocumentReader[T],
-      enclosing: sourcecode.Enclosing
+      r: BSONDocumentReader[T]
     ): Task[List[T]] = findMany(readConcern = readConcern, readPreference = readPreference)
 
     def findMany[M <: T](
@@ -98,8 +89,7 @@ abstract class ReactiveMongoDaoBase[T](
       readConcern: Option[ReadConcern] = None,
       readPreference: ReadPreference = readPreferenceO.getOrElse(ReadPreference.secondaryPreferred)
     )(implicit
-      r: BSONDocumentReader[M],
-      enclosing: sourcecode.Enclosing
+      r: BSONDocumentReader[M]
     ): Task[List[M]] = for {
       coll <- collection
       result <- ZIO.fromFuture(implicit ec =>
@@ -111,8 +101,7 @@ abstract class ReactiveMongoDaoBase[T](
           skip,
           limit,
           readConcern,
-          readPreference,
-          withQueryComment
+          readPreference
         )
       )
     } yield result
@@ -122,8 +111,7 @@ abstract class ReactiveMongoDaoBase[T](
       readConcern: Option[ReadConcern] = None,
       readPreference: ReadPreference = readPreferenceO.getOrElse(ReadPreference.secondaryPreferred)
     )(implicit
-      r: BSONDocumentReader[T],
-      enclosing: sourcecode.Enclosing
+      r: BSONDocumentReader[T]
     ): Task[List[T]] = findMany(
       BSONDocument("_id" -> BSONDocument("$in" -> ids)),
       readConcern = readConcern,
@@ -136,13 +124,11 @@ abstract class ReactiveMongoDaoBase[T](
       readConcern: Option[ReadConcern] = None,
       readPreference: Option[ReadPreference] = readPreferenceO
     )(implicit
-      r: BSONDocumentReader[T],
-      enclosing: sourcecode.Enclosing
+      r: BSONDocumentReader[T]
     ): Task[Option[T]] = for {
       coll <- collection
       result <- ZIO.fromFuture(implicit ec =>
-        Queries
-          .findOneQ[T](coll)(selector, projection, readConcern, readPreference, withQueryComment)
+        Queries.findOneQ[T](coll)(selector, projection, readConcern, readPreference)
       )
     } yield result
 
@@ -151,8 +137,7 @@ abstract class ReactiveMongoDaoBase[T](
       readConcern: Option[ReadConcern] = None,
       readPreference: Option[ReadPreference] = readPreferenceO
     )(implicit
-      r: BSONDocumentReader[T],
-      enclosing: sourcecode.Enclosing
+      r: BSONDocumentReader[T]
     ): Task[Option[T]] =
       findOne(BSONDocument("_id" -> id), readConcern = readConcern, readPreference = readPreference)
 
@@ -261,12 +246,6 @@ abstract class ReactiveMongoDaoBase[T](
         ZIO.fromFuture(implicit ec => coll.indexesManager.drop(indexName))
       )
     } yield ()
-
-    private def withQueryComment(implicit
-      enclosing: sourcecode.Enclosing
-    ): Option[String] =
-      if (autoCommentQueries) Some(QueryComment.make)
-      else None
 
   }
 

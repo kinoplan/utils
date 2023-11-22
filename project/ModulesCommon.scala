@@ -50,9 +50,7 @@ object ModulesCommon {
   lazy val reactivemongoBaseProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-reactivemongo-base")
-    .settings(
-      libraryDependencies ++= Seq(Dependencies.reactiveMongo % Provided, Dependencies.sourcecode)
-    )
+    .settings(libraryDependencies ++= Seq(Dependencies.reactiveMongo % Provided))
 
   lazy val reactivemongoBsonAnyProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)

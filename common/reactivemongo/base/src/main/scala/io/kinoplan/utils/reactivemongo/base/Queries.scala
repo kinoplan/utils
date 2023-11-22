@@ -12,7 +12,6 @@ import reactivemongo.api.bson.{
   document
 }
 import reactivemongo.api.bson.collection.BSONCollection
-import reactivemongo.api.commands.WriteResult
 
 private[utils] object Queries extends QueryBuilderSyntax {
 
@@ -88,35 +87,30 @@ private[utils] object Queries extends QueryBuilderSyntax {
     skip: Int = 0,
     limit: Int = -1,
     readConcern: Option[ReadConcern] = None,
-    readPreference: ReadPreference = ReadPreference.secondaryPreferred,
-    comment: Option[String] = None
+    readPreference: ReadPreference = ReadPreference.secondaryPreferred
   )(implicit
     ec: ExecutionContext
   ): Future[List[T]] = {
     val queryBuilder = collection.find(selector, projection).sort(sort).skip(skip)
     val queryBuilderWithHint = hint
       .fold(queryBuilder)(specification => queryBuilder.hint(collection.hint(specification)))
-    val queryBuilderWithComment = comment.fold(queryBuilderWithHint)(queryBuilderWithHint.comment(_))
 
-    queryBuilderWithComment.all[T](limit, readConcern = readConcern, readPreference = readPreference)
+    queryBuilderWithHint.all[T](limit, readConcern = readConcern, readPreference = readPreference)
   }
 
   def findOneQ[T: BSONDocumentReader](collection: BSONCollection)(
     selector: BSONDocument = BSONDocument(),
     projection: Option[BSONDocument] = None,
     readConcern: Option[ReadConcern] = None,
-    readPreference: Option[ReadPreference] = None,
-    comment: Option[String] = None
+    readPreference: Option[ReadPreference] = None
   )(implicit
     ec: ExecutionContext
   ): Future[Option[T]] = {
     val queryBuilder = collection.find(selector, projection)
     val queryBuilderWithReadConcern = readConcern.fold(queryBuilder)(queryBuilder.readConcern(_))
-    val queryBuilderWithComment = comment
-      .fold(queryBuilderWithReadConcern)(queryBuilderWithReadConcern.comment(_))
 
-    readPreference.fold(queryBuilderWithComment.one[T])(rp =>
-      queryBuilderWithComment.one[T](readPreference = rp)
+    readPreference.fold(queryBuilderWithReadConcern.one[T])(rp =>
+      queryBuilderWithReadConcern.one[T](readPreference = rp)
     )
   }
 
@@ -126,7 +120,7 @@ private[utils] object Queries extends QueryBuilderSyntax {
 
   def insertOneQ[T: BSONDocumentWriter](collection: BSONCollection)(value: T)(implicit
     ec: ExecutionContext
-  ): Future[WriteResult] = collection.insert(ordered = false).one(value)
+  ) = collection.insert(ordered = false).one(value)
 
   def updateQ(collection: BSONCollection)(
     q: BSONDocument,
@@ -191,16 +185,14 @@ private[utils] object Queries extends QueryBuilderSyntax {
 
   def deleteQ(collection: BSONCollection)(q: BSONDocument)(implicit
     ec: ExecutionContext
-  ): Future[WriteResult] = collection.delete(ordered = false).one(q)
+  ) = collection.delete(ordered = false).one(q)
 
   def deleteByIdQ(collection: BSONCollection)(id: BSONObjectID)(implicit
     ec: ExecutionContext
-  ): Future[WriteResult] = collection.delete(ordered = false).one(document("_id" -> id))
+  ) = collection.delete(ordered = false).one(document("_id" -> id))
 
   def deleteByIdsQ(collection: BSONCollection)(ids: Set[BSONObjectID])(implicit
     ec: ExecutionContext
-  ): Future[WriteResult] = collection
-    .delete(ordered = false)
-    .one(document("_id" -> document("$in" -> ids)))
+  ) = collection.delete(ordered = false).one(document("_id" -> document("$in" -> ids)))
 
 }

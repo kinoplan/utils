@@ -15,25 +15,17 @@ import reactivemongo.api.bson.{
 import reactivemongo.api.bson.collection.BSONCollection
 import reactivemongo.api.indexes.Index
 
-import io.kinoplan.utils.reactivemongo.base.{
-  BsonDocumentSyntax,
-  BsonNoneAsNullProducer,
-  Queries,
-  QueryComment,
-  SmartIndex
-}
+import io.kinoplan.utils.reactivemongo.base.{BsonNoneAsNullProducer, Queries, SmartIndex}
 
 abstract class ReactiveMongoDaoBase[T](
   reactiveMongoApi: ReactiveMongoApi,
   collectionName: String,
   diagnostic: Boolean = true,
-  autoCommentQueries: Boolean = true,
   failoverStrategyO: Option[FailoverStrategy] = None,
   readPreferenceO: Option[ReadPreference] = None
 )(implicit
   ec: ExecutionContext
-) extends BsonNoneAsNullProducer
-      with BsonDocumentSyntax {
+) extends BsonNoneAsNullProducer {
 
   protected object dao {
 
@@ -87,8 +79,7 @@ abstract class ReactiveMongoDaoBase[T](
       readPreference: ReadPreference = readPreferenceO.getOrElse(ReadPreference.secondaryPreferred)
     )(implicit
       r: BSONDocumentReader[T],
-      position: Position,
-      enclosing: sourcecode.Enclosing
+      position: Position
     ): Future[List[T]] = findMany(readConcern = readConcern, readPreference = readPreference)
 
     def findMany[M <: T](
@@ -102,21 +93,11 @@ abstract class ReactiveMongoDaoBase[T](
       readPreference: ReadPreference = readPreferenceO.getOrElse(ReadPreference.secondaryPreferred)
     )(implicit
       r: BSONDocumentReader[M],
-      position: Position,
-      enclosing: sourcecode.Enclosing
+      position: Position
     ): Future[List[M]] = collection
       .flatMap {
-        Queries.findManyQ(_)(
-          selector,
-          projection,
-          sort,
-          hint,
-          skip,
-          limit,
-          readConcern,
-          readPreference,
-          withQueryComment
-        )
+        Queries
+          .findManyQ(_)(selector, projection, sort, hint, skip, limit, readConcern, readPreference)
       }
       .withDiagnostic
 
@@ -126,8 +107,7 @@ abstract class ReactiveMongoDaoBase[T](
       readPreference: ReadPreference = readPreferenceO.getOrElse(ReadPreference.secondaryPreferred)
     )(implicit
       r: BSONDocumentReader[T],
-      position: Position,
-      enclosing: sourcecode.Enclosing
+      position: Position
     ): Future[List[T]] = findMany(
       BSONDocument("_id" -> BSONDocument("$in" -> ids)),
       readConcern = readConcern,
@@ -141,11 +121,10 @@ abstract class ReactiveMongoDaoBase[T](
       readPreference: Option[ReadPreference] = readPreferenceO
     )(implicit
       r: BSONDocumentReader[T],
-      position: Position,
-      enclosing: sourcecode.Enclosing
+      position: Position
     ): Future[Option[T]] = collection
       .flatMap {
-        Queries.findOneQ(_)(selector, projection, readConcern, readPreference, withQueryComment)
+        Queries.findOneQ(_)(selector, projection, readConcern, readPreference)
       }
       .withDiagnostic
 
@@ -155,8 +134,7 @@ abstract class ReactiveMongoDaoBase[T](
       readPreference: Option[ReadPreference] = readPreferenceO
     )(implicit
       r: BSONDocumentReader[T],
-      position: Position,
-      enclosing: sourcecode.Enclosing
+      position: Position
     ): Future[Option[T]] =
       findOne(BSONDocument("_id" -> id), readConcern = readConcern, readPreference = readPreference)
 
@@ -248,12 +226,6 @@ abstract class ReactiveMongoDaoBase[T](
       }
       .withDiagnostic
 
-    private def withQueryComment(implicit
-      enclosing: sourcecode.Enclosing
-    ): Option[String] =
-      if (autoCommentQueries) Some(QueryComment.make)
-      else None
-
   }
 
   def findAll(
@@ -261,8 +233,7 @@ abstract class ReactiveMongoDaoBase[T](
     readPreference: ReadPreference = readPreferenceO.getOrElse(ReadPreference.secondaryPreferred)
   )(implicit
     r: BSONDocumentReader[T],
-    position: Position,
-    enclosing: sourcecode.Enclosing
+    position: Position
   ): Future[List[T]] = dao.findAll(readConcern, readPreference)
 
   def findManyByIds(
@@ -271,8 +242,7 @@ abstract class ReactiveMongoDaoBase[T](
     readPreference: ReadPreference = readPreferenceO.getOrElse(ReadPreference.secondaryPreferred)
   )(implicit
     r: BSONDocumentReader[T],
-    position: Position,
-    enclosing: sourcecode.Enclosing
+    position: Position
   ): Future[List[T]] = dao.findManyByIds(ids, readConcern, readPreference)
 
   def findOneById(
@@ -281,8 +251,7 @@ abstract class ReactiveMongoDaoBase[T](
     readPreference: Option[ReadPreference] = readPreferenceO
   )(implicit
     r: BSONDocumentReader[T],
-    position: Position,
-    enclosing: sourcecode.Enclosing
+    position: Position
   ): Future[Option[T]] = dao.findOneById(id, readConcern, readPreference)
 
   def insertMany(values: List[T])(implicit

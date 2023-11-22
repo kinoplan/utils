@@ -42,7 +42,6 @@ object Dependencies {
   val scalaLogging         = "com.typesafe.scala-logging"    %% "scala-logging"          % "3.9.5"
   val scalastic            = "org.scalactic"                 %% "scalactic"              % "3.2.17"
   val scalatestPlay        = "org.scalatestplus.play"        %% "scalatestplus-play"     % "5.1.0"    % Test
-  val sourcecode           = "com.lihaoyi"                   %% "sourcecode"             % "0.3.1"
   val sttpSlf4jBackend     = "com.softwaremill.sttp.client3" %% "slf4j-backend"          % sttpV
   val tapirServer          = "com.softwaremill.sttp.tapir"   %% "tapir-server"           % tapirV
   val typesafeConfig       = "com.typesafe"                   % "config"                 % "1.4.3"
