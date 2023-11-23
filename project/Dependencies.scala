@@ -9,7 +9,7 @@ object Dependencies {
     val reactivemongoV = "1.0.10"
     val scalaJavaTimeV = "2.5.0"
     val sttpV          = "3.9.1"
-    val tapirV         = "1.9.1"
+    val tapirV         = "1.9.2"
     val zioConfigV     = "3.0.7"
   }
 
