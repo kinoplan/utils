@@ -75,6 +75,7 @@ object ModulesCommon {
 
   lazy val redissonProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
+    .configure(ProjectSettings.integrationTestProfile)
     .settings(name := "utils-redisson-core")
     .settings(libraryDependencies ++= Seq(Dependencies.redisson, Dependencies.jacksonModule))
 
