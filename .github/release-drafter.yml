@@ -12,7 +12,7 @@ categories:
       - 'improvement'
       - 'enhance'
     description: Performance improvements and optimizations to existing features.
-  - title: '⚡ Performance Improvements'
+  - title: '⚡ Performance'
     labels:
       - 'performance'
       - 'speed'
