@@ -3,15 +3,15 @@ tag-template: 'v$NEXT_PATCH_VERSION'
 categories:
   - title: '🚀 Features'
     labels:
-      - 'feature'
-      - 'enhancement'
       - 'feat'
-    description: All notable new features and improvements.
+      - 'feature'
+      - 'enhance'
+      - 'enhancement'
+    description: All notable new features.
   - title: '🎨 Improvements'
     labels:
       - 'improvement'
-      - 'enhance'
-    description: Performance improvements and optimizations to existing features.
+    description: Improvements and optimizations to existing features.
   - title: '⚡ Performance'
     labels:
       - 'performance'
@@ -35,7 +35,7 @@ categories:
       - 'test'
       - 'testing'
     description: Updates to our test suite and quality assurance process.
-  - title: '📚 Documentation'
+  - title: '📗 Documentation'
     labels:
       - 'docs'
       - 'documentation'
@@ -61,9 +61,10 @@ categories:
       - 'deprecated'
       - 'removed'
     description: Features that were removed or deprecated in this release.
-  - title: '📈 Version Bumps'
+  - title: '🌱 Dependency Updates'
     labels:
       - 'dependencies'
+    description: Updates to dependencies or management of project libraries.
   - title: '💡 Others'
     exclude-labels:
       - 'feature'
