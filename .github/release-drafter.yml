@@ -6,14 +6,22 @@ categories:
       - 'feature'
       - 'enhancement'
       - 'feat'
-  - title: 'Improvements'
+    description: All notable new features and improvements.
+  - title: '🎨 Improvements'
     labels:
-      - 'perf'
+      - 'improvement'
+      - 'enhance'
+    description: Performance improvements and optimizations to existing features.
+  - title: '⚡ Performance Improvements'
+    labels:
+      - 'performance'
+      - 'speed'
+      - 'optimization'
+    description: Enhancements that improve the speed and efficiency of the project.
+  - title: '♻️ Refactoring'
+    labels:
       - 'refactor'
-  - title: 'Tests'
-    labels:
-      - 'tests'
-      - 'testing'
+    description: Code refactoring and non-functional changes that don't modify the behavior of the code.
   - title: '🐛 Bug Fixes'
     labels:
       - 'fix'
@@ -21,18 +29,72 @@ categories:
       - 'bug'
       - 'hotfix'
       - 'revert'
-  - title: '🧰 Maintenance'
+    description: Fixed bugs and similar improvements.
+  - title: '🧪 Tests'
+    labels:
+      - 'test'
+      - 'testing'
+    description: Updates to our test suite and quality assurance process.
+  - title: '📚 Documentation'
     labels:
       - 'docs'
+      - 'documentation'
+    description: Documentation improvements and typo fixes.
+  - title: '🏗️ Build System'
+    labels:
+      - 'build'
+      - 'ci'
+      - 'automation'
+    description: Changes to our build process and tooling.
+  - title: '🧰 Maintenance'
+    labels:
       - 'chore'
       - 'maintenance'
-      - 'style'
-      - 'build'
-      - 'chores'
-      - 'ci'
+      - 'dependabot'
+    description: Routine tasks, repository housekeeping, and other chores.
+  - title: '🚧 WIP'
+    labels:
+      - 'WIP'
+    description: Work-in-progress changes that shouldn't be part of the release notes.
+  - title: '🗑️ Deprecated & Removed'
+    labels:
+      - 'deprecated'
+      - 'removed'
+    description: Features that were removed or deprecated in this release.
   - title: '📈 Version Bumps'
     labels:
       - 'dependencies'
+  - title: '💡 Others'
+    exclude-labels:
+      - 'feature'
+      - 'enhancement'
+      - 'feat'
+      - 'improvement'
+      - 'enhance'
+      - 'performance'
+      - 'speed'
+      - 'optimization'
+      - 'refactor'
+      - 'fix'
+      - 'bugfix'
+      - 'bug'
+      - 'hotfix'
+      - 'revert'
+      - 'test'
+      - 'testing'
+      - 'docs'
+      - 'documentation'
+      - 'build'
+      - 'ci'
+      - 'automation'
+      - 'chore'
+      - 'maintenance'
+      - 'dependabot'
+      - 'WIP'
+      - 'deprecated'
+      - 'removed'
+      - 'dependencies'
+    description: Other miscellaneous changes.
 change-template: '- $TITLE by @$AUTHOR (#$NUMBER)'
 change-title-escapes: '\<*_&' # You can add # and @ to disable mentions, and add ` to disable code blocks.
 version-resolver:
@@ -47,7 +109,7 @@ version-resolver:
       - 'patch'
   default: patch
 template: |
-  # Changes
+  # What's Changed
 
   $CHANGES
 
