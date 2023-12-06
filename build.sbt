@@ -27,6 +27,11 @@ lazy val logbackConfig = project
   .in(file("common/logback-config"))
   .configure(ModulesCommon.logbackConfigProfile)
 
+lazy val nullableCore = crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Pure)
+  .in(file("common/nullable/core"))
+  .configureCross(ModulesCommon.nullableCoreProfile)
+
 lazy val scalaLogging = project
   .in(file("common/scala-logging"))
   .configure(ModulesCommon.scalaLoggingProfile)

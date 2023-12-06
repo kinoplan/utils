@@ -23,6 +23,8 @@ object ProjectSettings {
           ScalacOptions.warnUnusedExplicits,
           ScalacOptions.warnNonUnitStatement
         ),
+      Test / tpolecatExcludeOptions ++=
+        Set(ScalacOptions.privateWarnDeadCode, ScalacOptions.warnNonUnitStatement),
       Test / fork := true,
       Test / javaOptions += "-Duser.timezone=UTC",
       libraryDependencies ++= Seq(Dependencies.scalatest.value, Dependencies.mockitoScala),
