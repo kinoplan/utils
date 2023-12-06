@@ -23,6 +23,7 @@ object Dependencies {
   val scalaJavaTime     = Def.setting("io.github.cquiroz" %%% "scala-java-time" % scalaJavaTimeV)
   val scalaJavaTimeZone = Def.setting("io.github.cquiroz" %%% "scala-java-time-tzdb" % scalaJavaTimeV)
   val scalatest         = Def.setting("org.scalatest" %%% "scalatest" % "3.2.17" % Test)
+  val tapirCore         = Def.setting("com.softwaremill.sttp.tapir" %%% "tapir-core" % tapirV)
 
   // A -> Z
   val circeParser          = "io.circe"                      %% "circe-parser"           % circeV

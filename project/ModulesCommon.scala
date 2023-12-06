@@ -55,6 +55,12 @@ object ModulesCommon {
         Seq(Dependencies.circeCore.value % Provided, Dependencies.circeGeneric.value % Test)
     )
 
+  lazy val nullableCodecTapirProfile: CrossProject => CrossProject = _
+    .configure(ProjectSettings.commonProfile)
+    .jsConfigure(ProjectSettings.scalaJsProfile)
+    .settings(name := "utils-nullable-codec-tapir")
+    .settings(libraryDependencies ++= Seq(Dependencies.tapirCore.value % Provided))
+
   lazy val scalaLoggingProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-scala-logging")
