@@ -46,6 +46,15 @@ object ModulesCommon {
     .jsConfigure(ProjectSettings.scalaJsProfile)
     .settings(name := "utils-nullable-core")
 
+  lazy val nullableCodecCirceProfile: CrossProject => CrossProject = _
+    .configure(ProjectSettings.commonProfile)
+    .jsConfigure(ProjectSettings.scalaJsProfile)
+    .settings(name := "utils-nullable-codec-circe")
+    .settings(
+      libraryDependencies ++=
+        Seq(Dependencies.circeCore.value % Provided, Dependencies.circeGeneric.value % Test)
+    )
+
   lazy val scalaLoggingProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-scala-logging")
@@ -88,7 +97,7 @@ object ModulesCommon {
     .settings(name := "utils-redisson-codec-circe")
     .settings(
       libraryDependencies ++=
-        Seq(Dependencies.circeCore % Provided, Dependencies.circeParser % Provided)
+        Seq(Dependencies.circeCore.value % Provided, Dependencies.circeParser % Provided)
     )
 
   lazy val redissonCodecPlayJsonProfile: Project => Project = _

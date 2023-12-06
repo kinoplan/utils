@@ -1,4 +1,4 @@
-package io.kinoplan.utils.nullable.core
+package io.kinoplan.utils.nullable
 
 /** Option-like data type that distinguishes null values from absent ones. */
 sealed trait Nullable[+A] extends Product with Serializable {
