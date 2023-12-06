@@ -32,6 +32,12 @@ lazy val nullableCore = crossProject(JSPlatform, JVMPlatform)
   .in(file("common/nullable/core"))
   .configureCross(ModulesCommon.nullableCoreProfile)
 
+lazy val nullableCodecCirce = crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Pure)
+  .in(file("common/nullable/codec/circe"))
+  .configureCross(ModulesCommon.nullableCodecCirceProfile)
+  .dependsOn(nullableCore)
+
 lazy val scalaLogging = project
   .in(file("common/scala-logging"))
   .configure(ModulesCommon.scalaLoggingProfile)

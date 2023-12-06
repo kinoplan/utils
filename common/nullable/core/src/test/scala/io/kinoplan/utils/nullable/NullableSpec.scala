@@ -1,4 +1,4 @@
-package io.kinoplan.utils.nullable.core
+package io.kinoplan.utils.nullable
 
 import org.scalatest.wordspec.AnyWordSpec
 
