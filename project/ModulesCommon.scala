@@ -41,6 +41,11 @@ object ModulesCommon {
         Seq(Dependencies.logbackCore % Provided, Dependencies.typesafeConfig % Provided)
     )
 
+  lazy val nullableCoreProfile: CrossProject => CrossProject = _
+    .configure(ProjectSettings.commonProfile)
+    .jsConfigure(ProjectSettings.scalaJsProfile)
+    .settings(name := "utils-nullable-core")
+
   lazy val scalaLoggingProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-scala-logging")
