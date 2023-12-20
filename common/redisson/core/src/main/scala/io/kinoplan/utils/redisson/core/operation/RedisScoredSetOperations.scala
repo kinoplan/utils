@@ -20,18 +20,55 @@ trait RedisScoredSetOperations {
       scoredSet(key).add(score, RedisEncoder[T].encode(value))
     }
 
-  protected def zRange[T: RedisDecoder](key: String, start: Int, end: Int): Future[Set[T]] =
+  protected def zRange[T: RedisDecoder](key: String, startIndex: Int, endIndex: Int): Future[Set[T]] =
     Future {
-      scoredSet(key).valueRange(start, end)
+      scoredSet(key).valueRange(startIndex, endIndex)
     }.flatMap(decodeSet[T])
 
-  protected def zRevRange[T: RedisDecoder](key: String, start: Int, end: Int): Future[Set[T]] =
-    Future {
-      scoredSet(key).valueRangeReversed(start, end)
-    }.flatMap(decodeSet[T])
+  protected def zRangeByScore[T: RedisDecoder](
+    key: String,
+    fromScore: Double,
+    fromInc: Boolean,
+    toScore: Double,
+    toInc: Boolean
+  ): Future[Set[T]] = Future {
+    scoredSet(key).valueRange(fromScore, fromInc, toScore, toInc)
+  }.flatMap(decodeSet[T])
+
+  protected def zRevRange[T: RedisDecoder](
+    key: String,
+    startIndex: Int,
+    endIndex: Int
+  ): Future[Set[T]] = Future {
+    scoredSet(key).valueRangeReversed(startIndex, endIndex)
+  }.flatMap(decodeSet[T])
+
+  protected def zRevRangeByScore[T: RedisDecoder](
+    key: String,
+    fromScore: Double,
+    fromInc: Boolean,
+    toScore: Double,
+    toInc: Boolean
+  ): Future[Set[T]] = Future {
+    scoredSet(key).valueRangeReversed(fromScore, fromInc, toScore, toInc)
+  }.flatMap(decodeSet[T])
 
   protected def zRem[T: RedisEncoder](key: String, value: T): Future[Boolean] = Future {
     scoredSet(key).remove(RedisEncoder[T].encode(value))
+  }
+
+  protected def zRemRangeByRank(key: String, startIndex: Int, endIndex: Int): Future[Int] = Future {
+    scoredSet(key).removeRangeByRank(startIndex, endIndex)
+  }
+
+  protected def zRemRangeByScore(
+    key: String,
+    fromScore: Double,
+    fromInc: Boolean,
+    toScore: Double,
+    toInc: Boolean
+  ): Future[Int] = Future {
+    scoredSet(key).removeRangeByScore(fromScore, fromInc, toScore, toInc)
   }
 
   protected def zCount(
