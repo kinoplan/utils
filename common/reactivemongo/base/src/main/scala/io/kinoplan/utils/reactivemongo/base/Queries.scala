@@ -3,7 +3,7 @@ package io.kinoplan.utils.reactivemongo.base
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
-import reactivemongo.api.{Cursor, ReadConcern, ReadPreference}
+import reactivemongo.api.{Collation, Cursor, ReadConcern, ReadPreference}
 import reactivemongo.api.bson.{
   BSONDocument,
   BSONDocumentReader,
@@ -12,6 +12,7 @@ import reactivemongo.api.bson.{
   document
 }
 import reactivemongo.api.bson.collection.BSONCollection
+import reactivemongo.api.bson.collection.BSONSerializationPack.NarrowValueReader
 import reactivemongo.api.commands.WriteResult
 
 private[utils] object Queries extends QueryBuilderSyntax {
@@ -79,6 +80,19 @@ private[utils] object Queries extends QueryBuilderSyntax {
       }
     ).collect[Seq](-1, Cursor.FailOnError[Seq[(String, Int)]]()).map(_.toMap)
   }
+
+  def distinctQ[R](collection: BSONCollection)(
+    key: String,
+    selector: Option[BSONDocument] = None,
+    readConcern: Option[ReadConcern] = None,
+    collation: Option[Collation] = None
+  )(implicit
+    reader: NarrowValueReader[R],
+    ec: ExecutionContext
+  ): Future[Set[R]] = readConcern
+    .fold(collection.distinct[R, Set](key = key, selector = selector, collation = collation))(rc =>
+      collection.distinct[R, Set](key, selector, rc, collation)
+    )
 
   def findManyQ[T: BSONDocumentReader](collection: BSONCollection)(
     selector: BSONDocument = document,
