@@ -1,8 +1,9 @@
 package io.kinoplan.utils.zio.reactivemongo
 
-import reactivemongo.api.{FailoverStrategy, ReadConcern, ReadPreference}
+import reactivemongo.api.{Collation, FailoverStrategy, ReadConcern, ReadPreference}
 import reactivemongo.api.bson._
 import reactivemongo.api.bson.collection.BSONCollection
+import reactivemongo.api.bson.collection.BSONSerializationPack.NarrowValueReader
 import reactivemongo.api.commands.WriteResult
 import reactivemongo.api.indexes.Index
 import zio.{Task, Unsafe, ZIO}
@@ -78,6 +79,19 @@ abstract class ReactiveMongoDaoBase[T](
       result <- ZIO.fromFuture(implicit ec =>
         Queries.countGroupedQ(coll)(groupBy, matchQuery, readConcern, readPreference)
       )
+    } yield result
+
+    def distinct[R](
+      key: String,
+      selector: Option[BSONDocument] = None,
+      readConcern: Option[ReadConcern] = None,
+      collation: Option[Collation] = None
+    )(implicit
+      reader: NarrowValueReader[R]
+    ): ZIO[Any, Throwable, Set[R]] = for {
+      coll <- collection
+      result <- ZIO
+        .fromFuture(implicit ec => Queries.distinctQ[R](coll)(key, selector, readConcern, collation))
     } yield result
 
     def findAll(

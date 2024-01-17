@@ -4,7 +4,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 import org.scalactic.source.Position
 import play.modules.reactivemongo.ReactiveMongoApi
-import reactivemongo.api.{FailoverStrategy, ReadConcern, ReadPreference}
+import reactivemongo.api.{Collation, FailoverStrategy, ReadConcern, ReadPreference}
 import reactivemongo.api.bson.{
   BSONDocument,
   BSONDocumentReader,
@@ -13,15 +13,10 @@ import reactivemongo.api.bson.{
   document
 }
 import reactivemongo.api.bson.collection.BSONCollection
+import reactivemongo.api.bson.collection.BSONSerializationPack.NarrowValueReader
 import reactivemongo.api.indexes.Index
 
-import io.kinoplan.utils.reactivemongo.base.{
-  BsonDocumentSyntax,
-  BsonNoneAsNullProducer,
-  Queries,
-  QueryComment,
-  SmartIndex
-}
+import io.kinoplan.utils.reactivemongo.base._
 
 abstract class ReactiveMongoDaoBase[T](
   reactiveMongoApi: ReactiveMongoApi,
@@ -81,6 +76,18 @@ abstract class ReactiveMongoDaoBase[T](
         Queries.countGroupedQ(_)(groupBy, matchQuery, readConcern, readPreference)
       }
       .withDiagnostic
+
+    def distinct[R](
+      key: String,
+      selector: Option[BSONDocument] = None,
+      readConcern: Option[ReadConcern] = None,
+      collation: Option[Collation] = None
+    )(implicit
+      reader: NarrowValueReader[R],
+      ec: ExecutionContext
+    ): Future[Set[R]] = collection.flatMap {
+      Queries.distinctQ[R](_)(key, selector, readConcern, collation)
+    }
 
     def findAll(
       readConcern: Option[ReadConcern] = None,
