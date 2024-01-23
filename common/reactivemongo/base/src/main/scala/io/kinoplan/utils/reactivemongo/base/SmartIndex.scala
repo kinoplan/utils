@@ -8,5 +8,6 @@ case class SmartIndex(
   name: Option[String] = None,
   unique: Boolean = false,
   background: Boolean = true,
-  partialFilter: Option[BSONDocument] = None
+  partialFilter: Option[BSONDocument] = None,
+  expireAfterSeconds: Option[Int] = None
 )

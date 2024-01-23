@@ -248,7 +248,8 @@ abstract class ReactiveMongoDaoBase[T](
                 name = smartIndex.name,
                 unique = smartIndex.unique,
                 background = smartIndex.background,
-                partialFilter = smartIndex.partialFilter
+                partialFilter = smartIndex.partialFilter,
+                expireAfterSeconds = smartIndex.expireAfterSeconds
               )
             )
         )
