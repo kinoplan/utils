@@ -2,7 +2,6 @@ package io.kinoplan.utils.play.reactivemongo
 
 import scala.concurrent.{ExecutionContext, Future}
 
-import org.scalactic.source.Position
 import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.api.{Collation, FailoverStrategy, ReadConcern, ReadPreference}
 import reactivemongo.api.bson.{
@@ -41,7 +40,7 @@ abstract class ReactiveMongoDaoBase[T](
     private def operations = ReactiveMongoOperations[T](collection)
 
     def smartEnsureIndexes(smartIndexes: Seq[SmartIndex], drop: Boolean = false)(implicit
-      position: Position
+      enclosing: sourcecode.Enclosing
     ): Future[Unit] = (
       for {
         coll <- collection
@@ -59,7 +58,7 @@ abstract class ReactiveMongoDaoBase[T](
       readConcern: Option[ReadConcern] = None,
       readPreference: Option[ReadPreference] = None
     )(implicit
-      position: Position
+      enclosing: sourcecode.Enclosing
     ): Future[Long] = collection
       .flatMap {
         Queries.countQ(_)(selector, limit, skip, readConcern, readPreference)
@@ -72,7 +71,7 @@ abstract class ReactiveMongoDaoBase[T](
       readConcern: Option[ReadConcern] = None,
       readPreference: Option[ReadPreference] = None
     )(implicit
-      position: Position
+      enclosing: sourcecode.Enclosing
     ): Future[Map[String, Int]] = collection
       .flatMap {
         Queries.countGroupedQ(_)(groupBy, matchQuery, readConcern, readPreference)
@@ -96,7 +95,6 @@ abstract class ReactiveMongoDaoBase[T](
       readPreference: ReadPreference = readPreferenceO.getOrElse(ReadPreference.secondaryPreferred)
     )(implicit
       r: BSONDocumentReader[T],
-      position: Position,
       enclosing: sourcecode.Enclosing
     ): Future[List[T]] = findMany(readConcern = readConcern, readPreference = readPreference)
 
@@ -111,7 +109,6 @@ abstract class ReactiveMongoDaoBase[T](
       readPreference: ReadPreference = readPreferenceO.getOrElse(ReadPreference.secondaryPreferred)
     )(implicit
       r: BSONDocumentReader[M],
-      position: Position,
       enclosing: sourcecode.Enclosing
     ): Future[List[M]] = collection
       .flatMap {
@@ -135,7 +132,6 @@ abstract class ReactiveMongoDaoBase[T](
       readPreference: ReadPreference = readPreferenceO.getOrElse(ReadPreference.secondaryPreferred)
     )(implicit
       r: BSONDocumentReader[T],
-      position: Position,
       enclosing: sourcecode.Enclosing
     ): Future[List[T]] = findMany(
       BSONDocument("_id" -> BSONDocument("$in" -> ids)),
@@ -150,7 +146,6 @@ abstract class ReactiveMongoDaoBase[T](
       readPreference: Option[ReadPreference] = readPreferenceO
     )(implicit
       r: BSONDocumentReader[T],
-      position: Position,
       enclosing: sourcecode.Enclosing
     ): Future[Option[T]] = collection
       .flatMap {
@@ -164,57 +159,56 @@ abstract class ReactiveMongoDaoBase[T](
       readPreference: Option[ReadPreference] = readPreferenceO
     )(implicit
       r: BSONDocumentReader[T],
-      position: Position,
       enclosing: sourcecode.Enclosing
     ): Future[Option[T]] =
       findOne(BSONDocument("_id" -> id), readConcern = readConcern, readPreference = readPreference)
 
     def insertMany(values: List[T])(implicit
       w: BSONDocumentWriter[T],
-      position: Position
+      enclosing: sourcecode.Enclosing
     ) = operations.insertMany(values).withDiagnostic
 
     def insertOne(value: T)(implicit
       w: BSONDocumentWriter[T],
-      position: Position
+      enclosing: sourcecode.Enclosing
     ) = operations.insertOne(value).withDiagnostic
 
     def update(q: BSONDocument, u: BSONDocument, multi: Boolean = false, upsert: Boolean = false)(
       implicit
-      position: Position
+      enclosing: sourcecode.Enclosing
     ) = operations.update(q, u, multi = multi, upsert = upsert).withDiagnostic
 
     def updateMany(values: List[T], f: T => (BSONDocument, BSONDocument, Boolean, Boolean))(implicit
-      position: Position
+      enclosing: sourcecode.Enclosing
     ) = operations.updateMany(values, f).withDiagnostic
 
     def upsert(q: BSONDocument, value: T)(implicit
       w: BSONDocumentWriter[T],
-      position: Position
+      enclosing: sourcecode.Enclosing
     ) = operations.upsert(q, value).withDiagnostic
 
     def saveOne(q: BSONDocument, value: T, multi: Boolean = false, upsert: Boolean = true)(implicit
       w: BSONDocumentWriter[T],
-      position: Position
+      enclosing: sourcecode.Enclosing
     ) = operations.saveOne(q, value, multi = multi, upsert = upsert).withDiagnostic
 
     def saveMany(values: List[T], f: T => (BSONDocument, T, Boolean, Boolean))(implicit
       w: BSONDocumentWriter[T],
-      position: Position
+      enclosing: sourcecode.Enclosing
     ) = operations.saveMany(values, f).withDiagnostic
 
     def delete(q: BSONDocument)(implicit
-      position: Position
+      enclosing: sourcecode.Enclosing
     ) = operations.delete(q).withDiagnostic
 
     def deleteByIds(ids: Set[BSONObjectID])(implicit
       ec: ExecutionContext,
-      position: Position
+      enclosing: sourcecode.Enclosing
     ) = operations.deleteByIds(ids).withDiagnostic
 
     def deleteById(id: BSONObjectID)(implicit
       ec: ExecutionContext,
-      position: Position
+      enclosing: sourcecode.Enclosing
     ) = operations.deleteById(id).withDiagnostic
 
     private def withQueryComment(implicit
@@ -230,7 +224,6 @@ abstract class ReactiveMongoDaoBase[T](
     readPreference: ReadPreference = readPreferenceO.getOrElse(ReadPreference.secondaryPreferred)
   )(implicit
     r: BSONDocumentReader[T],
-    position: Position,
     enclosing: sourcecode.Enclosing
   ): Future[List[T]] = dao.findAll(readConcern, readPreference)
 
@@ -240,7 +233,6 @@ abstract class ReactiveMongoDaoBase[T](
     readPreference: ReadPreference = readPreferenceO.getOrElse(ReadPreference.secondaryPreferred)
   )(implicit
     r: BSONDocumentReader[T],
-    position: Position,
     enclosing: sourcecode.Enclosing
   ): Future[List[T]] = dao.findManyByIds(ids, readConcern, readPreference)
 
@@ -250,28 +242,27 @@ abstract class ReactiveMongoDaoBase[T](
     readPreference: Option[ReadPreference] = readPreferenceO
   )(implicit
     r: BSONDocumentReader[T],
-    position: Position,
     enclosing: sourcecode.Enclosing
   ): Future[Option[T]] = dao.findOneById(id, readConcern, readPreference)
 
   def insertMany(values: List[T])(implicit
     w: BSONDocumentWriter[T],
-    position: Position
+    enclosing: sourcecode.Enclosing
   ) = dao.insertMany(values)
 
   def insertOne(value: T)(implicit
     w: BSONDocumentWriter[T],
-    position: Position
+    enclosing: sourcecode.Enclosing
   ) = dao.insertOne(value)
 
   def deleteByIds(ids: Set[BSONObjectID])(implicit
     ec: ExecutionContext,
-    position: Position
+    enclosing: sourcecode.Enclosing
   ) = dao.deleteByIds(ids)
 
   def deleteById(id: BSONObjectID)(implicit
     ec: ExecutionContext,
-    position: Position
+    enclosing: sourcecode.Enclosing
   ) = dao.deleteById(id)
 
   private def createIndexes(
@@ -318,15 +309,15 @@ abstract class ReactiveMongoDaoBase[T](
   implicit protected class FutureSyntax[A](future: Future[A]) {
 
     def withDiagnostic(implicit
-      position: Position
+      enclosing: sourcecode.Enclosing
     ): Future[A] =
       if (diagnostic) ensureDiagnostic
       else future
 
     def ensureDiagnostic(implicit
-      position: Position
+      enclosing: sourcecode.Enclosing
     ): Future[A] = future.recoverWith { case ex: Throwable =>
-      val diagnosticInfo = s"At (${position.fileName}:${position.lineNumber})"
+      val diagnosticInfo = s"At (${enclosing.value})"
       if (ex.getMessage != null && ex.getMessage.startsWith(diagnosticInfo)) Future.failed(ex)
       else Future.failed(new Throwable(diagnosticInfo + " " + ex.getMessage, ex))
     }
