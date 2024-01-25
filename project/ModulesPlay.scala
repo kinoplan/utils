@@ -18,11 +18,7 @@ object ModulesPlay {
     .settings(name := "utils-play-reactivemongo")
     .settings(
       libraryDependencies ++=
-        Seq(
-          Dependencies.play              % Provided,
-          Dependencies.playReactiveMongo % Provided,
-          Dependencies.scalastic
-        )
+        Seq(Dependencies.play % Provided, Dependencies.playReactiveMongo % Provided)
     )
 
   lazy val requestMapContextProfile: Project => Project = _

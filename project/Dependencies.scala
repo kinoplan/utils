@@ -43,7 +43,6 @@ object Dependencies {
   val redisson             = "org.redisson"                   % "redisson"               % "3.24.2"
   val refined              = "eu.timepit"                    %% "refined"                % "0.11.0"
   val scalaLogging         = "com.typesafe.scala-logging"    %% "scala-logging"          % "3.9.5"
-  val scalastic            = "org.scalactic"                 %% "scalactic"              % "3.2.17"
   val scalatestPlay        = "org.scalatestplus.play"        %% "scalatestplus-play"     % "5.1.0"    % Test
   val sourcecode           = "com.lihaoyi"                   %% "sourcecode"             % "0.3.1"
   val sttpSlf4jBackend     = "com.softwaremill.sttp.client3" %% "slf4j-backend"          % sttpV
