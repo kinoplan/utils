@@ -33,6 +33,8 @@ abstract class ReactiveMongoDaoBase[T](
         failoverStrategyO.fold(db.collection(collectionName))(db.collection(collectionName, _))
       )
 
+    private def operations = ReactiveMongoOperations[T](collection)
+
     def smartEnsureIndexes(smartIndexes: Seq[SmartIndex], clearDiff: Boolean = false): Unit = Unsafe
       .unsafe { implicit unsafe =>
         zio
@@ -172,17 +174,11 @@ abstract class ReactiveMongoDaoBase[T](
 
     def insertMany(values: List[T])(implicit
       w: BSONDocumentWriter[T]
-    ) = for {
-      coll <- collection
-      result <- ZIO.fromFuture(implicit ec => Queries.insertManyQ(coll)(values))
-    } yield result
+    ) = operations.insertMany(values)
 
     def insertOne(value: T)(implicit
       w: BSONDocumentWriter[T]
-    ) = for {
-      coll <- collection
-      result <- ZIO.fromFuture(implicit ec => Queries.insertOneQ(coll)(value))
-    } yield result
+    ) = operations.insertOne(value)
 
     def update(
       q: BSONDocument,
@@ -190,52 +186,28 @@ abstract class ReactiveMongoDaoBase[T](
       multi: Boolean = false,
       upsert: Boolean = false,
       arrayFilters: Seq[BSONDocument] = Seq.empty[BSONDocument]
-    ) = for {
-      coll <- collection
-      result <- ZIO
-        .fromFuture(implicit ec => Queries.updateQ(coll)(q, u, multi, upsert, arrayFilters))
-    } yield result
+    ) = operations.update(q, u, multi = multi, upsert = upsert, arrayFilters = arrayFilters)
 
-    def updateMany(values: List[T], f: T => (BSONDocument, BSONDocument, Boolean, Boolean)) = for {
-      coll <- collection
-      result <- ZIO.fromFuture(implicit ec => Queries.updateManyQ(coll)(values, f))
-    } yield result
+    def updateMany(values: List[T], f: T => (BSONDocument, BSONDocument, Boolean, Boolean)) =
+      operations.updateMany(values, f)
 
     def upsert(q: BSONDocument, value: T)(implicit
       w: BSONDocumentWriter[T]
-    ) = for {
-      coll <- collection
-      result <- ZIO.fromFuture(implicit ec => Queries.upsertQ(coll)(q, value))
-    } yield result
+    ) = operations.upsert(q, value)
 
     def saveOne(q: BSONDocument, value: T, multi: Boolean = false, upsert: Boolean = true)(implicit
       w: BSONDocumentWriter[T]
-    ) = for {
-      coll <- collection
-      result <- ZIO.fromFuture(implicit ec => Queries.saveQ(coll)(q, value, multi, upsert))
-    } yield result
+    ) = operations.saveOne(q, value, multi = multi, upsert = upsert)
 
     def saveMany(values: List[T], f: T => (BSONDocument, T, Boolean, Boolean))(implicit
       w: BSONDocumentWriter[T]
-    ) = for {
-      coll <- collection
-      result <- ZIO.fromFuture(implicit ec => Queries.saveManyQ(coll)(values, f))
-    } yield result
+    ) = operations.saveMany(values, f)
 
-    def delete(q: BSONDocument) = for {
-      coll <- collection
-      result <- ZIO.fromFuture(implicit ec => Queries.deleteQ(coll)(q))
-    } yield result
+    def delete(q: BSONDocument) = operations.delete(q)
 
-    def deleteByIds(ids: Set[BSONObjectID]) = for {
-      coll <- collection
-      result <- ZIO.fromFuture(implicit ec => Queries.deleteByIdsQ(coll)(ids))
-    } yield result
+    def deleteByIds(ids: Set[BSONObjectID]) = operations.deleteByIds(ids)
 
-    def deleteById(id: BSONObjectID) = for {
-      coll <- collection
-      result <- ZIO.fromFuture(implicit ec => Queries.deleteByIdQ(coll)(id))
-    } yield result
+    def deleteById(id: BSONObjectID) = operations.deleteById(id)
 
     private def createIndexes(coll: BSONCollection, smartIndexes: Seq[SmartIndex]): Task[Unit] = ZIO
       .foreach(smartIndexes)(smartIndex =>
