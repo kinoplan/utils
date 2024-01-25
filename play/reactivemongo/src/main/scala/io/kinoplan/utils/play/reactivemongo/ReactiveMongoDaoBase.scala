@@ -38,6 +38,8 @@ abstract class ReactiveMongoDaoBase[T](
         failoverStrategyO.fold(db.collection(collectionName))(db.collection(collectionName, _))
       )
 
+    private def operations = ReactiveMongoOperations[T](collection)
+
     def smartEnsureIndexes(smartIndexes: Seq[SmartIndex], drop: Boolean = false)(implicit
       position: Position
     ): Future[Unit] = (
@@ -170,90 +172,50 @@ abstract class ReactiveMongoDaoBase[T](
     def insertMany(values: List[T])(implicit
       w: BSONDocumentWriter[T],
       position: Position
-    ) = collection
-      .flatMap {
-        Queries.insertManyQ(_)(values)
-      }
-      .withDiagnostic
+    ) = operations.insertMany(values).withDiagnostic
 
     def insertOne(value: T)(implicit
       w: BSONDocumentWriter[T],
       position: Position
-    ) = collection
-      .flatMap {
-        Queries.insertOneQ(_)(value)
-      }
-      .withDiagnostic
+    ) = operations.insertOne(value).withDiagnostic
 
     def update(q: BSONDocument, u: BSONDocument, multi: Boolean = false, upsert: Boolean = false)(
       implicit
       position: Position
-    ) = collection
-      .flatMap {
-        Queries.updateQ(_)(q, u, multi = multi, upsert = upsert)
-      }
-      .withDiagnostic
+    ) = operations.update(q, u, multi = multi, upsert = upsert).withDiagnostic
 
     def updateMany(values: List[T], f: T => (BSONDocument, BSONDocument, Boolean, Boolean))(implicit
       position: Position
-    ) = collection
-      .flatMap {
-        Queries.updateManyQ(_)(values, f)
-      }
-      .withDiagnostic
+    ) = operations.updateMany(values, f).withDiagnostic
 
     def upsert(q: BSONDocument, value: T)(implicit
       w: BSONDocumentWriter[T],
       position: Position
-    ) = collection
-      .flatMap {
-        Queries.upsertQ(_)(q, value)
-      }
-      .withDiagnostic
+    ) = operations.upsert(q, value).withDiagnostic
 
     def saveOne(q: BSONDocument, value: T, multi: Boolean = false, upsert: Boolean = true)(implicit
       w: BSONDocumentWriter[T],
       position: Position
-    ) = collection
-      .flatMap {
-        Queries.saveQ(_)(q, value, multi = multi, upsert = upsert)
-      }
-      .withDiagnostic
+    ) = operations.saveOne(q, value, multi = multi, upsert = upsert).withDiagnostic
 
     def saveMany(values: List[T], f: T => (BSONDocument, T, Boolean, Boolean))(implicit
       w: BSONDocumentWriter[T],
       position: Position
-    ) = collection
-      .flatMap {
-        Queries.saveManyQ(_)(values, f)
-      }
-      .withDiagnostic
+    ) = operations.saveMany(values, f).withDiagnostic
 
     def delete(q: BSONDocument)(implicit
       position: Position
-    ) = collection
-      .flatMap {
-        Queries.deleteQ(_)(q)
-      }
-      .withDiagnostic
+    ) = operations.delete(q).withDiagnostic
 
     def deleteByIds(ids: Set[BSONObjectID])(implicit
       ec: ExecutionContext,
       position: Position
-    ) = collection
-      .flatMap {
-        Queries.deleteByIdsQ(_)(ids)
-      }
-      .withDiagnostic
+    ) = operations.deleteByIds(ids).withDiagnostic
 
     def deleteById(id: BSONObjectID)(implicit
       ec: ExecutionContext,
       position: Position
-    ) = collection
-      .flatMap {
-        Queries.deleteByIdQ(_)(id)
-      }
-      .withDiagnostic
+    ) = operations.deleteById(id).withDiagnostic
 
     private def withQueryComment(implicit
       enclosing: sourcecode.Enclosing
