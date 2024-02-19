@@ -8,7 +8,7 @@ object Dependencies {
     val playV          = "2.8.21"
     val reactivemongoV = "1.0.10"
     val scalaJavaTimeV = "2.5.0"
-    val sttpV          = "3.9.2"
+    val sttpV          = "3.9.3"
     val tapirV         = "1.9.9"
     val zioConfigV     = "3.0.7"
   }
@@ -22,7 +22,7 @@ object Dependencies {
   val scalaJavaLocales  = Def.setting("io.github.cquiroz" %%% "scala-java-locales" % "1.5.1")
   val scalaJavaTime     = Def.setting("io.github.cquiroz" %%% "scala-java-time" % scalaJavaTimeV)
   val scalaJavaTimeZone = Def.setting("io.github.cquiroz" %%% "scala-java-time-tzdb" % scalaJavaTimeV)
-  val scalatest         = Def.setting("org.scalatest" %%% "scalatest" % "3.2.17" % Test)
+  val scalatest         = Def.setting("org.scalatest" %%% "scalatest" % "3.2.18" % Test)
   val tapirCore         = Def.setting("com.softwaremill.sttp.tapir" %%% "tapir-core" % tapirV)
 
   // A -> Z
@@ -31,7 +31,7 @@ object Dependencies {
   val http4sDsl            = "org.http4s"                    %% "http4s-dsl"             % "0.23.25"
   val http4sServer         = "org.http4s"                    %% "http4s-server"          % "0.23.25"
   val jacksonModule        = "com.fasterxml.jackson.module"  %% "jackson-module-scala"   % "2.16.1"
-  val jodaTime             = "joda-time"                      % "joda-time"              % "2.12.6"
+  val jodaTime             = "joda-time"                      % "joda-time"              % "2.12.7"
   val kindProjector        = "org.typelevel"                 %% "kind-projector"         % "0.13.2"
   val logback              = "ch.qos.logback"                 % "logback-classic"        % "1.2.13"
   val logbackCore          = "ch.qos.logback"                 % "logback-core"           % "1.2.13"

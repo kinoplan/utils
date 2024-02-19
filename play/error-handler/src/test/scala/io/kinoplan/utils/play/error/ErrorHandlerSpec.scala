@@ -107,10 +107,12 @@ class ErrorHandlerSpec
 
         commonAssert(result, logMessages, logMdcProperties)
         assert(result.header.status === InternalServerError.header.status)
+
         assert(
           result.body.consumeData.map(_.decodeString("UTF-8")).futureValue ===
             "A server error occurred: Test"
         )
+
       }
   }
 
