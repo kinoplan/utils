@@ -286,6 +286,7 @@ class LoggingFilterSpec
         val logMdcProperties: Map[String, String] = getLogMdcProperties
 
         commonAssert(result, logMessages, logMdcProperties)
+
         assert(
           logMessages.exists(
             _.contains(
@@ -293,6 +294,7 @@ class LoggingFilterSpec
             )
           )
         )
+
       }
   }
 
