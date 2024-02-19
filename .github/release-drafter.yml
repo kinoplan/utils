@@ -46,12 +46,6 @@ categories:
       - 'ci'
       - 'automation'
     description: Changes to our build process and tooling.
-  - title: '🧰 Maintenance'
-    labels:
-      - 'chore'
-      - 'maintenance'
-      - 'dependabot'
-    description: Routine tasks, repository housekeeping, and other chores.
   - title: '🚧 WIP'
     labels:
       - 'WIP'
@@ -65,6 +59,12 @@ categories:
     labels:
       - 'dependencies'
     description: Updates to dependencies or management of project libraries.
+  - title: '🧰 Maintenance'
+    labels:
+      - 'chore'
+      - 'maintenance'
+      - 'dependabot'
+    description: Routine tasks, repository housekeeping, and other chores.
   - title: '💡 Others'
     exclude-labels:
       - 'feature'
