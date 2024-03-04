@@ -115,6 +115,21 @@ private[utils] object Queries extends QueryBuilderSyntax {
     queryBuilderWithComment.all[T](limit, readConcern = readConcern, readPreference = readPreference)
   }
 
+  def findManyCursorQ[T: BSONDocumentReader](collection: BSONCollection)(
+    selector: BSONDocument = document,
+    projection: Option[BSONDocument] = None,
+    sort: BSONDocument = document,
+    batchSize: Int = 0,
+    readConcern: Option[ReadConcern] = None,
+    readPreference: ReadPreference = ReadPreference.secondaryPreferred,
+    comment: Option[String] = None
+  ): Cursor.WithOps[T] = {
+    val queryBuilder = collection.find(selector, projection).sort(sort).batchSize(batchSize)
+    val queryBuilderWithComment = comment.fold(queryBuilder)(queryBuilder.comment(_))
+
+    queryBuilderWithComment.allCursor[T](readConcern, readPreference)
+  }
+
   def findOneQ[T: BSONDocumentReader](collection: BSONCollection)(
     selector: BSONDocument = BSONDocument(),
     projection: Option[BSONDocument] = None,

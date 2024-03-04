@@ -24,6 +24,15 @@ private[utils] trait QueryBuilderSyntax {
       builderWithReadConcern.cursor[T](readPreference).collect[List](limit, err)
     }
 
+    def allCursor[T: BSONDocumentReader](
+      readConcern: Option[ReadConcern] = None,
+      readPreference: ReadPreference = ReadPreference.secondaryPreferred
+    ): Cursor.WithOps[T] = {
+      val builderWithReadConcern = readConcern.fold(builder)(builder.readConcern(_))
+
+      builderWithReadConcern.cursor[T](readPreference)
+    }
+
   }
 
 }

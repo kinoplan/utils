@@ -3,7 +3,7 @@ package io.kinoplan.utils.play.reactivemongo
 import scala.concurrent.{ExecutionContext, Future}
 
 import play.modules.reactivemongo.ReactiveMongoApi
-import reactivemongo.api.{Collation, FailoverStrategy, ReadConcern, ReadPreference}
+import reactivemongo.api.{Collation, Cursor, FailoverStrategy, ReadConcern, ReadPreference}
 import reactivemongo.api.bson.{
   BSONDocument,
   BSONDocumentReader,
@@ -138,6 +138,30 @@ abstract class ReactiveMongoDaoBase[T](
       readConcern = readConcern,
       readPreference = readPreference
     )
+
+    def findManyC[M <: T](
+      selector: BSONDocument = document,
+      projection: Option[BSONDocument] = None,
+      sort: BSONDocument = document,
+      batchSize: Int = 0,
+      readConcern: Option[ReadConcern] = None,
+      readPreference: ReadPreference = readPreferenceO.getOrElse(ReadPreference.secondaryPreferred)
+    )(implicit
+      r: BSONDocumentReader[M],
+      enclosing: sourcecode.Enclosing
+    ): Future[Cursor.WithOps[M]] = collection
+      .map {
+        Queries.findManyCursorQ(_)(
+          selector,
+          projection,
+          sort,
+          batchSize,
+          readConcern,
+          readPreference,
+          withQueryComment
+        )
+      }
+      .withDiagnostic
 
     def findOne(
       selector: BSONDocument = BSONDocument(),
