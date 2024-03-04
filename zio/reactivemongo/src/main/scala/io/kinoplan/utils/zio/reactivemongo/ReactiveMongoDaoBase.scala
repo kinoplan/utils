@@ -1,6 +1,6 @@
 package io.kinoplan.utils.zio.reactivemongo
 
-import reactivemongo.api.{Collation, FailoverStrategy, ReadConcern, ReadPreference}
+import reactivemongo.api.{Collation, CursorProducer, FailoverStrategy, ReadConcern, ReadPreference}
 import reactivemongo.api.bson._
 import reactivemongo.api.bson.collection.BSONCollection
 import reactivemongo.api.bson.collection.BSONSerializationPack.NarrowValueReader
@@ -132,6 +132,29 @@ abstract class ReactiveMongoDaoBase[T](
         )
       )
     } yield result
+
+    def findManyC[M <: T](
+      selector: BSONDocument = document,
+      projection: Option[BSONDocument] = None,
+      sort: BSONDocument = document,
+      batchSize: Int = 0,
+      readConcern: Option[ReadConcern] = None,
+      readPreference: ReadPreference = readPreferenceO.getOrElse(ReadPreference.secondaryPreferred)
+    )(implicit
+      r: BSONDocumentReader[M],
+      enclosing: sourcecode.Enclosing,
+      cursorProducer: CursorProducer[M]
+    ): Task[cursorProducer.ProducedCursor] = collection.map(coll =>
+      Queries.findManyCursorQ[M](coll)(
+        selector,
+        projection,
+        sort,
+        batchSize,
+        readConcern,
+        readPreference,
+        withQueryComment
+      )(r, cursorProducer)
+    )
 
     def findManyByIds(
       ids: Set[BSONObjectID],
