@@ -216,7 +216,7 @@ abstract class ReactiveMongoDaoBase[T](
             .indexesManager
             .ensure(
               Index(
-                key = smartIndex.key.toSeq,
+                key = smartIndex.key,
                 name = smartIndex.name,
                 unique = smartIndex.unique,
                 background = smartIndex.background,
@@ -233,7 +233,7 @@ abstract class ReactiveMongoDaoBase[T](
       filteredIndexNames = indexes
         .filterNot(index =>
           smartIndexes.exists(smartIndex =>
-            smartIndex.key == index.key.toSet &&
+            smartIndex.key == index.key &&
             ((smartIndex.name.nonEmpty && smartIndex.name.exists(index.name.contains(_))) ||
             smartIndex.name.isEmpty)
           ) || index.name.contains("_id_")
