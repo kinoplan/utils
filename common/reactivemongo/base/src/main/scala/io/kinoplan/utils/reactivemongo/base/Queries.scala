@@ -3,7 +3,7 @@ package io.kinoplan.utils.reactivemongo.base
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
-import reactivemongo.api.{Collation, Cursor, ReadConcern, ReadPreference}
+import reactivemongo.api.{Collation, Cursor, CursorProducer, ReadConcern, ReadPreference}
 import reactivemongo.api.bson.{
   BSONDocument,
   BSONDocumentReader,
@@ -113,6 +113,24 @@ private[utils] object Queries extends QueryBuilderSyntax {
     val queryBuilderWithComment = comment.fold(queryBuilderWithHint)(queryBuilderWithHint.comment(_))
 
     queryBuilderWithComment.all[T](limit, readConcern = readConcern, readPreference = readPreference)
+  }
+
+  def findManyCursorQ[T](collection: BSONCollection)(
+    selector: BSONDocument = document,
+    projection: Option[BSONDocument] = None,
+    sort: BSONDocument = document,
+    batchSize: Int = 0,
+    readConcern: Option[ReadConcern] = None,
+    readPreference: ReadPreference = ReadPreference.secondaryPreferred,
+    comment: Option[String] = None
+  )(implicit
+    r: BSONDocumentReader[T],
+    cursorProducer: CursorProducer[T]
+  ): cursorProducer.ProducedCursor = {
+    val queryBuilder = collection.find(selector, projection).sort(sort).batchSize(batchSize)
+    val queryBuilderWithComment = comment.fold(queryBuilder)(queryBuilder.comment(_))
+
+    queryBuilderWithComment.allCursor[T](readConcern, readPreference)(r, cursorProducer)
   }
 
   def findOneQ[T: BSONDocumentReader](collection: BSONCollection)(
