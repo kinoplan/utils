@@ -6,7 +6,6 @@ import org.http4s.blaze.server.BlazeServerBuilder
 import org.http4s.server.Router
 import org.http4s.server.middleware._
 import zio.{RIO, Task, ZIO}
-import zio.config.getConfig
 import zio.interop.catz._
 
 import io.kinoplan.utils.IntegrationCheck
@@ -24,7 +23,8 @@ object IntegrationHealthcheckServer {
 
   def start(
     additionalIntegrationChecks: Set[IntegrationCheck[Task]] = Set.empty
-  ): ZIO[Env, Throwable, Unit] = getConfig[ServerConfig]
+  ): ZIO[Env, Throwable, Unit] = ZIO
+    .service[ServerConfig]
     .flatMap(serverConfig =>
       ZIO
         .executor

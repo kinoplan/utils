@@ -3,7 +3,6 @@ package io.kinoplan.utils.zio.http4s
 import org.http4s._
 import org.http4s.dsl.Http4sDsl
 import zio._
-import zio.config.getConfig
 import zio.interop.catz._
 
 import io.kinoplan.utils.IntegrationCheck
@@ -17,7 +16,7 @@ class IntegrationHealthcheck[R <: IntegrationHealthcheck.Env: EnvironmentTag]
   ): HttpRoutes[RIO[R, *]] = HttpRoutes.of[RIO[R, *]] { case GET -> Root / "health" =>
     (
       for {
-        config <- getConfig[IntegrationHealthcheckConfig]
+        config <- ZIO.service[IntegrationHealthcheckConfig]
         integrationChecks <- ZIO.service[Set[IntegrationCheck[Task]]]
         integrationCompletedChecks <- ZIO
           .foreachPar(integrationChecks ++ additionalIntegrationChecks) { integrationCheck =>

@@ -2,13 +2,12 @@ package io.kinoplan.utils.zio.monitoring
 
 import io.prometheus.client.exporter.HTTPServer
 import zio.{Scope, Task, ZIO}
-import zio.config.getConfig
 import zio.metrics.prometheus.helpers.{getCurrentRegistry, http, initializeDefaultExports, stopHttp}
 
 object PrometheusServer {
 
   private def acquire = for {
-    config <- getConfig[PrometheusConfig]
+    config <- ZIO.service[PrometheusConfig]
     registry <- getCurrentRegistry()
     _ <- initializeDefaultExports(registry).ignore
     server <- http(registry, config.port)
