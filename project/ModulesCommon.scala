@@ -1,9 +1,10 @@
-import sbt.Keys._
+import Dependencies.Libraries
+import sbt.Keys.*
 import locales.{CLDRVersion, LocalesFilter}
 import sbt.{Project, Provided, Test}
 import sbtcrossproject.CrossProject
-import scalajscrossproject.ScalaJSCrossPlugin.autoImport._
-import locales.LocalesPlugin.autoImport._
+import scalajscrossproject.ScalaJSCrossPlugin.autoImport.*
+import locales.LocalesPlugin.autoImport.*
 
 object ModulesCommon {
 
@@ -16,7 +17,7 @@ object ModulesCommon {
     .configure(ProjectSettings.commonProfile)
     .jsConfigure(ProjectSettings.scalaJsProfile)
     .settings(name := "utils-http4s-server")
-    .settings(libraryDependencies ++= Seq(Dependencies.http4sServer))
+    .settings(libraryDependencies ++= Seq(Libraries.http4sServer))
 
   lazy val integrationCheckProfile: CrossProject => CrossProject = _
     .configure(ProjectSettings.commonProfile)
@@ -30,7 +31,7 @@ object ModulesCommon {
     .settings(
       cldrVersion := CLDRVersion.Version("43.1"), // http://unicode.org/Public/cldr/
       localesFilter := LocalesFilter.Selection("ru", "en"),
-      libraryDependencies ++= Seq(Dependencies.scalaJavaLocales.value)
+      libraryDependencies ++= Seq(Libraries.scalaJavaLocales.value)
     )
 
   lazy val logbackConfigProfile: Project => Project = _
@@ -38,7 +39,7 @@ object ModulesCommon {
     .settings(name := "utils-logback-config")
     .settings(
       libraryDependencies ++=
-        Seq(Dependencies.logbackCore % Provided, Dependencies.typesafeConfig % Provided)
+        Seq(Libraries.logbackCore % Provided, Libraries.typesafeConfig % Provided)
     )
 
   lazy val nullableCoreProfile: CrossProject => CrossProject = _
@@ -52,27 +53,25 @@ object ModulesCommon {
     .settings(name := "utils-nullable-codec-circe")
     .settings(
       libraryDependencies ++=
-        Seq(Dependencies.circeCore.value % Provided, Dependencies.circeGeneric.value % Test)
+        Seq(Libraries.circeCore.value % Provided, Libraries.circeGeneric.value % Test)
     )
 
   lazy val nullableCodecTapirProfile: CrossProject => CrossProject = _
     .configure(ProjectSettings.commonProfile)
     .jsConfigure(ProjectSettings.scalaJsProfile)
     .settings(name := "utils-nullable-codec-tapir")
-    .settings(libraryDependencies ++= Seq(Dependencies.tapirCore.value % Provided))
+    .settings(libraryDependencies ++= Seq(Libraries.tapirCore.value % Provided))
 
   lazy val scalaLoggingProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-scala-logging")
     .settings(Test / parallelExecution := false)
-    .settings(libraryDependencies ++= Seq(Dependencies.logback, Dependencies.scalaLogging))
+    .settings(libraryDependencies ++= Seq(Libraries.logback, Libraries.scalaLogging))
 
   lazy val reactivemongoBaseProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-reactivemongo-base")
-    .settings(
-      libraryDependencies ++= Seq(Dependencies.reactiveMongo % Provided, Dependencies.sourcecode)
-    )
+    .settings(libraryDependencies ++= Seq(Libraries.reactiveMongo % Provided, Libraries.sourcecode))
 
   lazy val reactivemongoBsonProfile: Project => Project =
     _.configure(ProjectSettings.commonProfile).settings(name := "utils-reactivemongo-bson")
@@ -80,38 +79,34 @@ object ModulesCommon {
   lazy val reactivemongoBsonAnyProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-reactivemongo-bson-any")
-    .settings(libraryDependencies ++= Seq(Dependencies.reactiveMongo % Provided))
+    .settings(libraryDependencies ++= Seq(Libraries.reactiveMongo % Provided))
 
   lazy val reactivemongoBsonJodaTimeProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-reactivemongo-bson-joda-time")
-    .settings(
-      libraryDependencies ++= Seq(Dependencies.reactiveMongo % Provided, Dependencies.jodaTime)
-    )
+    .settings(libraryDependencies ++= Seq(Libraries.reactiveMongo % Provided, Libraries.jodaTime))
 
   lazy val reactivemongoBsonRefinedProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-reactivemongo-bson-refined")
-    .settings(
-      libraryDependencies ++= Seq(Dependencies.reactiveMongo % Provided, Dependencies.refined)
-    )
+    .settings(libraryDependencies ++= Seq(Libraries.reactiveMongo % Provided, Libraries.refined))
 
   lazy val redissonProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-redisson-core")
-    .settings(libraryDependencies ++= Seq(Dependencies.redisson, Dependencies.jacksonModule))
+    .settings(libraryDependencies ++= Seq(Libraries.redisson, Libraries.jacksonModule))
 
   lazy val redissonCodecCirceProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-redisson-codec-circe")
     .settings(
       libraryDependencies ++=
-        Seq(Dependencies.circeCore.value % Provided, Dependencies.circeParser % Provided)
+        Seq(Libraries.circeCore.value % Provided, Libraries.circeParser % Provided)
     )
 
   lazy val redissonCodecPlayJsonProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-redisson-codec-play-json")
-    .settings(libraryDependencies ++= Seq(Dependencies.playJson % Provided))
+    .settings(libraryDependencies ++= Seq(Libraries.playJson % Provided))
 
 }
