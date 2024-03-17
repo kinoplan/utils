@@ -1,7 +1,10 @@
+import Dependencies.{Libraries, ShadingEntity}
+import coursier.ShadingPlugin
+import coursier.ShadingPlugin.autoImport.*
 import org.typelevel.sbt.tpolecat.TpolecatPlugin.autoImport.tpolecatExcludeOptions
 import org.typelevel.scalacoptions.ScalacOptions
-import sbt.Keys.*
 import sbt.*
+import sbt.Keys.*
 import scalafix.sbt.ScalafixPlugin
 import scoverage.ScoverageKeys.*
 
@@ -27,13 +30,28 @@ object ProjectSettings {
         Set(ScalacOptions.privateWarnDeadCode, ScalacOptions.warnNonUnitStatement),
       Test / fork := true,
       Test / javaOptions += "-Duser.timezone=UTC",
-      libraryDependencies ++= Seq(Dependencies.scalatest.value, Dependencies.mockitoScala),
+      libraryDependencies ++= Seq(Libraries.scalatest.value, Libraries.mockitoScala),
       coverageHighlighting := true
     )
 
   lazy val scalaJsProfile: Project => Project = _.settings(Test / fork := false)
 
   lazy val kindProjectorProfile: Project => Project =
-    _.settings(addCompilerPlugin(Dependencies.kindProjector.cross(CrossVersion.full)))
+    _.settings(addCompilerPlugin(Libraries.kindProjector.cross(CrossVersion.full)))
+
+  private val namespace = "io.kinoplan.utils"
+
+  def shadingProfile(shadingEntities: ShadingEntity*): Project => Project = _
+    .enablePlugins(ShadingPlugin)
+    .settings(
+      libraryDependencies ++= shadingEntities.flatMap(_.libraryDependencies(scalaVersion.value)),
+      shadedModules ++= shadingEntities.flatMap(_.dependencies).map(_.module).toSet,
+      shadingRules ++=
+        shadingEntities
+          .flatMap(_.modulePackages)
+          .map(modulePackage => ShadingRule.moveUnder(modulePackage, s"$namespace.shaded")),
+      validNamespaces ++= Set(namespace, "io"),
+      validEntries ++= Set("LICENSE", "NOTICE", "README")
+    )
 
 }

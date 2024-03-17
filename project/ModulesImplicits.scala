@@ -1,7 +1,8 @@
-import sbt.Keys._
-import sbt._
+import Dependencies.Libraries
+import sbt.Keys.*
+import sbt.*
 import sbtcrossproject.CrossProject
-import scalajscrossproject.ScalaJSCrossPlugin.autoImport._
+import scalajscrossproject.ScalaJSCrossPlugin.autoImport.*
 
 object ModulesImplicits {
 
@@ -27,16 +28,16 @@ object ModulesImplicits {
     .jsSettings(
       libraryDependencies ++=
         Seq(
-          Dependencies.scalaJavaTime.value     % Provided,
-          Dependencies.scalaJavaLocales.value  % Test,
-          Dependencies.scalaJavaTimeZone.value % Test,
-          Dependencies.localesFullDb.value     % Test
+          Libraries.scalaJavaTime.value     % Provided,
+          Libraries.scalaJavaLocales.value  % Test,
+          Libraries.scalaJavaTimeZone.value % Test,
+          Libraries.localesFullDb.value     % Test
         )
     )
 
   lazy val jodaTimeProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-implicits-joda-time")
-    .settings(libraryDependencies ++= Seq(Dependencies.jodaTime))
+    .settings(libraryDependencies ++= Seq(Libraries.jodaTime))
 
 }
