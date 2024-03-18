@@ -11,7 +11,7 @@ object Dependencies {
     val scalaJavaTimeV = "2.5.0"
     val sttpV          = "3.9.4"
     val tapirV         = "1.9.11"
-    val zioConfigV     = "3.0.7"
+    val zioConfigV     = "4.0.1"
   }
 
   import Versions.*

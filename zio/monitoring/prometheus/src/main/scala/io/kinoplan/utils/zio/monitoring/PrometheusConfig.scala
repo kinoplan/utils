@@ -1,17 +1,16 @@
 package io.kinoplan.utils.zio.monitoring
 
-import com.typesafe.config.ConfigFactory
-import zio.{Layer, ZIO}
-import zio.config._
-import zio.config.ConfigDescriptor._
-import zio.config.typesafe.TypesafeConfig
+import zio.{Layer, ZLayer}
+import zio.Config.Error
+import zio.config.magnolia.deriveConfig
+import zio.config.typesafe.TypesafeConfigProvider
 
 private[monitoring] case class PrometheusConfig(port: Int)
 
 private[monitoring] object PrometheusConfig {
-  private val configDescriptor = nested("prometheus")(int("port").to[PrometheusConfig])
+  private val config = deriveConfig[PrometheusConfig].nested("prometheus")
 
-  val live: Layer[ReadError[String], PrometheusConfig] = TypesafeConfig
-    .fromTypesafeConfig(ZIO.attempt(ConfigFactory.load.resolve), configDescriptor)
+  val live: Layer[Error, PrometheusConfig] = ZLayer
+    .fromZIO(TypesafeConfigProvider.fromResourcePath().load(config))
 
 }
