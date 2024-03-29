@@ -1,11 +1,25 @@
 package io.kinoplan.utils.zio.monitoring
 
-import zio.{&, ULayer}
-import zio.metrics.prometheus.Registry
-import zio.metrics.prometheus.exporters.Exporters
+import io.micrometer.core.instrument.Clock
+import io.micrometer.prometheus.{PrometheusConfig, PrometheusMeterRegistry}
+import io.prometheus.client.CollectorRegistry
+import zio.{ULayer, ZLayer}
+import zio.metrics.connectors.micrometer
+import zio.metrics.connectors.micrometer.MicrometerConfig
 
-object PrometheusModule {
+private[monitoring] object PrometheusModule {
 
-  val live: ULayer[Registry.Service & Exporters] = Registry.live ++ Exporters.live
+  private val registryLive = ZLayer.succeed(
+    new PrometheusMeterRegistry(
+      PrometheusConfig.DEFAULT,
+      CollectorRegistry.defaultRegistry,
+      Clock.SYSTEM
+    )
+  )
+
+  private val micrometerConfigLive = ZLayer.succeed(MicrometerConfig.default)
+  private val micrometerLive = registryLive ++ micrometerConfigLive >>> micrometer.micrometerLayer
+
+  val live: ULayer[Unit with PrometheusMeterRegistry] = micrometerLive ++ registryLive
 
 }
