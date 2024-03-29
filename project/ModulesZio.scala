@@ -1,12 +1,10 @@
 import Dependencies.{Libraries, Shades}
-import coursier.ShadingPlugin
 import sbt.Keys.*
 import sbt.{Project, Provided}
 
 object ModulesZio {
 
   lazy val http4sHealthcheckProfile: Project => Project = _
-    .enablePlugins(ShadingPlugin)
     .configure(
       ProjectSettings.commonProfile,
       ProjectSettings.kindProjectorProfile,
@@ -31,7 +29,15 @@ object ModulesZio {
   lazy val monitoringPrometheusProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile, ProjectSettings.shadingProfile(Shades.zioConfig))
     .settings(name := "utils-zio-monitoring-prometheus")
-    .settings(libraryDependencies ++= Seq(Libraries.zio, Libraries.zioMetricsPrometheus))
+    .settings(
+      libraryDependencies ++=
+        Seq(
+          Libraries.micrometerRegistryPrometheus,
+          Libraries.prometheusSimpleClientHttpServer,
+          Libraries.zio,
+          Libraries.zioMetricsConnectorsMicrometer
+        )
+    )
 
   lazy val reactivemongoProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile, ProjectSettings.shadingProfile(Shades.zioConfig))
