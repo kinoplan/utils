@@ -39,9 +39,10 @@ trait RedisArrayOperations {
       deque(key).pollLastAndOfferFirstTo(destination)
     }.flatMap(decodeNullableValue[T])
 
-  protected def lRange[T: RedisDecoder](key: String, start: Int, end: Int): Future[List[T]] = Future {
-    list(key).range(start, end)
-  }.flatMap(decodeArray[T])
+  protected def lRange[T: RedisDecoder](key: String, start: Int, end: Int): Future[List[T]] =
+    Future {
+      list(key).range(start, end)
+    }.flatMap(decodeArray[T])
 
   protected def lTrim(key: String, start: Int, end: Int): Future[Unit] = Future {
     list(key).trim(start, end)
