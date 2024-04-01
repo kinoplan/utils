@@ -15,6 +15,7 @@ import io.kinoplan.utils.reactivemongo.base.{
   QueryComment,
   SmartIndex
 }
+import io.kinoplan.utils.zio.reactivemongo.metrics.ReactiveMongoMetric._
 
 abstract class ReactiveMongoDaoBase[T](
   reactiveMongoApi: ReactiveMongoApi,
@@ -69,6 +70,7 @@ abstract class ReactiveMongoDaoBase[T](
       result <- ZIO.fromFuture(implicit ec =>
         Queries.countQ(coll)(selector, limit, skip, readConcern, readPreference)
       )
+      _ <- commandsCounter.tagged(collectionLabels(coll)).increment
     } yield result
 
     def countGrouped(
@@ -81,6 +83,7 @@ abstract class ReactiveMongoDaoBase[T](
       result <- ZIO.fromFuture(implicit ec =>
         Queries.countGroupedQ(coll)(groupBy, matchQuery, readConcern, readPreference)
       )
+      _ <- commandsCounter.tagged(collectionLabels(coll)).increment
     } yield result
 
     def distinct[R](
@@ -94,6 +97,7 @@ abstract class ReactiveMongoDaoBase[T](
       coll <- collection
       result <- ZIO
         .fromFuture(implicit ec => Queries.distinctQ[R](coll)(key, selector, readConcern, collation))
+      _ <- commandsCounter.tagged(collectionLabels(coll)).increment
     } yield result
 
     def findAll(
@@ -131,6 +135,9 @@ abstract class ReactiveMongoDaoBase[T](
           withQueryComment
         )
       )
+      _ <- findCounter.tagged(collectionLabels(coll)).increment
+      _ <-
+        findReceivedDocumentsCounter.tagged(collectionLabels(coll)).incrementBy(result.length.toLong)
     } yield result
 
     def findManyC[M <: T](
@@ -144,16 +151,21 @@ abstract class ReactiveMongoDaoBase[T](
       r: BSONDocumentReader[M],
       enclosing: sourcecode.Enclosing,
       cursorProducer: CursorProducer[M]
-    ): Task[cursorProducer.ProducedCursor] = collection.map(coll =>
-      Queries.findManyCursorQ[M](coll)(
-        selector,
-        projection,
-        sort,
-        batchSize,
-        readConcern,
-        readPreference,
-        withQueryComment
-      )(r, cursorProducer)
+    ): Task[cursorProducer.ProducedCursor] = collection.flatMap(coll =>
+      findCounter
+        .tagged(collectionLabels(coll))
+        .increment
+        .as(
+          Queries.findManyCursorQ[M](coll)(
+            selector,
+            projection,
+            sort,
+            batchSize,
+            readConcern,
+            readPreference,
+            withQueryComment
+          )(r, cursorProducer)
+        )
     )
 
     def findManyByIds(
@@ -182,6 +194,10 @@ abstract class ReactiveMongoDaoBase[T](
       result <- ZIO.fromFuture(implicit ec =>
         Queries
           .findOneQ[T](coll)(selector, projection, readConcern, readPreference, withQueryComment)
+      )
+      _ <- findCounter.tagged(collectionLabels(coll)).increment
+      _ <- ZIO.foreachDiscard(result)(_ =>
+        findReceivedDocumentsCounter.tagged(collectionLabels(coll)).increment
       )
     } yield result
 
