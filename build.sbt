@@ -151,6 +151,10 @@ lazy val zioMonitoringPrometheus = project
   .in(file("zio/monitoring/prometheus"))
   .configure(ModulesZio.monitoringPrometheusProfile)
 
+lazy val zioOpenTelemetry = project
+  .in(file("zio/opentelemetry"))
+  .configure(ModulesZio.openTelemetryProfile)
+
 lazy val zioReactivemongo = project
   .in(file("zio/reactivemongo"))
   .configure(ModulesZio.reactivemongoProfile)

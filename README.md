@@ -56,6 +56,7 @@ libraryDependencies ++= Seq(
   "io.kinoplan" %% "utils-zio-integration-check" % ${version}, // JVM and Scala.js
   "io.kinoplan" %% "utils-zio-http4s-healthcheck" % ${version}, // JVM only
   "io.kinoplan" %% "utils-zio-monitoring-prometheus" % ${version}, // JVM only
+  "io.kinoplan" %% "utils-zio-opentelemetry" % ${version}, // JVM only
   "io.kinoplan" %% "utils-zio-reactivemongo" % ${version}, // JVM only
   "io.kinoplan" %% "utils-zio-sttp-slf4j-backend" % ${version}, // JVM only
   "io.kinoplan" %% "utils-zio-tapir-server" % ${version}, // JVM and Scala.js
