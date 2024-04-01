@@ -34,7 +34,7 @@ jobs:
       run: sbt ++${{ matrix.scala }} coverageReport
 
     - name: Send coverage report to codecov
-      uses: codecov/codecov-action@v4.1.0
+      uses: codecov/codecov-action@v4.1.1
 
 #    - name: Send coverage report to codacy
 #      uses: codacy/codacy-coverage-reporter-action@master
