@@ -39,6 +39,21 @@ object ModulesZio {
         )
     )
 
+  lazy val openTelemetryProfile: Project => Project = _
+    .configure(ProjectSettings.commonProfile, ProjectSettings.shadingProfile(Shades.zioConfig))
+    .settings(name := "utils-zio-opentelemetry")
+    .settings(
+      libraryDependencies ++=
+        Seq(
+          Libraries.openTelemetrySdk,
+          Libraries.openTelemetryExporterOtlp,
+          Libraries.openTelemetryExporterLoggingOtlp,
+          Libraries.openTelemetrySemconvIncubating,
+          Libraries.zio,
+          Libraries.zioOpenTelemetry
+        )
+    )
+
   lazy val reactivemongoProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile, ProjectSettings.shadingProfile(Shades.zioConfig))
     .settings(name := "utils-zio-reactivemongo")
