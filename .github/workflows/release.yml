@@ -5,6 +5,7 @@ on:
       - main
       - develop/*
     tags: ["v*.*.*"]
+  pull_request:
 
 env:
   PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
