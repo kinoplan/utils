@@ -3,7 +3,7 @@ package io.kinoplan.utils.zio.reactivemongo.metrics
 import java.time.temporal.ChronoUnit
 
 import reactivemongo.api.bson.collection.BSONCollection
-import zio.ZIOAspect
+import zio.{Chunk, ZIOAspect}
 import zio.metrics.{Metric, MetricKeyType, MetricLabel, MetricState}
 import zio.metrics.Metric.Counter
 
@@ -17,7 +17,8 @@ object ReactiveMongoMetric {
     .timer(
       s"${PREFIX}_query_duration_seconds",
       "Tracks the time elapsed between sending a request and receiving a response per type and db.collection.",
-      ChronoUnit.SECONDS
+      ChronoUnit.SECONDS,
+      Chunk(0.005, 0.01, 0.025, 0.05, 0.075, 0.1, 0.25, 0.5, 0.75, 1.0, 2.5, 5.0, 7.5, 10.0)
     )
 
   val queriesCounter: Counter[Long] = Metric
