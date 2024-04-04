@@ -15,6 +15,12 @@ import reactivemongo.api.bson.collection.BSONCollection
 import reactivemongo.api.bson.collection.BSONSerializationPack.NarrowValueReader
 import reactivemongo.api.indexes.Index
 
+import io.kinoplan.utils.play.reactivemongo.metrics.ReactiveMongoMetrics.wrapper.{
+  commandQueryTimerWrapper,
+  commandReceivedDocumentsCounterWrapper,
+  findQueryTimerWrapper,
+  findReceivedDocumentsCounterWrapper
+}
 import io.kinoplan.utils.reactivemongo.base._
 
 abstract class ReactiveMongoDaoBase[T](
@@ -60,8 +66,10 @@ abstract class ReactiveMongoDaoBase[T](
     )(implicit
       enclosing: sourcecode.Enclosing
     ): Future[Long] = collection
-      .flatMap {
-        Queries.countQ(_)(selector, limit, skip, readConcern, readPreference)
+      .flatMap { coll =>
+        Queries
+          .countQ(coll)(selector, limit, skip, readConcern, readPreference)
+          .withCommandQueryTimer(coll)
       }
       .withDiagnostic
 
@@ -73,8 +81,11 @@ abstract class ReactiveMongoDaoBase[T](
     )(implicit
       enclosing: sourcecode.Enclosing
     ): Future[Map[String, Int]] = collection
-      .flatMap {
-        Queries.countGroupedQ(_)(groupBy, matchQuery, readConcern, readPreference)
+      .flatMap { coll =>
+        Queries
+          .countGroupedQ(coll)(groupBy, matchQuery, readConcern, readPreference)
+          .withCommandQueryTimer(coll)
+          .withCommandReceivedDocumentsCounter(coll)(_.size.toLong)
       }
       .withDiagnostic
 
@@ -86,8 +97,11 @@ abstract class ReactiveMongoDaoBase[T](
     )(implicit
       reader: NarrowValueReader[R],
       ec: ExecutionContext
-    ): Future[Set[R]] = collection.flatMap {
-      Queries.distinctQ[R](_)(key, selector, readConcern, collation)
+    ): Future[Set[R]] = collection.flatMap { coll =>
+      Queries
+        .distinctQ[R](coll)(key, selector, readConcern, collation)
+        .withCommandQueryTimer(coll)
+        .withCommandReceivedDocumentsCounter(coll)(_.size.toLong)
     }
 
     def findAll(
@@ -111,18 +125,21 @@ abstract class ReactiveMongoDaoBase[T](
       r: BSONDocumentReader[M],
       enclosing: sourcecode.Enclosing
     ): Future[List[M]] = collection
-      .flatMap {
-        Queries.findManyQ(_)(
-          selector,
-          projection,
-          sort,
-          hint,
-          skip,
-          limit,
-          readConcern,
-          readPreference,
-          withQueryComment
-        )
+      .flatMap { coll =>
+        Queries
+          .findManyQ(coll)(
+            selector,
+            projection,
+            sort,
+            hint,
+            skip,
+            limit,
+            readConcern,
+            readPreference,
+            withQueryComment
+          )
+          .withFindQueryTimer(coll)
+          .withFindReceivedDocumentsCounter(coll)(_.length.toLong)
       }
       .withDiagnostic
 
@@ -173,8 +190,14 @@ abstract class ReactiveMongoDaoBase[T](
       r: BSONDocumentReader[T],
       enclosing: sourcecode.Enclosing
     ): Future[Option[T]] = collection
-      .flatMap {
-        Queries.findOneQ(_)(selector, projection, readConcern, readPreference, withQueryComment)
+      .flatMap { coll =>
+        Queries
+          .findOneQ(coll)(selector, projection, readConcern, readPreference, withQueryComment)
+          .withFindQueryTimer(coll)
+          .withFindReceivedDocumentsCounter(coll)(opt =>
+            if (opt.isEmpty) 0L
+            else 1L
+          )
       }
       .withDiagnostic
 
@@ -332,6 +355,19 @@ abstract class ReactiveMongoDaoBase[T](
       }
 
   implicit protected class FutureSyntax[A](future: Future[A]) {
+
+    def withFindQueryTimer(collection: BSONCollection): Future[A] =
+      findQueryTimerWrapper(collection)(future)
+
+    def withCommandQueryTimer(collection: BSONCollection): Future[A] =
+      commandQueryTimerWrapper(collection)(future)
+
+    def withFindReceivedDocumentsCounter(collection: BSONCollection)(count: A => Long): Future[A] =
+      findReceivedDocumentsCounterWrapper(collection)(future)(count)
+
+    def withCommandReceivedDocumentsCounter(collection: BSONCollection)(
+      count: A => Long
+    ): Future[A] = commandReceivedDocumentsCounterWrapper(collection)(future)(count)
 
     def withDiagnostic(implicit
       enclosing: sourcecode.Enclosing
