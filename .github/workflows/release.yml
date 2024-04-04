@@ -23,4 +23,5 @@ jobs:
         with:
           jvm: "zulu:8.0.392"
       - name: Publish
+        if: ${{ !github.event.repository.fork }}
         run: sbt clean ci-release
