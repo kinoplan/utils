@@ -21,7 +21,7 @@ jobs:
       - uses: coursier/cache-action@v6
       - uses: coursier/setup-action@v1
         with:
-          jvm: "zulu:8.0.392"
+          jvm: "zulu:8.0.402"
       - name: Publish
-        if: ${{ !github.event.repository.fork }}
+        if: ${{ !github.event.pull_request.head.repo.fork }}
         run: sbt clean ci-release
