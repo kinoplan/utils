@@ -61,6 +61,7 @@ libraryDependencies ++= Seq(
   "io.kinoplan" %% "utils-zio-sttp-opentelemetry-backend" % ${version}, // JVM only
   "io.kinoplan" %% "utils-zio-sttp-slf4j-backend" % ${version}, // JVM only
   "io.kinoplan" %% "utils-zio-tapir-server" % ${version}, // JVM and Scala.js
+  "io.kinoplan" %% "utils-zio-tapir-opentelemetry" % ${version}, // JVM and Scala.js
 )
 ```
 

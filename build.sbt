@@ -173,6 +173,10 @@ lazy val zioTapirServer = crossProject(JSPlatform, JVMPlatform)
   .in(file("zio/tapir/server"))
   .configure(ModulesZio.tapirServerProfile)
 
+lazy val zioTapirOpenTelemetry = project
+  .in(file("zio/tapir/opentelemetry"))
+  .configure(ModulesZio.tapirOpenTelemetryProfile)
+
 // format: off
 inThisBuild(
   List(
