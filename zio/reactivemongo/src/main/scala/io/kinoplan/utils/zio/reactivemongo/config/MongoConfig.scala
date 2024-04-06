@@ -1,9 +1,8 @@
 package io.kinoplan.utils.zio.reactivemongo.config
 
-import zio.{Config, Layer, ZLayer}
+import zio.{Config, Layer, ZIO, ZLayer}
 import zio.Config._
 import zio.config._
-import zio.config.typesafe._
 
 private[reactivemongo] case class MongoConfig(databases: List[Database])
 
@@ -13,19 +12,19 @@ private[reactivemongo] case class Database(name: String, uri: String) {
 
 private[reactivemongo] object MongoConfig {
 
-  private def databaseDescriptor(dbName: String) = Config
+  private def databaseConfig(dbName: String) = Config
     .succeed(dbName)
     .zip(string("uri"))
     .to[Database]
     .nested("mongodb", dbName)
 
-  private def databasesDescriptor(dbNames: Seq[String]) = dbNames.map(databaseDescriptor)
+  private def databasesConfig(dbNames: Seq[String]) = dbNames.map(databaseConfig)
 
-  private def configDescriptor(dbNames: Seq[String]) = Config
-    .collectAll(databasesDescriptor(dbNames).head, databasesDescriptor(dbNames).tail: _*)
+  private def config(dbNames: Seq[String]) = Config
+    .collectAll(databasesConfig(dbNames).head, databasesConfig(dbNames).tail: _*)
     .to[MongoConfig]
 
   def live(dbNames: Seq[String]): Layer[Error, MongoConfig] = ZLayer
-    .fromZIO(TypesafeConfigProvider.fromResourcePath().load(configDescriptor(dbNames)))
+    .fromZIO(ZIO.config(config(dbNames)))
 
 }

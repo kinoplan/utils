@@ -63,7 +63,6 @@ object Dependencies {
     val typesafeConfig                   = "com.typesafe"                   % "config"                              % "1.4.3"
     val zio                              = "dev.zio"                       %% "zio"                                 % "2.0.21"
     val zioConfig                        = "dev.zio"                       %% "zio-config"                          % zioConfigV
-    val zioConfigTypesafe                = "dev.zio"                       %% "zio-config-typesafe"                 % zioConfigV
     val zioConfigMagnolia                = "dev.zio"                       %% "zio-config-magnolia"                 % zioConfigV
     val zioConfigEnumeratum              = "dev.zio"                       %% "zio-config-enumeratum"               % zioConfigV
     val zioInteropCats                   = "dev.zio"                       %% "zio-interop-cats"                    % "23.1.0.1"
@@ -73,12 +72,7 @@ object Dependencies {
 
   object Batches {
 
-    val zioConfig: Seq[ModuleID] = Seq(
-      Libraries.zioConfig,
-      Libraries.zioConfigTypesafe,
-      Libraries.zioConfigMagnolia,
-      Libraries.zioConfigEnumeratum
-    )
+    val zioConfig: Seq[ModuleID] = Seq(Libraries.zioConfig, Libraries.zioConfigMagnolia, Libraries.zioConfigEnumeratum)
 
   }
 
@@ -98,7 +92,7 @@ object Dependencies {
 
     val zioConfig: ShadingEntity = ShadingEntity(
       Batches.zioConfig,
-      Seq("zio.config", "com.typesafe.config", "mercator", "magnolia", "enumeratum"),
+      Seq("zio.config", "mercator", "magnolia", "enumeratum"),
       Seq(Libraries.scalaCollectionCompat),
       Seq(Libraries.scalaReflect)
     )

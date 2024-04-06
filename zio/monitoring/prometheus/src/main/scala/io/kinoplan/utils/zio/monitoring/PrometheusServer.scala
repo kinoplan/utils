@@ -11,21 +11,24 @@ object PrometheusServer {
 
   private def acquire = for {
     _ <- ZIO.logInfo("Starting prometheus server...")
-    config <- ZIO.service[RootConfig]
+    config <- ZIO.service[config.RootConfig]
     prometheusRegistry <- ZIO.service[PrometheusMeterRegistry]
     http <- ZIO.attempt(
       new HTTPServer(new InetSocketAddress(config.port), prometheusRegistry.getPrometheusRegistry)
     )
   } yield http
 
-  private def release(httpServer: HTTPServer) = ZIO.succeed(httpServer.close())
-
   def start(): Task[Nothing] = ZIO
-    .acquireRelease(acquire)(release)
+    .fromAutoCloseable(acquire)
     .flatMap(httpServer =>
       ZIO.logInfo(s"Prometheus server started on port ${httpServer.getPort}") *> ZIO.never
     )
     .tapErrorCause(ZIO.logErrorCause(_))
-    .provide(Scope.default, RootConfig.live, PrometheusModule.live, DefaultJvmMetrics.live.unit)
+    .provide(
+      Scope.default,
+      config.RootConfig.live,
+      PrometheusModule.live,
+      DefaultJvmMetrics.live.unit
+    )
 
 }
