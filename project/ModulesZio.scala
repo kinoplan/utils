@@ -81,4 +81,11 @@ object ModulesZio {
     .settings(name := "utils-zio-tapir-server")
     .settings(libraryDependencies ++= Seq(Libraries.tapirServer, Libraries.zio % Provided))
 
+  lazy val tapirOpenTelemetryProfile: Project => Project = _
+    .configure(ProjectSettings.commonProfile, ProjectSettings.kindProjectorProfile)
+    .settings(name := "utils-zio-tapir-opentelemetry")
+    .settings(
+      libraryDependencies ++= Seq(Libraries.tapirServer, Libraries.zio, Libraries.zioOpenTelemetry)
+    )
+
 }
