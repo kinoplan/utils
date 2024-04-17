@@ -55,7 +55,7 @@ object Dependencies {
     val scalaCollectionCompat            = "org.scala-lang.modules"        %% "scala-collection-compat"             % "2.11.0"
     val scalaLogging                     = "com.typesafe.scala-logging"    %% "scala-logging"                       % "3.9.5"
     val scalatestPlay                    = "org.scalatestplus.play"        %% "scalatestplus-play"                  % "5.1.0"    % Test
-    val sourcecode                       = "com.lihaoyi"                   %% "sourcecode"                          % "0.3.1"
+    val sourcecode                       = "com.lihaoyi"                   %% "sourcecode"                          % "0.4.1"
     val sttpCore                         = "com.softwaremill.sttp.client3" %% "core"                                % sttpV
     val sttpSlf4jBackend                 = "com.softwaremill.sttp.client3" %% "slf4j-backend"                       % sttpV
     val sttpZio                          = "com.softwaremill.sttp.client3" %% "zio"                                 % sttpV
