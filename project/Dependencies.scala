@@ -52,7 +52,7 @@ object Dependencies {
     val reactiveMongo                    = "org.reactivemongo"             %% "reactivemongo"                       % reactivemongoV
     val redisson                         = "org.redisson"                   % "redisson"                            % "3.24.2"
     val refined                          = "eu.timepit"                    %% "refined"                             % "0.11.1"
-    val scalaCollectionCompat            = "org.scala-lang.modules"        %% "scala-collection-compat"             % "2.11.0"
+    val scalaCollectionCompat            = "org.scala-lang.modules"        %% "scala-collection-compat"             % "2.12.0"
     val scalaLogging                     = "com.typesafe.scala-logging"    %% "scala-logging"                       % "3.9.5"
     val scalatestPlay                    = "org.scalatestplus.play"        %% "scalatestplus-play"                  % "5.1.0"    % Test
     val sourcecode                       = "com.lihaoyi"                   %% "sourcecode"                          % "0.3.1"
