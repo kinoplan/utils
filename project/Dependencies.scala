@@ -5,7 +5,7 @@ import sbt.librarymanagement.DependencyBuilders
 object Dependencies {
 
   object Versions {
-    val circeV         = "0.14.6"
+    val circeV         = "0.14.7"
     val openTelemetryV = "1.37.0"
     val playV          = "2.8.21"
     val reactivemongoV = "1.0.10"
