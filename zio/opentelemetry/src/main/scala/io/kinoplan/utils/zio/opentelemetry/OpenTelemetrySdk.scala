@@ -41,6 +41,6 @@ object OpenTelemetrySdk {
             )
           } yield openTelemetry
         )
-      ) ++ ContextStorage.fiberRef
+      ) ++ OpenTelemetry.contextZIO
 
 }
