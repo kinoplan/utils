@@ -1,4 +1,4 @@
-import Dependencies.{Batches, Libraries}
+import Dependencies.Libraries
 import sbt.Keys.*
 import sbt.*
 import sbtcrossproject.CrossProject
@@ -39,6 +39,11 @@ object ModulesImplicits {
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-implicits-joda-time")
     .settings(libraryDependencies ++= Seq(Libraries.jodaTime))
+
+  lazy val identityProfile: CrossProject => CrossProject = _
+    .configure(ProjectSettings.commonProfile)
+    .jsConfigure(ProjectSettings.scalaJsProfile)
+    .settings(name := "utils-implicits-identity")
 
   lazy val zioProfile: CrossProject => CrossProject = _
     .configure(ProjectSettings.commonProfile, ProjectSettings.zioTestProfile)
