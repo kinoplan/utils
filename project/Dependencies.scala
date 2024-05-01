@@ -1,5 +1,5 @@
 import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport.*
-import sbt.*
+import sbt.{Def, *}
 import sbt.librarymanagement.DependencyBuilders
 
 object Dependencies {
@@ -12,6 +12,7 @@ object Dependencies {
     val scalaJavaTimeV = "2.5.0"
     val sttpV          = "3.9.5"
     val tapirV         = "1.10.6"
+    val zioV           = "2.0.22"
     val zioConfigV     = "4.0.1"
   }
 
@@ -28,6 +29,9 @@ object Dependencies {
     val scalaJavaTimeZone = Def.setting("io.github.cquiroz" %%% "scala-java-time-tzdb" % scalaJavaTimeV)
     val scalatest         = Def.setting("org.scalatest" %%% "scalatest" % "3.2.18" % Test)
     val tapirCore         = Def.setting("com.softwaremill.sttp.tapir" %%% "tapir-core" % tapirV)
+    val zio               = Def.setting("dev.zio" %%% "zio" % zioV)
+    val zioTest           = Def.setting("dev.zio" %%% "zio-test" % zioV)
+    val zioTestSbt        = Def.setting("dev.zio" %%% "zio-test-sbt" % zioV)
 
     // A -> Z
     val circeParser                      = "io.circe"                      %% "circe-parser"                        % circeV
@@ -61,7 +65,6 @@ object Dependencies {
     val sttpZio                          = "com.softwaremill.sttp.client3" %% "zio"                                 % sttpV
     val tapirServer                      = "com.softwaremill.sttp.tapir"   %% "tapir-server"                        % tapirV
     val typesafeConfig                   = "com.typesafe"                   % "config"                              % "1.4.3"
-    val zio                              = "dev.zio"                       %% "zio"                                 % "2.0.22"
     val zioConfig                        = "dev.zio"                       %% "zio-config"                          % zioConfigV
     val zioConfigMagnolia                = "dev.zio"                       %% "zio-config-magnolia"                 % zioConfigV
     val zioConfigEnumeratum              = "dev.zio"                       %% "zio-config-enumeratum"               % zioConfigV

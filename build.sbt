@@ -112,6 +112,11 @@ lazy val implicitsJodaTime = project
   .configure(ModulesImplicits.jodaTimeProfile)
   .dependsOn(date.jvm)
 
+lazy val implicitsZio = crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Pure)
+  .in(file("implicits/zio"))
+  .configureCross(ModulesImplicits.zioProfile)
+
 // zzzzzzzzzzzzzzzzzzzz Play Modules zzzzzzzzzzzzzzzzzzzz
 
 lazy val playErrorHandler = project

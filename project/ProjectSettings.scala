@@ -1,4 +1,4 @@
-import Dependencies.{Libraries, ShadingEntity}
+import Dependencies.{Batches, Libraries, ShadingEntity}
 import coursier.ShadingPlugin
 import coursier.ShadingPlugin.autoImport.*
 import org.typelevel.sbt.tpolecat.TpolecatPlugin.autoImport.tpolecatExcludeOptions
@@ -35,6 +35,11 @@ object ProjectSettings {
     )
 
   lazy val scalaJsProfile: Project => Project = _.settings(Test / fork := false)
+
+  lazy val zioTestProfile: Project => Project = _.settings(
+    testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework"),
+    libraryDependencies ++= Seq(Libraries.zioTest.value, Libraries.zioTestSbt.value)
+  )
 
   lazy val kindProjectorProfile: Project => Project =
     _.settings(addCompilerPlugin(Libraries.kindProjector.cross(CrossVersion.full)))
