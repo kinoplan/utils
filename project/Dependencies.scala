@@ -10,10 +10,10 @@ object Dependencies {
     val playV          = "2.8.21"
     val reactivemongoV = "1.0.10"
     val scalaJavaTimeV = "2.5.0"
-    val sttpV          = "3.9.5"
+    val sttpV          = "3.9.6"
     val tapirV         = "1.10.6"
     val zioV           = "2.0.22"
-    val zioConfigV     = "4.0.1"
+    val zioConfigV     = "4.0.2"
   }
 
   import Versions.*
@@ -38,7 +38,7 @@ object Dependencies {
     val http4sBlazeServer                = "org.http4s"                    %% "http4s-blaze-server"                 % "0.23.16"
     val http4sDsl                        = "org.http4s"                    %% "http4s-dsl"                          % "0.23.27"
     val http4sServer                     = "org.http4s"                    %% "http4s-server"                       % "0.23.27"
-    val jacksonModule                    = "com.fasterxml.jackson.module"  %% "jackson-module-scala"                % "2.17.0"
+    val jacksonModule                    = "com.fasterxml.jackson.module"  %% "jackson-module-scala"                % "2.17.1"
     val jodaTime                         = "joda-time"                      % "joda-time"                           % "2.12.7"
     val kindProjector                    = "org.typelevel"                 %% "kind-projector"                      % "0.13.3"
     val logback                          = "ch.qos.logback"                 % "logback-classic"                     % "1.2.13"
@@ -50,7 +50,7 @@ object Dependencies {
     val openTelemetrySdk                 = "io.opentelemetry"               % "opentelemetry-sdk"                   % openTelemetryV
     val openTelemetrySemconvIncubating   = "io.opentelemetry.semconv"       % "opentelemetry-semconv-incubating"    % "1.24.0-alpha"
     val play                             = "com.typesafe.play"             %% "play"                                % playV
-    val playJson                         = "com.typesafe.play"             %% "play-json"                           % "2.10.4"
+    val playJson                         = "com.typesafe.play"             %% "play-json"                           % "2.10.5"
     val playReactiveMongo                = "org.reactivemongo"             %% "play2-reactivemongo"                 % s"$reactivemongoV-play28"
     val prometheusSimpleClientHttpServer = "io.prometheus"                  % "simpleclient_httpserver"             % "0.16.0"
     val reactiveMongo                    = "org.reactivemongo"             %% "reactivemongo"                       % reactivemongoV
@@ -70,7 +70,7 @@ object Dependencies {
     val zioConfigEnumeratum              = "dev.zio"                       %% "zio-config-enumeratum"               % zioConfigV
     val zioInteropCats                   = "dev.zio"                       %% "zio-interop-cats"                    % "23.1.0.2"
     val zioMetricsConnectorsMicrometer   = "dev.zio"                       %% "zio-metrics-connectors-micrometer"   % "2.3.1"
-    val zioOpenTelemetry                 = "dev.zio"                       %% "zio-opentelemetry"                   % "3.0.0-RC22"
+    val zioOpenTelemetry                 = "dev.zio"                       %% "zio-opentelemetry"                   % "3.0.0-RC23"
   }
 
   object Batches {
