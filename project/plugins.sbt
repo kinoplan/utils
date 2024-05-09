@@ -4,7 +4,7 @@ addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.16.0")
 
 addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "1.3.2")
 
-addSbtPlugin("io.github.cquiroz" % "sbt-locales" % "4.2.0")
+addSbtPlugin("io.github.cquiroz" % "sbt-locales" % "4.3.0")
 
 addSbtPlugin("io.get-coursier" % "sbt-shading" % "2.1.4")
 
