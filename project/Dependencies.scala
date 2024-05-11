@@ -24,7 +24,7 @@ object Dependencies {
     val circeCore         = Def.setting("io.circe" %%% "circe-core" % circeV)
     val circeGeneric      = Def.setting("io.circe" %%% "circe-generic" % circeV)
     val localesFullDb     = Def.setting("io.github.cquiroz" %%% "locales-full-db" % "1.5.2")
-    val scalaJavaLocales  = Def.setting("io.github.cquiroz" %%% "scala-java-locales" % "1.5.1")
+    val scalaJavaLocales  = Def.setting("io.github.cquiroz" %%% "scala-java-locales" % "1.5.2")
     val scalaJavaTime     = Def.setting("io.github.cquiroz" %%% "scala-java-time" % scalaJavaTimeV)
     val scalaJavaTimeZone = Def.setting("io.github.cquiroz" %%% "scala-java-time-tzdb" % scalaJavaTimeV)
     val scalatest         = Def.setting("org.scalatest" %%% "scalatest" % "3.2.18" % Test)
