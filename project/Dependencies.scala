@@ -6,12 +6,12 @@ object Dependencies {
 
   object Versions {
     val circeV         = "0.14.7"
-    val openTelemetryV = "1.37.0"
+    val openTelemetryV = "1.38.0"
     val playV          = "2.8.21"
     val reactivemongoV = "1.0.10"
     val scalaJavaTimeV = "2.5.0"
     val sttpV          = "3.9.6"
-    val tapirV         = "1.10.6"
+    val tapirV         = "1.10.7"
     val zioV           = "2.1.1"
     val zioConfigV     = "4.0.2"
   }
@@ -24,7 +24,7 @@ object Dependencies {
     val circeCore         = Def.setting("io.circe" %%% "circe-core" % circeV)
     val circeGeneric      = Def.setting("io.circe" %%% "circe-generic" % circeV)
     val localesFullDb     = Def.setting("io.github.cquiroz" %%% "locales-full-db" % "1.5.2")
-    val scalaJavaLocales  = Def.setting("io.github.cquiroz" %%% "scala-java-locales" % "1.5.1")
+    val scalaJavaLocales  = Def.setting("io.github.cquiroz" %%% "scala-java-locales" % "1.5.2")
     val scalaJavaTime     = Def.setting("io.github.cquiroz" %%% "scala-java-time" % scalaJavaTimeV)
     val scalaJavaTimeZone = Def.setting("io.github.cquiroz" %%% "scala-java-time-tzdb" % scalaJavaTimeV)
     val scalatest         = Def.setting("org.scalatest" %%% "scalatest" % "3.2.18" % Test)
