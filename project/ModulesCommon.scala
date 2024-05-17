@@ -29,7 +29,7 @@ object ModulesCommon {
     .jsConfigure(ProjectSettings.scalaJsProfile)
     .settings(name := "utils-locales-minimal-db")
     .settings(
-      cldrVersion := CLDRVersion.Version("43.1"), // http://unicode.org/Public/cldr/
+      cldrVersion := CLDRVersion.Version("45.0"), // http://unicode.org/Public/cldr/
       localesFilter := LocalesFilter.Selection("ru", "en"),
       libraryDependencies ++= Seq(Libraries.scalaJavaLocales.value)
     )
