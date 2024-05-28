@@ -30,6 +30,7 @@ libraryDependencies ++= Seq(
   "io.kinoplan" %% "utils-integration-check" % ${version}, // JVM and Scala.js
   "io.kinoplan" %% "utils-locales-minimal-db" % ${version}, // JVM and Scala.js
   "io.kinoplan" %% "utils-logback-config" % ${version}, // JVM only
+  "io.kinoplan" %% "utils-logback-layout" % ${version}, // JVM only
   "io.kinoplan" %% "utils-scala-logging" % ${version}, // JVM only
   "io.kinoplan" %% "utils-nullable-core" % ${version}, // JVM and Scala.js
   "io.kinoplan" %% "utils-nullable-codec-circe" % ${version}, // JVM and Scala.js

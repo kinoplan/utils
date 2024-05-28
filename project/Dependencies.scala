@@ -41,7 +41,7 @@ object Dependencies {
     val jacksonModule                    = "com.fasterxml.jackson.module"  %% "jackson-module-scala"                % "2.17.1"
     val jodaTime                         = "joda-time"                      % "joda-time"                           % "2.12.7"
     val kindProjector                    = "org.typelevel"                 %% "kind-projector"                      % "0.13.3"
-    val logback                          = "ch.qos.logback"                 % "logback-classic"                     % "1.2.13"
+    val logbackClassic                   = "ch.qos.logback"                 % "logback-classic"                     % "1.2.13"
     val logbackCore                      = "ch.qos.logback"                 % "logback-core"                        % "1.2.13"
     val micrometerRegistryPrometheus     = "io.micrometer"                  % "micrometer-registry-prometheus"      % "1.12.7"
     val mockitoScala                     = "org.scalatestplus"             %% "mockito-3-4"                         % "3.2.10.0" % Test

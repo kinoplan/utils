@@ -24,8 +24,12 @@ lazy val localesMinimalDb = crossProject(JSPlatform, JVMPlatform)
   .configureCross(ModulesCommon.localesMinimalDbProfile)
 
 lazy val logbackConfig = project
-  .in(file("common/logback-config"))
+  .in(file("common/logback/config"))
   .configure(ModulesCommon.logbackConfigProfile)
+
+lazy val logbackLayout = project
+  .in(file("common/logback/layout"))
+  .configure(ModulesCommon.logbackLayoutProfile)
 
 lazy val nullableCore = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)

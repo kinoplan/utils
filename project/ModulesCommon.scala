@@ -42,6 +42,11 @@ object ModulesCommon {
         Seq(Libraries.logbackCore % Provided, Libraries.typesafeConfig % Provided)
     )
 
+  lazy val logbackLayoutProfile: Project => Project = _
+    .configure(ProjectSettings.commonProfile)
+    .settings(name := "utils-logback-layout")
+    .settings(libraryDependencies ++= Seq(Libraries.logbackClassic % Provided))
+
   lazy val nullableCoreProfile: CrossProject => CrossProject = _
     .configure(ProjectSettings.commonProfile)
     .jsConfigure(ProjectSettings.scalaJsProfile)
@@ -66,7 +71,7 @@ object ModulesCommon {
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-scala-logging")
     .settings(Test / parallelExecution := false)
-    .settings(libraryDependencies ++= Seq(Libraries.logback, Libraries.scalaLogging))
+    .settings(libraryDependencies ++= Seq(Libraries.logbackClassic, Libraries.scalaLogging))
 
   lazy val reactivemongoBaseProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
