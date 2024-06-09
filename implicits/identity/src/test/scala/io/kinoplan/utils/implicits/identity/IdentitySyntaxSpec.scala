@@ -116,4 +116,16 @@ class IdentitySyntaxSpec extends AnyFlatSpec with Matchers {
     entity3 shouldBe IdentityTest.nonEmpty.disableBoolValue
   }
 
+  "applyIfTo" should "apply onTrue if condition is true, otherwise onFalse" in {
+    val entity1 = IdentityTest.empty.applyIfTo(_.boolValue)(_.optionValue, _.optionValue)
+    val entity2 = IdentityTest.nonEmpty.applyIfTo(_.boolValue)(_.optionValue, _.optionValue)
+    val entity3 = IdentityTest
+      .nonEmpty
+      .applyIfTo(IdentityTest.nonEmpty.boolValue)(_.optionValue, _.optionValue)
+
+    entity1 shouldBe None
+    entity2 shouldBe Some(1)
+    entity3 shouldBe Some(1)
+  }
+
 }

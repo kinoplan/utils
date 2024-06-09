@@ -55,6 +55,15 @@ final private[implicits] class IdentityOps[T](private val entity: T) extends Any
   def applyIf(value: T => Boolean)(onTrue: T => T, onFalse: T => T): T =
     applyIf(value(entity))(onTrue, onFalse)
 
+  @inline
+  def applyIfTo[A](value: Boolean)(onTrue: T => A, onFalse: T => A): A =
+    if (value) onTrue(entity)
+    else onFalse(entity)
+
+  @inline
+  def applyIfTo[A](value: T => Boolean)(onTrue: T => A, onFalse: T => A): A =
+    applyIfTo(value(entity))(onTrue, onFalse)
+
 }
 
 trait IdentitySyntax {
