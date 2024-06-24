@@ -27,7 +27,7 @@ object Dependencies {
     val scalaJavaLocales  = Def.setting("io.github.cquiroz" %%% "scala-java-locales" % "1.5.4")
     val scalaJavaTime     = Def.setting("io.github.cquiroz" %%% "scala-java-time" % scalaJavaTimeV)
     val scalaJavaTimeZone = Def.setting("io.github.cquiroz" %%% "scala-java-time-tzdb" % scalaJavaTimeV)
-    val scalatest         = Def.setting("org.scalatest" %%% "scalatest" % "3.2.18" % Test)
+    val scalatest         = Def.setting("org.scalatest" %%% "scalatest" % "3.2.19" % Test)
     val tapirCore         = Def.setting("com.softwaremill.sttp.tapir" %%% "tapir-core" % tapirV)
     val zio               = Def.setting("dev.zio" %%% "zio" % zioV)
     val zioTest           = Def.setting("dev.zio" %%% "zio-test" % zioV)
