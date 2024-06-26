@@ -43,7 +43,7 @@ object Dependencies {
     val kindProjector                    = "org.typelevel"                 %% "kind-projector"                      % "0.13.3"
     val logbackClassic                   = "ch.qos.logback"                 % "logback-classic"                     % "1.2.13"
     val logbackCore                      = "ch.qos.logback"                 % "logback-core"                        % "1.2.13"
-    val micrometerRegistryPrometheus     = "io.micrometer"                  % "micrometer-registry-prometheus"      % "1.12.7"
+    val micrometerRegistryPrometheus     = "io.micrometer"                  % "micrometer-registry-prometheus"      % "1.13.1"
     val mockitoScala                     = "org.scalatestplus"             %% "mockito-3-4"                         % "3.2.10.0" % Test
     val openTelemetryExporterOtlp        = "io.opentelemetry"               % "opentelemetry-exporter-otlp"         % openTelemetryV
     val openTelemetryExporterLoggingOtlp = "io.opentelemetry"               % "opentelemetry-exporter-logging-otlp" % openTelemetryV
