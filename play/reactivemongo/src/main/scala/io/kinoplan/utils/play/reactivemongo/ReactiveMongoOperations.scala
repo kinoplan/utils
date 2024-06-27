@@ -6,6 +6,11 @@ import reactivemongo.api.{DB, FailoverStrategy}
 import reactivemongo.api.bson._
 import reactivemongo.api.bson.collection.BSONCollection
 
+import io.kinoplan.utils.play.reactivemongo.metrics.ReactiveMongoMetrics.wrapper.{
+  deleteQueryTimerWrapper,
+  insertQueryTimerWrapper,
+  updateQueryTimerWrapper
+}
 import io.kinoplan.utils.reactivemongo.base.Queries
 
 class ReactiveMongoOperations[T](coll: Future[BSONCollection])(implicit
@@ -15,58 +20,58 @@ class ReactiveMongoOperations[T](coll: Future[BSONCollection])(implicit
 
   def insertMany(values: List[T])(implicit
     w: BSONDocumentWriter[T]
-  ) = collection.flatMap {
-    Queries.insertManyQ(_)(values)
+  ) = collection.flatMap { coll =>
+    insertQueryTimerWrapper(coll)(Queries.insertManyQ(coll)(values))
   }
 
   def insertOne(value: T)(implicit
     w: BSONDocumentWriter[T]
-  ) = collection.flatMap {
-    Queries.insertOneQ(_)(value)
+  ) = collection.flatMap { coll =>
+    insertQueryTimerWrapper(coll)(Queries.insertOneQ(coll)(value))
   }
 
   def update(q: BSONDocument, u: BSONDocument, multi: Boolean = false, upsert: Boolean = false) =
-    collection.flatMap {
-      Queries.updateQ(_)(q, u, multi = multi, upsert = upsert)
+    collection.flatMap { coll =>
+      updateQueryTimerWrapper(coll)(Queries.updateQ(coll)(q, u, multi = multi, upsert = upsert))
     }
 
   def updateMany(values: List[T], f: T => (BSONDocument, BSONDocument, Boolean, Boolean)) =
-    collection.flatMap {
-      Queries.updateManyQ(_)(values, f)
+    collection.flatMap { coll =>
+      updateQueryTimerWrapper(coll)(Queries.updateManyQ(coll)(values, f))
     }
 
   def upsert(q: BSONDocument, value: T)(implicit
     w: BSONDocumentWriter[T]
-  ) = collection.flatMap {
-    Queries.upsertQ(_)(q, value)
+  ) = collection.flatMap { coll =>
+    updateQueryTimerWrapper(coll)(Queries.upsertQ(coll)(q, value))
   }
 
   def saveOne(q: BSONDocument, value: T, multi: Boolean = false, upsert: Boolean = true)(implicit
     w: BSONDocumentWriter[T]
-  ) = collection.flatMap {
-    Queries.saveQ(_)(q, value, multi = multi, upsert = upsert)
+  ) = collection.flatMap { coll =>
+    updateQueryTimerWrapper(coll)(Queries.saveQ(coll)(q, value, multi = multi, upsert = upsert))
   }
 
   def saveMany(values: List[T], f: T => (BSONDocument, T, Boolean, Boolean))(implicit
     w: BSONDocumentWriter[T]
-  ) = collection.flatMap {
-    Queries.saveManyQ(_)(values, f)
+  ) = collection.flatMap { coll =>
+    updateQueryTimerWrapper(coll)(Queries.saveManyQ(coll)(values, f))
   }
 
-  def delete(q: BSONDocument) = collection.flatMap {
-    Queries.deleteQ(_)(q)
+  def delete(q: BSONDocument) = collection.flatMap { coll =>
+    deleteQueryTimerWrapper(coll)(Queries.deleteQ(coll)(q))
   }
 
   def deleteByIds(ids: Set[BSONObjectID])(implicit
     ec: ExecutionContext
-  ) = collection.flatMap {
-    Queries.deleteByIdsQ(_)(ids)
+  ) = collection.flatMap { coll =>
+    deleteQueryTimerWrapper(coll)(Queries.deleteByIdsQ(coll)(ids))
   }
 
   def deleteById(id: BSONObjectID)(implicit
     ec: ExecutionContext
-  ) = collection.flatMap {
-    Queries.deleteByIdQ(_)(id)
+  ) = collection.flatMap { coll =>
+    deleteQueryTimerWrapper(coll)(Queries.deleteByIdQ(coll)(id))
   }
 
 }

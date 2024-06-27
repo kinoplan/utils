@@ -18,7 +18,8 @@ object ModulesPlay {
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-play-reactivemongo")
     .settings(
-      libraryDependencies ++= Seq(Libraries.play % Provided, Libraries.playReactiveMongo % Provided)
+      libraryDependencies ++=
+        Seq(Libraries.play % Provided, Libraries.playReactiveMongo % Provided, Libraries.kamonCore)
     )
 
   lazy val requestMapContextProfile: Project => Project = _
