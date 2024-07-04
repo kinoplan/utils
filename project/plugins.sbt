@@ -8,7 +8,7 @@ addSbtPlugin("io.github.cquiroz" % "sbt-locales" % "4.5.0")
 
 addSbtPlugin("io.get-coursier" % "sbt-shading" % "2.1.5")
 
-addSbtPlugin("org.scoverage" % "sbt-scoverage" % "2.0.12")
+addSbtPlugin("org.scoverage" % "sbt-scoverage" % "2.1.0")
 
 addSbtPlugin("org.typelevel" % "sbt-tpolecat" % "0.5.1")
 
