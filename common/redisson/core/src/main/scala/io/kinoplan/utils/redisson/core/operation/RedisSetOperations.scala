@@ -23,8 +23,15 @@ trait RedisSetOperations {
     set(key).readAll()
   }.flatMap(decodeSet[T])
 
-  protected def sLen(key: String): Future[Int] = Future {
+  protected def sCard(key: String): Future[Int] = Future {
     set(key).size()
+  }
+
+  @deprecated(message = "use sCard instead", since = "0.0.40")
+  protected def sLen(key: String): Future[Int] = sCard(key)
+
+  protected def sIsMember[T: RedisEncoder](key: String, value: T): Future[Boolean] = Future {
+    set(key).contains(RedisEncoder[T].encode(value))
   }
 
   protected def sRem[T: RedisEncoder](key: String, value: T): Future[Boolean] = Future {
