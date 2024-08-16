@@ -21,17 +21,18 @@ object Dependencies {
   object Libraries {
     val scalaReflect = "org.scala-lang" % "scala-reflect"
     // Cross-platform dependencies
-    val circeCore         = Def.setting("io.circe" %%% "circe-core" % circeV)
-    val circeGeneric      = Def.setting("io.circe" %%% "circe-generic" % circeV)
-    val localesFullDb     = Def.setting("io.github.cquiroz" %%% "locales-full-db" % "1.5.4")
-    val scalaJavaLocales  = Def.setting("io.github.cquiroz" %%% "scala-java-locales" % "1.5.4")
-    val scalaJavaTime     = Def.setting("io.github.cquiroz" %%% "scala-java-time" % scalaJavaTimeV)
-    val scalaJavaTimeZone = Def.setting("io.github.cquiroz" %%% "scala-java-time-tzdb" % scalaJavaTimeV)
-    val scalatest         = Def.setting("org.scalatest" %%% "scalatest" % "3.2.19" % Test)
-    val tapirCore         = Def.setting("com.softwaremill.sttp.tapir" %%% "tapir-core" % tapirV)
-    val zio               = Def.setting("dev.zio" %%% "zio" % zioV)
-    val zioTest           = Def.setting("dev.zio" %%% "zio-test" % zioV)
-    val zioTestSbt        = Def.setting("dev.zio" %%% "zio-test-sbt" % zioV)
+    val circeCore                = Def.setting("io.circe" %%% "circe-core" % circeV)
+    val circeGeneric             = Def.setting("io.circe" %%% "circe-generic" % circeV)
+    val localesFullDb            = Def.setting("io.github.cquiroz" %%% "locales-full-db" % "1.5.4")
+    val scalaJavaLocales         = Def.setting("io.github.cquiroz" %%% "scala-java-locales" % "1.5.4")
+    val scalaJavaTime            = Def.setting("io.github.cquiroz" %%% "scala-java-time" % scalaJavaTimeV)
+    val scalaJavaTimeZone        = Def.setting("io.github.cquiroz" %%% "scala-java-time-tzdb" % scalaJavaTimeV)
+    val scalaJsMacrotaskExecutor = Def.setting("org.scala-js" %%% "scala-js-macrotask-executor" % "1.1.1")
+    val scalatest                = Def.setting("org.scalatest" %%% "scalatest" % "3.2.19" % Test)
+    val tapirCore                = Def.setting("com.softwaremill.sttp.tapir" %%% "tapir-core" % tapirV)
+    val zio                      = Def.setting("dev.zio" %%% "zio" % zioV)
+    val zioTest                  = Def.setting("dev.zio" %%% "zio-test" % zioV)
+    val zioTestSbt               = Def.setting("dev.zio" %%% "zio-test-sbt" % zioV)
 
     // A -> Z
     val circeParser                      = "io.circe"                      %% "circe-parser"                        % circeV

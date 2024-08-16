@@ -50,5 +50,6 @@ object ModulesImplicits {
     .jsConfigure(ProjectSettings.scalaJsProfile)
     .settings(name := "utils-implicits-zio")
     .settings(libraryDependencies ++= Seq(Libraries.zio.value % Provided))
+    .jsSettings(libraryDependencies += Libraries.scalaJsMacrotaskExecutor.value % Test)
 
 }
