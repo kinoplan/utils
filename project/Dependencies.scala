@@ -43,8 +43,8 @@ object Dependencies {
     val jodaTime                         = "joda-time"                      % "joda-time"                           % "2.12.7"
     val kamonCore                        = "io.kamon"                      %% "kamon-core"                          % "2.7.3"
     val kindProjector                    = "org.typelevel"                 %% "kind-projector"                      % "0.13.3"
-    val logbackClassic                   = "ch.qos.logback"                 % "logback-classic"                     % "1.2.13"
-    val logbackCore                      = "ch.qos.logback"                 % "logback-core"                        % "1.2.13"
+    val logbackClassic                   = "ch.qos.logback"                 % "logback-classic"                     % "1.5.6"
+    val logbackCore                      = "ch.qos.logback"                 % "logback-core"                        % "1.5.6"
     val micrometerRegistryPrometheus     = "io.micrometer"                  % "micrometer-registry-prometheus"      % "1.12.9"
     val mockitoScala                     = "org.scalatestplus"             %% "mockito-3-4"                         % "3.2.10.0" % Test
     val openTelemetryExporterOtlp        = "io.opentelemetry"               % "opentelemetry-exporter-otlp"         % openTelemetryV
