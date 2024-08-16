@@ -122,7 +122,7 @@ lazy val implicitsIdentity = crossProject(JSPlatform, JVMPlatform)
   .configureCross(ModulesImplicits.identityProfile)
 
 lazy val implicitsZio = crossProject(JSPlatform, JVMPlatform)
-  .crossType(CrossType.Pure)
+  .crossType(CrossType.Full)
   .in(file("implicits/zio"))
   .configureCross(ModulesImplicits.zioProfile)
 
