@@ -33,7 +33,7 @@ object ModulesZio {
       libraryDependencies ++=
         Seq(
           Libraries.micrometerRegistryPrometheus,
-          Libraries.prometheusSimpleClientHttpServer,
+          Libraries.prometheusExporterHttpServer,
           Libraries.zio.value,
           Libraries.zioMetricsConnectorsMicrometer
         )

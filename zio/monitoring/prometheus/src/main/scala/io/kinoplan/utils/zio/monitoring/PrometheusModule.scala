@@ -1,8 +1,8 @@
 package io.kinoplan.utils.zio.monitoring
 
 import io.micrometer.core.instrument.Clock
-import io.micrometer.prometheus.{PrometheusConfig, PrometheusMeterRegistry}
-import io.prometheus.client.CollectorRegistry
+import io.micrometer.prometheusmetrics.{PrometheusConfig, PrometheusMeterRegistry}
+import io.prometheus.metrics.model.registry.PrometheusRegistry
 import zio.{ULayer, ZLayer}
 import zio.metrics.connectors.micrometer
 import zio.metrics.connectors.micrometer.MicrometerConfig
@@ -12,7 +12,7 @@ private[monitoring] object PrometheusModule {
   private val registryLive = ZLayer.succeed(
     new PrometheusMeterRegistry(
       PrometheusConfig.DEFAULT,
-      CollectorRegistry.defaultRegistry,
+      PrometheusRegistry.defaultRegistry,
       Clock.SYSTEM
     )
   )
