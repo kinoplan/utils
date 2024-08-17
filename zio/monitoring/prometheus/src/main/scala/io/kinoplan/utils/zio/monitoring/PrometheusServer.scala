@@ -1,9 +1,7 @@
 package io.kinoplan.utils.zio.monitoring
 
-import java.net.InetSocketAddress
-
-import io.micrometer.prometheus.PrometheusMeterRegistry
-import io.prometheus.client.exporter.HTTPServer
+import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
+import io.prometheus.metrics.exporter.httpserver.HTTPServer
 import zio.{Scope, Task, ZIO}
 import zio.metrics.jvm.DefaultJvmMetrics
 
@@ -14,7 +12,11 @@ object PrometheusServer {
     config <- ZIO.service[config.RootConfig]
     prometheusRegistry <- ZIO.service[PrometheusMeterRegistry]
     http <- ZIO.attempt(
-      new HTTPServer(new InetSocketAddress(config.port), prometheusRegistry.getPrometheusRegistry)
+      HTTPServer
+        .builder()
+        .port(config.port)
+        .registry(prometheusRegistry.getPrometheusRegistry)
+        .buildAndStart()
     )
   } yield http
 
