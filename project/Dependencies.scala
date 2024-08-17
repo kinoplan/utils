@@ -10,9 +10,9 @@ object Dependencies {
     val playV          = "2.8.22"
     val reactivemongoV = "1.0.10"
     val scalaJavaTimeV = "2.6.0"
-    val sttpV          = "3.9.7"
+    val sttpV          = "3.9.8"
     val tapirV         = "1.11.1"
-    val zioV           = "2.0.22"
+    val zioV           = "2.1.7"
     val zioConfigV     = "4.0.2"
   }
 
@@ -21,17 +21,18 @@ object Dependencies {
   object Libraries {
     val scalaReflect = "org.scala-lang" % "scala-reflect"
     // Cross-platform dependencies
-    val circeCore         = Def.setting("io.circe" %%% "circe-core" % circeV)
-    val circeGeneric      = Def.setting("io.circe" %%% "circe-generic" % circeV)
-    val localesFullDb     = Def.setting("io.github.cquiroz" %%% "locales-full-db" % "1.5.4")
-    val scalaJavaLocales  = Def.setting("io.github.cquiroz" %%% "scala-java-locales" % "1.5.4")
-    val scalaJavaTime     = Def.setting("io.github.cquiroz" %%% "scala-java-time" % scalaJavaTimeV)
-    val scalaJavaTimeZone = Def.setting("io.github.cquiroz" %%% "scala-java-time-tzdb" % scalaJavaTimeV)
-    val scalatest         = Def.setting("org.scalatest" %%% "scalatest" % "3.2.19" % Test)
-    val tapirCore         = Def.setting("com.softwaremill.sttp.tapir" %%% "tapir-core" % tapirV)
-    val zio               = Def.setting("dev.zio" %%% "zio" % zioV)
-    val zioTest           = Def.setting("dev.zio" %%% "zio-test" % zioV)
-    val zioTestSbt        = Def.setting("dev.zio" %%% "zio-test-sbt" % zioV)
+    val circeCore                = Def.setting("io.circe" %%% "circe-core" % circeV)
+    val circeGeneric             = Def.setting("io.circe" %%% "circe-generic" % circeV)
+    val localesFullDb            = Def.setting("io.github.cquiroz" %%% "locales-full-db" % "1.5.4")
+    val scalaJavaLocales         = Def.setting("io.github.cquiroz" %%% "scala-java-locales" % "1.5.4")
+    val scalaJavaTime            = Def.setting("io.github.cquiroz" %%% "scala-java-time" % scalaJavaTimeV)
+    val scalaJavaTimeZone        = Def.setting("io.github.cquiroz" %%% "scala-java-time-tzdb" % scalaJavaTimeV)
+    val scalaJsMacrotaskExecutor = Def.setting("org.scala-js" %%% "scala-js-macrotask-executor" % "1.1.1")
+    val scalatest                = Def.setting("org.scalatest" %%% "scalatest" % "3.2.19" % Test)
+    val tapirCore                = Def.setting("com.softwaremill.sttp.tapir" %%% "tapir-core" % tapirV)
+    val zio                      = Def.setting("dev.zio" %%% "zio" % zioV)
+    val zioTest                  = Def.setting("dev.zio" %%% "zio-test" % zioV)
+    val zioTestSbt               = Def.setting("dev.zio" %%% "zio-test-sbt" % zioV)
 
     // A -> Z
     val circeParser                      = "io.circe"                      %% "circe-parser"                        % circeV
@@ -42,8 +43,8 @@ object Dependencies {
     val jodaTime                         = "joda-time"                      % "joda-time"                           % "2.12.7"
     val kamonCore                        = "io.kamon"                      %% "kamon-core"                          % "2.7.3"
     val kindProjector                    = "org.typelevel"                 %% "kind-projector"                      % "0.13.3"
-    val logbackClassic                   = "ch.qos.logback"                 % "logback-classic"                     % "1.2.13"
-    val logbackCore                      = "ch.qos.logback"                 % "logback-core"                        % "1.2.13"
+    val logbackClassic                   = "ch.qos.logback"                 % "logback-classic"                     % "1.5.6"
+    val logbackCore                      = "ch.qos.logback"                 % "logback-core"                        % "1.5.6"
     val micrometerRegistryPrometheus     = "io.micrometer"                  % "micrometer-registry-prometheus"      % "1.13.3"
     val mockitoScala                     = "org.scalatestplus"             %% "mockito-3-4"                         % "3.2.10.0" % Test
     val openTelemetryExporterOtlp        = "io.opentelemetry"               % "opentelemetry-exporter-otlp"         % openTelemetryV
@@ -69,9 +70,9 @@ object Dependencies {
     val zioConfig                        = "dev.zio"                       %% "zio-config"                          % zioConfigV
     val zioConfigMagnolia                = "dev.zio"                       %% "zio-config-magnolia"                 % zioConfigV
     val zioConfigEnumeratum              = "dev.zio"                       %% "zio-config-enumeratum"               % zioConfigV
-    val zioInteropCats                   = "dev.zio"                       %% "zio-interop-cats"                    % "23.1.0.2"
+    val zioInteropCats                   = "dev.zio"                       %% "zio-interop-cats"                    % "23.1.0.3"
     val zioMetricsConnectorsMicrometer   = "dev.zio"                       %% "zio-metrics-connectors-micrometer"   % "2.3.1"
-    val zioOpenTelemetry                 = "dev.zio"                       %% "zio-opentelemetry"                   % "3.0.0-RC23"
+    val zioOpenTelemetry                 = "dev.zio"                       %% "zio-opentelemetry"                   % "3.0.0-RC25"
   }
 
   object Batches {
