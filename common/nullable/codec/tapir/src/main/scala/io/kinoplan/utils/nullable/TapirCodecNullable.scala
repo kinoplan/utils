@@ -1,11 +1,12 @@
 package io.kinoplan.utils.nullable
 
-import sttp.tapir.{Schema, SchemaType}
+import sttp.tapir.Schema
 
 trait TapirCodecNullable {
 
-  implicit def schemaForNullable[T: Schema]: Schema[Nullable[T]] =
-    Schema[Nullable[T]](SchemaType.SOption(implicitly[Schema[T]])(_.toOption))
-      .copy(isOptional = true, format = Some("absent or nullable"))
+  implicit def schemaForNullable[T](implicit
+    s: Schema[T]
+  ): Schema[Nullable[T]] = Schema[Nullable[T]](s.schemaType.as[Nullable[T]])
+    .copy(isOptional = true, format = Some("absent or nullable"))
 
 }
