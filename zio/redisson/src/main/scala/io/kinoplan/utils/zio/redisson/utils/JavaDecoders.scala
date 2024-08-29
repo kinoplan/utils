@@ -26,6 +26,11 @@ private[redisson] object JavaDecoders {
     .map(_.doubleValue())
     .toList
 
+  def decodeMapValue[T: RedisDecoder](jMap: java.util.Map[String, String]): Task[Map[String, T]] =
+    ZIO.foreach(jMap.asScala.toMap) { case (k, v) =>
+      ZIO.fromTry(RedisDecoder[T].decode(v)).map(k -> _)
+    }
+
   def decodeMapScored[T: RedisDecoder](
     jMap: java.util.Map[String, java.lang.Double]
   ): Task[Map[T, Double]] = ZIO.foreach(jMap.asScala.toMap) { case (k, v) =>
