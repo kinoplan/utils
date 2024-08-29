@@ -6,16 +6,31 @@ import zio.{Task, ZIO}
 
 private[redisson] object JavaDecoders {
 
-  def decodeCollection[T: RedisDecoder](jCollection: java.util.Collection[String]): Task[List[T]] =
-    ZIO.foreach(jCollection.asScala.map(RedisDecoder[T].decode).toList)(ZIO.fromTry(_))
+  def decodeCollection[T: RedisDecoder](
+    jCollection: java.util.Collection[String]
+  ): Task[Iterable[T]] = ZIO.foreach(jCollection.asScala.map(RedisDecoder[T].decode))(ZIO.fromTry(_))
+
+  def decodeList[T: RedisDecoder](jCollection: java.util.List[String]): Task[List[T]] = ZIO
+    .foreach(jCollection.asScala.map(RedisDecoder[T].decode).toList)(ZIO.fromTry(_))
 
   def decodeIterator[T: RedisDecoder](jCollection: java.util.Iterator[String]): Task[Iterator[T]] =
     ZIO
-      .foreach(jCollection.asScala.map(RedisDecoder[T].decode).toList)(ZIO.fromTry(_))
+      .foreach(jCollection.asScala.map(RedisDecoder[T].decode).toSeq)(ZIO.fromTry(_))
       .map(_.iterator)
 
   def decodeSet[T: RedisDecoder](jCollection: java.util.Set[String]): Task[Set[T]] = ZIO
     .foreach(jCollection.asScala.map(RedisDecoder[T].decode).toSet)(ZIO.fromTry(_))
+
+  def decodeListDouble(jList: java.util.List[java.lang.Double]): List[Double] = jList
+    .asScala
+    .map(_.doubleValue())
+    .toList
+
+  def decodeMapScored[T: RedisDecoder](
+    jMap: java.util.Map[String, java.lang.Double]
+  ): Task[Map[T, Double]] = ZIO.foreach(jMap.asScala.toMap) { case (k, v) =>
+    ZIO.fromTry(RedisDecoder[T].decode(k)).map(_ -> v.doubleValue())
+  }
 
   def decodeNullableValue[T: RedisDecoder](nullableValue: String): Task[Option[T]] = ZIO
     .fromOption(Option(nullableValue))
@@ -30,7 +45,13 @@ private[redisson] object JavaDecoders {
   def decodeMapListValue[T: RedisDecoder, K](
     jMap: java.util.Map[K, java.util.List[String]]
   ): Task[Map[K, List[T]]] = ZIO.foreach(jMap.asScala.toMap) { case (key, jValue) =>
-    decodeCollection(jValue).map(value => (key, value))
+    decodeList(jValue).map(value => (key, value))
+  }
+
+  def decodeMapScoredValue[T: RedisDecoder, K](
+    jMap: java.util.Map[K, java.util.Map[String, java.lang.Double]]
+  ): Task[Map[K, Map[T, Double]]] = ZIO.foreach(jMap.asScala.toMap) { case (key, jValue) =>
+    decodeMapScored(jValue).map(value => (key, value))
   }
 
 }
