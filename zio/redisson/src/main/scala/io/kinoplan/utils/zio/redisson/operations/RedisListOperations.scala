@@ -56,9 +56,9 @@ trait RedisListOperations {
 
   def lIndex[T: RedisDecoder](key: String, index: Int): Task[Option[T]]
 
-  def lIndex[T: RedisDecoder](key: String, indexes: Int*): Task[List[T]]
+  def lIndex[T: RedisDecoder](key: String, indexes: Int*): Task[Iterable[T]]
 
-  def lIndex[T: RedisDecoder](key: String, indexes: Set[Int]): Task[List[T]]
+  def lIndex[T: RedisDecoder](key: String, indexes: Set[Int]): Task[Iterable[T]]
 
   def lInsertAfter[A: RedisEncoder, B: RedisEncoder](key: String, pivot: A, element: B): Task[Int]
 
@@ -70,7 +70,7 @@ trait RedisListOperations {
 
   def lPop[T: RedisDecoder](key: String): Task[Option[T]]
 
-  def lPop[T: RedisDecoder](key: String, limit: Int): Task[List[T]]
+  def lPop[T: RedisDecoder](key: String, limit: Int): Task[Iterable[T]]
 
   def lPush[T: RedisEncoder](key: String, elements: T*): Task[Int]
 
@@ -80,11 +80,11 @@ trait RedisListOperations {
 
   def lPushX[T: RedisEncoder](key: String, elements: List[T]): Task[Int]
 
-  def lRange[T: RedisDecoder](key: String): Task[List[T]]
+  def lRange[T: RedisDecoder](key: String): Task[Iterable[T]]
 
-  def lRange[T: RedisDecoder](key: String, stop: Int): Task[List[T]]
+  def lRange[T: RedisDecoder](key: String, stop: Int): Task[Iterable[T]]
 
-  def lRange[T: RedisDecoder](key: String, start: Int, stop: Int): Task[List[T]]
+  def lRange[T: RedisDecoder](key: String, start: Int, stop: Int): Task[Iterable[T]]
 
   def lRem(key: String, index: Int): Task[Unit]
 
@@ -104,7 +104,7 @@ trait RedisListOperations {
 
   def rPop[T: RedisDecoder](key: String): Task[Option[T]]
 
-  def rPop[T: RedisDecoder](key: String, count: Int): Task[List[T]]
+  def rPop[T: RedisDecoder](key: String, count: Int): Task[Iterable[T]]
 
   def rPopLPush[T: RedisDecoder](source: String, destination: String): Task[Option[T]]
 
@@ -214,10 +214,10 @@ case class RedisListOperationsLive(redissonClient: RedissonClient) extends Redis
     .fromCompletionStage(list(key).getAsync(index))
     .flatMap(JavaDecoders.decodeNullableValue(_))
 
-  override def lIndex[T: RedisDecoder](key: String, indexes: Int*): Task[List[T]] =
+  override def lIndex[T: RedisDecoder](key: String, indexes: Int*): Task[Iterable[T]] =
     lIndex(key, indexes.toSet)
 
-  override def lIndex[T: RedisDecoder](key: String, indexes: Set[Int]): Task[List[T]] = ZIO
+  override def lIndex[T: RedisDecoder](key: String, indexes: Set[Int]): Task[Iterable[T]] = ZIO
     .fromCompletionStage(list(key).getAsync(indexes.toSeq: _*))
     .flatMap(JavaDecoders.decodeCollection(_))
 
@@ -253,7 +253,7 @@ case class RedisListOperationsLive(redissonClient: RedissonClient) extends Redis
     .fromCompletionStage(queue(key).pollAsync())
     .flatMap(JavaDecoders.decodeNullableValue(_))
 
-  override def lPop[T: RedisDecoder](key: String, limit: Int): Task[List[T]] = ZIO
+  override def lPop[T: RedisDecoder](key: String, limit: Int): Task[Iterable[T]] = ZIO
     .fromCompletionStage(queue(key).pollAsync(limit))
     .flatMap(JavaDecoders.decodeCollection(_))
 
@@ -271,15 +271,15 @@ case class RedisListOperationsLive(redissonClient: RedissonClient) extends Redis
     .fromCompletionStage(deque(key).addFirstIfExistsAsync(elements.map(RedisEncoder[T].encode): _*))
     .map(_.toInt)
 
-  override def lRange[T: RedisDecoder](key: String): Task[List[T]] = ZIO
+  override def lRange[T: RedisDecoder](key: String): Task[Iterable[T]] = ZIO
     .fromCompletionStage(list(key).readAllAsync())
     .flatMap(JavaDecoders.decodeCollection(_))
 
-  override def lRange[T: RedisDecoder](key: String, stop: Int): Task[List[T]] = ZIO
+  override def lRange[T: RedisDecoder](key: String, stop: Int): Task[Iterable[T]] = ZIO
     .fromCompletionStage(list(key).rangeAsync(stop))
     .flatMap(JavaDecoders.decodeCollection(_))
 
-  override def lRange[T: RedisDecoder](key: String, start: Int, stop: Int): Task[List[T]] = ZIO
+  override def lRange[T: RedisDecoder](key: String, start: Int, stop: Int): Task[Iterable[T]] = ZIO
     .fromCompletionStage(list(key).rangeAsync(start, stop))
     .flatMap(JavaDecoders.decodeCollection(_))
 
@@ -314,7 +314,7 @@ case class RedisListOperationsLive(redissonClient: RedissonClient) extends Redis
     .fromCompletionStage(deque(key).removeLastAsync())
     .flatMap(JavaDecoders.decodeNullableValue(_))
 
-  override def rPop[T: RedisDecoder](key: String, count: Int): Task[List[T]] = ZIO
+  override def rPop[T: RedisDecoder](key: String, count: Int): Task[Iterable[T]] = ZIO
     .fromCompletionStage(deque(key).pollLastAsync(count))
     .flatMap(JavaDecoders.decodeCollection(_))
 

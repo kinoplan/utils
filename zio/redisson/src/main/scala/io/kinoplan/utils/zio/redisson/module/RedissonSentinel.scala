@@ -13,7 +13,7 @@ object RedissonSentinel {
     ZLayer.fromZIO(
       for {
         config <- ZIO.service[RedisSentinelConfig]
-        client <- ZIO.attempt(Redisson.create(config.redissonConfig))
+        client <- ZIO.attempt(Redisson.create(config.redissonConfig).reactive())
       } yield client
     )
 
