@@ -14,6 +14,7 @@ trait RedisClient
       with RedisSortedSetOperations
       with RedisStringOperations
       with RedisTopicOperations
+      with RedisHyperLogLogOperations
 
 case class RedisClientLive(redissonClient: RedissonClient)
     extends RedisClient
@@ -24,6 +25,7 @@ case class RedisClientLive(redissonClient: RedissonClient)
       with RedisSortedSetOperationsImpl
       with RedisStringOperationsImpl
       with RedisTopicOperationsImpl
+      with RedisHyperLogLogOperationsImpl
 
 object RedisClient {
 
