@@ -7,10 +7,12 @@ import io.kinoplan.utils.zio.redisson.utils.{JavaDecoders, JavaEncoders}
 import org.redisson.api.RScoredSortedSet.Aggregate
 import org.redisson.api.{RLexSortedSet, RScoredSortedSet, RedissonClient}
 import org.redisson.client.codec.StringCodec
+import zio.macros.accessible
 import zio.{Duration, Task, URLayer, ZIO, ZLayer}
 
 import java.util.concurrent.TimeUnit
 
+@accessible
 trait RedisSortedSetOperations {
 
   def bzmPopMax[T: RedisDecoder](
@@ -355,9 +357,8 @@ trait RedisSortedSetOperations {
 
 }
 
-case class RedisSortedSetOperationsLive(redissonClient: RedissonClient)
-    extends RedisSortedSetOperations
-      with DefaultRedisEncoders {
+trait RedisSortedSetOperationsImpl extends RedisSortedSetOperations with DefaultRedisEncoders {
+  protected val redissonClient: RedissonClient
 
   private lazy val scoredSortedSet: String => RScoredSortedSet[String] =
     redissonClient.getScoredSortedSet[String](_, StringCodec.INSTANCE)
@@ -967,6 +968,9 @@ case class RedisSortedSetOperationsLive(redissonClient: RedissonClient)
     .map(_.intValue())
 
 }
+
+case class RedisSortedSetOperationsLive(redissonClient: RedissonClient)
+    extends RedisSortedSetOperationsImpl
 
 object RedisSortedSetOperations {
 

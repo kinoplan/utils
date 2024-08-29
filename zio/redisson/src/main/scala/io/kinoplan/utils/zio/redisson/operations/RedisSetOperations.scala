@@ -6,7 +6,9 @@ import zio.{Task, URLayer, ZIO, ZLayer}
 import io.kinoplan.utils.redisson.base.codec.{RedisDecoder, RedisEncoder}
 import io.kinoplan.utils.redisson.crossCollectionConverters._
 import io.kinoplan.utils.zio.redisson.utils.JavaDecoders
+import zio.macros.accessible
 
+@accessible
 trait RedisSetOperations {
   def sAdd[T: RedisEncoder](key: String, member: T): Task[Boolean]
 
@@ -67,7 +69,8 @@ trait RedisSetOperations {
   def sUnionStore[T: RedisDecoder](destination: String, keys: Set[String]): Task[Int]
 }
 
-case class RedisSetOperationsLive(redissonClient: RedissonClient) extends RedisSetOperations {
+trait RedisSetOperationsImpl extends RedisSetOperations {
+  protected val redissonClient: RedissonClient
 
   private lazy val set: String => RSet[String] =
     redissonClient.getSet[String](_, StringCodec.INSTANCE)
@@ -185,6 +188,8 @@ case class RedisSetOperationsLive(redissonClient: RedissonClient) extends RedisS
     .map(_.intValue())
 
 }
+
+case class RedisSetOperationsLive(redissonClient: RedissonClient) extends RedisSetOperationsImpl
 
 object RedisSetOperations {
 

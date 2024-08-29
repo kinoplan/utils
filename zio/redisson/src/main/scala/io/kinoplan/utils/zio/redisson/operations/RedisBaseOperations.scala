@@ -26,7 +26,8 @@ trait RedisBaseOperations {
   def pingSingle(timeout: Duration): Task[Boolean]
 }
 
-case class RedisBaseOperationsLive(redissonClient: RedissonClient) extends RedisBaseOperations {
+trait RedisBaseOperationsImpl extends RedisBaseOperations {
+  protected val redissonClient: RedissonClient
 
   private lazy val clusterNode = redissonClient.getRedisNodes(RedisNodes.CLUSTER)
 
@@ -59,6 +60,8 @@ case class RedisBaseOperationsLive(redissonClient: RedissonClient) extends Redis
     .attempt(singleNode.pingAll(timeout.getSeconds, TimeUnit.SECONDS))
 
 }
+
+case class RedisBaseOperationsLive(redissonClient: RedissonClient) extends RedisBaseOperationsImpl
 
 object RedisBaseOperations {
 

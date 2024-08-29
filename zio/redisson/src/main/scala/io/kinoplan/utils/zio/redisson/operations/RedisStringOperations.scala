@@ -55,7 +55,8 @@ trait RedisStringOperations {
   def strLen[T: RedisDecoder](key: String): Task[Long]
 }
 
-case class RedisStringOperationsLive(redissonClient: RedissonClient) extends RedisStringOperations {
+trait RedisStringOperationsImpl extends RedisStringOperations {
+  protected val redissonClient: RedissonClient
 
   private lazy val bucket: String => RBucket[String] =
     redissonClient.getBucket(_, StringCodec.INSTANCE)
@@ -151,6 +152,9 @@ case class RedisStringOperationsLive(redissonClient: RedissonClient) extends Red
     .map(_.longValue())
 
 }
+
+case class RedisStringOperationsLive(redissonClient: RedissonClient)
+    extends RedisStringOperationsImpl
 
 object RedisStringOperations {
 
