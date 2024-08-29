@@ -123,7 +123,8 @@ trait RedisListOperations {
   def rPushX[T: RedisEncoder](key: String, elements: List[T]): Task[Int]
 }
 
-case class RedisListOperationsLive(redissonClient: RedissonClient) extends RedisListOperations {
+trait RedisListOperationsImpl extends RedisListOperations {
+  protected val redissonClient: RedissonClient
 
   private lazy val blockingQueue: String => RBlockingQueue[String] =
     redissonClient.getBlockingQueue[String](_, StringCodec.INSTANCE)
@@ -350,6 +351,8 @@ case class RedisListOperationsLive(redissonClient: RedissonClient) extends Redis
     .map(_.toInt)
 
 }
+
+case class RedisListOperationsLive(redissonClient: RedissonClient) extends RedisListOperationsImpl
 
 object RedisListOperations {
 

@@ -6,32 +6,28 @@ import zio.macros.accessible
 import zio.{URLayer, ZIO, ZLayer}
 
 @accessible
-trait RedisClient {
-  def base: RedisBaseOperations
-  def list: RedisListOperations
-  def set: RedisSetOperations
-  def topic: RedisTopicOperations
-}
+trait RedisClient
+    extends RedisBaseOperations
+      with RedisBitmapOperations
+      with RedisListOperations
+      with RedisSetOperations
+      with RedisSortedSetOperations
+      with RedisStringOperations
+      with RedisTopicOperations
+
+case class RedisClientLive(redissonClient: RedissonClient)
+    extends RedisClient
+      with RedisBaseOperationsImpl
+      with RedisBitmapOperationsImpl
+      with RedisListOperationsImpl
+      with RedisSetOperationsImpl
+      with RedisSortedSetOperationsImpl
+      with RedisStringOperationsImpl
+      with RedisTopicOperationsImpl
 
 object RedisClient {
 
-  val live: URLayer[RedissonClient, RedisClient] = RedisBaseOperations.live ++
-    RedisListOperations.live ++ RedisSetOperations.live ++ RedisTopicOperations.live >>>
-    ZLayer.fromZIO(
-      for {
-        baseOperations <- ZIO.service[RedisBaseOperations]
-        listOperations <- ZIO.service[RedisListOperations]
-        setOperations <- ZIO.service[RedisSetOperations]
-        topicOperations <- ZIO.service[RedisTopicOperations]
-      } yield new RedisClient {
-        override def base: RedisBaseOperations = baseOperations
-
-        override def list: RedisListOperations = listOperations
-
-        override def set: RedisSetOperations = setOperations
-
-        override def topic: RedisTopicOperations = topicOperations
-      }
-    )
+  val live: URLayer[RedissonClient, RedisClient] = ZLayer
+    .fromZIO(ZIO.service[RedissonClient].map(RedisClientLive))
 
 }

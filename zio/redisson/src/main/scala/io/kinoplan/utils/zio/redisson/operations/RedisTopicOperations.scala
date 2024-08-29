@@ -32,7 +32,8 @@ trait RedisTopicOperations {
   def unsubscribe(channel: String, listenerId: Int): Task[Unit]
 }
 
-case class RedisTopicOperationsLive(redissonClient: RedissonClient) extends RedisTopicOperations {
+trait RedisTopicOperationsImpl extends RedisTopicOperations {
+  protected val redissonClient: RedissonClient
 
   private lazy val topic: String => RTopic = redissonClient.getTopic(_, StringCodec.INSTANCE)
 
@@ -97,6 +98,8 @@ case class RedisTopicOperationsLive(redissonClient: RedissonClient) extends Redi
     .unit
 
 }
+
+case class RedisTopicOperationsLive(redissonClient: RedissonClient) extends RedisTopicOperationsImpl
 
 object RedisTopicOperations {
 

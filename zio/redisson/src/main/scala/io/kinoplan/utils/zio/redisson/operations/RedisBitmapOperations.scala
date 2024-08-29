@@ -44,7 +44,8 @@ trait RedisBitmapOperations {
   def clearBit(key: String): Task[Unit]
 }
 
-case class RedisBitmapOperationsLive(redissonClient: RedissonClient) extends RedisBitmapOperations {
+trait RedisBitmapOperationsImpl extends RedisBitmapOperations {
+  protected val redissonClient: RedissonClient
 
   private lazy val bitSet: String => RBitSet = redissonClient.getBitSet
 
@@ -115,6 +116,9 @@ case class RedisBitmapOperationsLive(redissonClient: RedissonClient) extends Red
     .unit
 
 }
+
+case class RedisBitmapOperationsLive(redissonClient: RedissonClient)
+    extends RedisBitmapOperationsImpl
 
 object RedisBitmapOperations {
 
