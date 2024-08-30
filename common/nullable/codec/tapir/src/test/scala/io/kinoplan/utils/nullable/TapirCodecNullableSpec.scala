@@ -12,6 +12,13 @@ class TapirCodecNullableSpec extends AnyWordSpec with TapirCodecNullable {
       )
 
     "return correct isOptional" in assert(implicitly[Schema[Nullable[String]]].isOptional)
+
+    "return correct format" in {
+      assert(implicitly[Schema[Nullable[String]]].format.contains("absent or nullable"))
+      assert(
+        implicitly[Schema[Nullable[SchemaDate]]].format.contains("absent or nullable dd.MM.yyyy")
+      )
+    }
   }
 
 }
