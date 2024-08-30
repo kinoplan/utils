@@ -78,6 +78,6 @@ case class RedisHyperLogLogOperationsLive(redissonClient: RedissonClient)
 object RedisBaseOperations {
 
   val live: URLayer[RedissonClient, RedisHyperLogLogOperations] = ZLayer
-    .fromZIO(ZIO.service[RedissonClient].map(RedisHyperLogLogOperationsLive))
+    .fromZIO(ZIO.serviceWith[RedissonClient](RedisHyperLogLogOperationsLive))
 
 }

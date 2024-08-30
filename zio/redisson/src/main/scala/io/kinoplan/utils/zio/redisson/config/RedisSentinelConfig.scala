@@ -136,7 +136,7 @@ private[redisson] case class RedisSentinelConfig(
 }
 
 private[redisson] object RedisSentinelConfig {
-  private val config = deriveConfig[RedisSentinelConfig]
+  private val config = deriveConfig[RedisSentinelConfig].nested("redis", "sentinel")
 
   val live: Layer[Error, RedisSentinelConfig] = ZLayer.fromZIO(ZIO.config(config))
 }

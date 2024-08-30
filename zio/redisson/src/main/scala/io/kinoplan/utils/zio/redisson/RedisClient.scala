@@ -30,6 +30,6 @@ case class RedisClientLive(redissonClient: RedissonClient)
 object RedisClient {
 
   val live: URLayer[RedissonClient, RedisClient] = ZLayer
-    .fromZIO(ZIO.service[RedissonClient].map(RedisClientLive))
+    .fromZIO(ZIO.serviceWith[RedissonClient](RedisClientLive))
 
 }

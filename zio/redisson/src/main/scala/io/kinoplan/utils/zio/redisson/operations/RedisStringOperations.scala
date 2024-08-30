@@ -159,6 +159,6 @@ case class RedisStringOperationsLive(redissonClient: RedissonClient)
 object RedisStringOperations {
 
   val live: URLayer[RedissonClient, RedisStringOperations] = ZLayer
-    .fromZIO(ZIO.service[RedissonClient].map(RedisStringOperationsLive))
+    .fromZIO(ZIO.serviceWith[RedissonClient](RedisStringOperationsLive))
 
 }

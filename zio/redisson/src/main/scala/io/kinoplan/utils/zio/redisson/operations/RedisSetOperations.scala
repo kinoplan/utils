@@ -194,6 +194,6 @@ case class RedisSetOperationsLive(redissonClient: RedissonClient) extends RedisS
 object RedisSetOperations {
 
   val live: URLayer[RedissonClient, RedisSetOperations] = ZLayer
-    .fromZIO(ZIO.service[RedissonClient].map(RedisSetOperationsLive))
+    .fromZIO(ZIO.serviceWith[RedissonClient](RedisSetOperationsLive))
 
 }

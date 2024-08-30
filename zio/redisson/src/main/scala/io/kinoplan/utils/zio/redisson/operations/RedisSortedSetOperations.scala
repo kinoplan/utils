@@ -975,6 +975,6 @@ case class RedisSortedSetOperationsLive(redissonClient: RedissonClient)
 object RedisSortedSetOperations {
 
   val live: URLayer[RedissonClient, RedisSortedSetOperations] = ZLayer
-    .fromZIO(ZIO.service[RedissonClient].map(RedisSortedSetOperationsLive))
+    .fromZIO(ZIO.serviceWith[RedissonClient](RedisSortedSetOperationsLive))
 
 }

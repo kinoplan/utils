@@ -13,7 +13,7 @@ object RedissonSentinel {
     ZLayer.fromZIO(
       for {
         config <- ZIO.service[RedisSentinelConfig]
-        client <- ZIO.attempt(Redisson.create(config.redissonConfig).reactive())
+        client <- ZIO.attempt(Redisson.create(config.redissonConfig))
       } yield client
     )
 
@@ -26,7 +26,6 @@ object RedissonSentinel {
 
           override def checkAvailability: Task[Boolean] = redisClient
             .get
-            .base
             .pingSentinelMasterSlave(10.seconds)
         }
 

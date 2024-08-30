@@ -123,6 +123,6 @@ case class RedisBitmapOperationsLive(redissonClient: RedissonClient)
 object RedisBitmapOperations {
 
   val live: URLayer[RedissonClient, RedisBitmapOperations] = ZLayer
-    .fromZIO(ZIO.service[RedissonClient].map(RedisBitmapOperationsLive))
+    .fromZIO(ZIO.serviceWith[RedissonClient](RedisBitmapOperationsLive))
 
 }

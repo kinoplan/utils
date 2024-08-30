@@ -24,7 +24,7 @@ object RedissonSingle {
         val integrationCheck = new IntegrationCheck[Task] {
           override val checkServiceName: String = "redisson.single"
 
-          override def checkAvailability: Task[Boolean] = redisClient.get.base.pingSingle(10.seconds)
+          override def checkAvailability: Task[Boolean] = redisClient.get.pingSingle(10.seconds)
         }
 
         ZIntegration.environment(redisClient.get, Set(integrationCheck))
