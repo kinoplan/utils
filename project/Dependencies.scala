@@ -9,7 +9,7 @@ object Dependencies {
     val logbackV       = "1.5.12"
     val openTelemetryV = "1.43.0"
     val playV          = "2.8.22"
-    val reactivemongoV = "1.0.10"
+    val reactivemongoV = "1.1.0-RC13"
     val scalaJavaTimeV = "2.6.0"
     val sttpV          = "3.10.1"
     val tapirV         = "1.11.7"
@@ -58,9 +58,9 @@ object Dependencies {
     val play                             = "com.typesafe.play"             %% "play"                                   % playV
     val playJson                         = "org.playframework"             %% "play-json"                              % "3.0.4"
     val play2Json                        = "com.typesafe.play"             %% "play-json"                              % "2.10.6"
-    val playReactiveMongo                = "org.reactivemongo"             %% "play2-reactivemongo"                    % s"$reactivemongoV-play28"
+    val playReactiveMongo                = "org.reactivemongo"             %% "play2-reactivemongo"                    % "1.1.0-play28.RC13"
     val prometheusExporterHttpServer     = "io.prometheus"                  % "prometheus-metrics-exporter-httpserver" % "1.3.2"
-    val reactiveMongo                    = "org.reactivemongo"             %% "reactivemongo"                          % reactivemongoV
+    val reactiveMongo                    = "org.reactivemongo"             %% "reactivemongo"                          % "1.1.0-pekko.RC13"
     val reactiveMongoBsonApi             = "org.reactivemongo"             %% "reactivemongo-bson-api"                 % reactivemongoV
     val redisson                         = "org.redisson"                   % "redisson"                               % "3.24.2"
     val refined                          = "eu.timepit"                    %% "refined"                                % "0.11.2"
