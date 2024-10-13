@@ -22,7 +22,8 @@ jobs:
       uses: coursier/setup-action@v1
       with:
         jvm: ${{ matrix.java }}
-
+    - uses: sbt/setup-sbt@v1
+      
     - name: Test
       run: |
         export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS --add-opens=java.base/java.lang=ALL-UNNAMED";
