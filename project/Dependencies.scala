@@ -42,7 +42,7 @@ object Dependencies {
     val http4sServer                     = "org.http4s"                    %% "http4s-server"                          % "0.23.28"
     val jacksonModule                    = "com.fasterxml.jackson.module"  %% "jackson-module-scala"                   % "2.18.0"
     val jodaTime                         = "joda-time"                      % "joda-time"                              % "2.13.0"
-    val kamonCore                        = "io.kamon"                      %% "kamon-core"                             % "2.7.4"
+    val kamonCore                        = "io.kamon"                      %% "kamon-core"                             % "2.7.5"
     val kindProjector                    = "org.typelevel"                 %% "kind-projector"                         % "0.13.3"
     val logbackClassic                   = "ch.qos.logback"                 % "logback-classic"                        % logbackV
     val logbackCore                      = "ch.qos.logback"                 % "logback-core"                           % logbackV
