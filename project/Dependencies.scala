@@ -6,14 +6,14 @@ object Dependencies {
 
   object Versions {
     val circeV         = "0.14.10"
-    val logbackV       = "1.5.9"
+    val logbackV       = "1.5.10"
     val openTelemetryV = "1.43.0"
     val playV          = "2.8.22"
     val reactivemongoV = "1.0.10"
     val scalaJavaTimeV = "2.6.0"
     val sttpV          = "3.10.0"
     val tapirV         = "1.11.7"
-    val zioV           = "2.1.9"
+    val zioV           = "2.1.11"
     val zioConfigV     = "4.0.2"
   }
 
@@ -42,7 +42,7 @@ object Dependencies {
     val http4sServer                     = "org.http4s"                    %% "http4s-server"                          % "0.23.28"
     val jacksonModule                    = "com.fasterxml.jackson.module"  %% "jackson-module-scala"                   % "2.18.0"
     val jodaTime                         = "joda-time"                      % "joda-time"                              % "2.13.0"
-    val kamonCore                        = "io.kamon"                      %% "kamon-core"                             % "2.7.4"
+    val kamonCore                        = "io.kamon"                      %% "kamon-core"                             % "2.7.5"
     val kindProjector                    = "org.typelevel"                 %% "kind-projector"                         % "0.13.3"
     val logbackClassic                   = "ch.qos.logback"                 % "logback-classic"                        % logbackV
     val logbackCore                      = "ch.qos.logback"                 % "logback-core"                           % logbackV
