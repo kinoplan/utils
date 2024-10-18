@@ -20,4 +20,8 @@ trait RedisKeysOperations {
     keys.delete(keySet.toList: _*)
   }
 
+  protected def delByPattern(pattern: String): Future[Long] = Future {
+    keys.deleteByPattern(pattern)
+  }
+
 }
