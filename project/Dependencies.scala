@@ -55,7 +55,7 @@ object Dependencies {
     val play                             = "com.typesafe.play"             %% "play"                                   % playV
     val playJson                         = "com.typesafe.play"             %% "play-json"                              % "2.10.6"
     val playReactiveMongo                = "org.reactivemongo"             %% "play2-reactivemongo"                    % s"$reactivemongoV-play28"
-    val prometheusExporterHttpServer     = "io.prometheus"                  % "prometheus-metrics-exporter-httpserver" % "1.3.1"
+    val prometheusExporterHttpServer     = "io.prometheus"                  % "prometheus-metrics-exporter-httpserver" % "1.3.2"
     val reactiveMongo                    = "org.reactivemongo"             %% "reactivemongo"                          % reactivemongoV
     val redisson                         = "org.redisson"                   % "redisson"                               % "3.24.2"
     val refined                          = "eu.timepit"                    %% "refined"                                % "0.11.2"
