@@ -10,6 +10,8 @@ import scoverage.ScoverageKeys.*
 
 object ProjectSettings {
 
+  private val namespace = "io.kinoplan.utils"
+
   lazy val commonProfile: Project => Project = _
     .enablePlugins(ScalafixPlugin)
     .settings(
@@ -44,7 +46,7 @@ object ProjectSettings {
   lazy val kindProjectorProfile: Project => Project =
     _.settings(addCompilerPlugin(Libraries.kindProjector.cross(CrossVersion.full)))
 
-  private val namespace = "io.kinoplan.utils"
+  lazy val publishSkipProfile: Project => Project = _.settings(publish / skip := true)
 
   def shadingProfile(shadingEntities: ShadingEntity*): Project => Project = _
     .enablePlugins(ShadingPlugin)

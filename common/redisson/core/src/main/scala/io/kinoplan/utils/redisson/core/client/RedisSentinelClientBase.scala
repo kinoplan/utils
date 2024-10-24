@@ -4,7 +4,7 @@ import org.redisson.Redisson
 import org.redisson.api.RedissonClient
 import org.redisson.config.{Config, ReadMode, SubscriptionMode}
 
-import io.kinoplan.utils.redisson.core.codec.DefaultRedisCodecs
+import io.kinoplan.utils.redisson.codec.DefaultRedisCodecs
 import io.kinoplan.utils.redisson.core.operation.RedisOperations
 
 abstract class RedisSentinelClientBase extends RedisOperations with DefaultRedisCodecs {

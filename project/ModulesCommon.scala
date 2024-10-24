@@ -8,6 +8,11 @@ import locales.LocalesPlugin.autoImport.*
 
 object ModulesCommon {
 
+  lazy val crossCollectionProfile: CrossProject => CrossProject = _
+    .configure(ProjectSettings.commonProfile)
+    .jsConfigure(ProjectSettings.scalaJsProfile)
+    .settings(name := "utils-cross-collection")
+
   lazy val dateProfile: CrossProject => CrossProject = _
     .configure(ProjectSettings.commonProfile)
     .jsConfigure(ProjectSettings.scalaJsProfile)
@@ -96,13 +101,22 @@ object ModulesCommon {
     .settings(name := "utils-reactivemongo-bson-refined")
     .settings(libraryDependencies ++= Seq(Libraries.reactiveMongo % Provided, Libraries.refined))
 
-  lazy val redissonProfile: Project => Project = _
+  lazy val redissonCoreProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-redisson-core")
-    .settings(libraryDependencies ++= Seq(Libraries.redisson, Libraries.jacksonModule))
+    .settings(
+      libraryDependencies ++=
+        Seq(Libraries.redisson, Libraries.jacksonModule, Libraries.scalaCollectionCompat)
+    )
 
-  lazy val redissonCodecCirceProfile: Project => Project = _
+  lazy val redissonCodecBaseProfile: CrossProject => CrossProject = _
     .configure(ProjectSettings.commonProfile)
+    .jsConfigure(ProjectSettings.scalaJsProfile)
+    .settings(name := "utils-redisson-codec-base")
+
+  lazy val redissonCodecCirceProfile: CrossProject => CrossProject = _
+    .configure(ProjectSettings.commonProfile)
+    .jsConfigure(ProjectSettings.scalaJsProfile)
     .settings(name := "utils-redisson-codec-circe")
     .settings(
       libraryDependencies ++=

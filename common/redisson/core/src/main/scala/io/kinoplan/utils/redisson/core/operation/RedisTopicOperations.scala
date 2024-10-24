@@ -6,7 +6,7 @@ import org.redisson.api.{RPatternTopic, RTopic, RedissonClient}
 import org.redisson.api.listener.{MessageListener, PatternMessageListener}
 import org.redisson.client.codec.StringCodec
 
-import io.kinoplan.utils.redisson.core.codec.{RedisDecoder, RedisEncoder}
+import io.kinoplan.utils.redisson.codec.{RedisDecoder, RedisEncoder}
 
 trait RedisTopicOperations {
   implicit protected val executionContext: ExecutionContext

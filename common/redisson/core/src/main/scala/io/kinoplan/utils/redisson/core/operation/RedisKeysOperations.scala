@@ -4,7 +4,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 import org.redisson.api.RedissonClient
 
-import io.kinoplan.utils.redisson.crossCollectionConverters._
+import io.kinoplan.utils.cross.collection.converters._
 
 trait RedisKeysOperations {
   implicit protected val executionContext: ExecutionContext
