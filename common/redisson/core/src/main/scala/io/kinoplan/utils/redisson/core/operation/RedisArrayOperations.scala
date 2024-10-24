@@ -5,8 +5,8 @@ import scala.concurrent.{ExecutionContext, Future}
 import org.redisson.api.{RDeque, RList, RedissonClient}
 import org.redisson.client.codec.StringCodec
 
+import io.kinoplan.utils.redisson.codec.{RedisDecoder, RedisEncoder}
 import io.kinoplan.utils.redisson.core.JavaDecoders._
-import io.kinoplan.utils.redisson.core.codec.{RedisDecoder, RedisEncoder}
 
 trait RedisArrayOperations {
   implicit protected val executionContext: ExecutionContext

@@ -1,3 +1,3 @@
-package io.kinoplan.utils.redisson.core.codec
+package io.kinoplan.utils.redisson.codec
 
 trait DefaultRedisCodecs extends DefaultRedisEncoders with DefaultRedisDecoders

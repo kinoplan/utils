@@ -1,4 +1,4 @@
-package io.kinoplan.utils.redisson.core.codec
+package io.kinoplan.utils.redisson.codec
 
 import scala.util.Try
 

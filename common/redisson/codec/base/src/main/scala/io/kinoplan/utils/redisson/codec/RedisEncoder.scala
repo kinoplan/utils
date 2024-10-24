@@ -1,4 +1,4 @@
-package io.kinoplan.utils.redisson.core.codec
+package io.kinoplan.utils.redisson.codec
 
 trait RedisEncoder[T] {
   def encode(value: T): String

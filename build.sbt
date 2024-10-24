@@ -2,6 +2,11 @@ ThisBuild / resolvers += "Artima Maven Repository".at("https://repo.artima.com/r
 
 // zzzzzzzzzzzzzzzzzzzz Common Modules zzzzzzzzzzzzzzzzzzzz
 
+lazy val crossCollection = crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Pure)
+  .in(file("common/cross/collection"))
+  .configureCross(ModulesCommon.crossCollectionProfile)
+
 lazy val date = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
   .in(file("common/date"))
@@ -75,17 +80,24 @@ lazy val reactivemongoBsonRefined = project
 
 lazy val redissonCore = project
   .in(file("common/redisson/core"))
-  .configure(ModulesCommon.redissonProfile)
+  .configure(ModulesCommon.redissonCoreProfile)
+  .dependsOn(crossCollection.jvm, redissonCodecBase.jvm)
 
-lazy val redissonCodecCirce = project
+lazy val redissonCodecBase = crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Pure)
+  .in(file("common/redisson/codec/base"))
+  .configureCross(ModulesCommon.redissonCodecBaseProfile)
+
+lazy val redissonCodecCirce = crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Pure)
   .in(file("common/redisson/codec/circe"))
-  .configure(ModulesCommon.redissonCodecCirceProfile)
-  .dependsOn(redissonCore)
+  .configureCross(ModulesCommon.redissonCodecCirceProfile)
+  .dependsOn(redissonCodecBase)
 
 lazy val redissonCodecPlayJson = project
   .in(file("common/redisson/codec/play-json"))
   .configure(ModulesCommon.redissonCodecPlayJsonProfile)
-  .dependsOn(redissonCore)
+  .dependsOn(redissonCodecBase.jvm)
 
 // zzzzzzzzzzzzzzzzzzzz Implicits Modules zzzzzzzzzzzzzzzzzzzz
 

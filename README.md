@@ -41,7 +41,8 @@ libraryDependencies ++= Seq(
   "io.kinoplan" %% "utils-reactivemongo-bson-joda-time" % ${version}, // JVM only
   "io.kinoplan" %% "utils-reactivemongo-bson-refined" % ${version}, // JVM only
   "io.kinoplan" %% "utils-redisson-core" % ${version}, // JVM only
-  "io.kinoplan" %% "utils-redisson-codec-circe" % ${version}, // JVM only
+  "io.kinoplan" %% "utils-redisson-codec-base" % ${version}, // JVM and Scala.js
+  "io.kinoplan" %% "utils-redisson-codec-circe" % ${version}, // JVM and Scala.js
   "io.kinoplan" %% "utils-redisson-codec-play-json" % ${version}, // JVM only
   // implicits
   "io.kinoplan" %% "utils-implicits-any" % ${version}, // JVM and Scala.js
