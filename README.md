@@ -25,6 +25,7 @@ Here is the complete list of published artifacts:
 ```scala
 libraryDependencies ++= Seq(
   // base
+  "io.kinoplan" %% "utils-circe-zio-prelude" % ${version}, // JVM and Scala.js
   "io.kinoplan" %% "utils-date" % ${version}, // JVM and Scala.js
   "io.kinoplan" %% "utils-http4s-server" % ${version}, // JVM and Scala.js
   "io.kinoplan" %% "utils-integration-check" % ${version}, // JVM and Scala.js
@@ -40,6 +41,7 @@ libraryDependencies ++= Seq(
   "io.kinoplan" %% "utils-reactivemongo-bson-any" % ${version}, // JVM only
   "io.kinoplan" %% "utils-reactivemongo-bson-joda-time" % ${version}, // JVM only
   "io.kinoplan" %% "utils-reactivemongo-bson-refined" % ${version}, // JVM only
+  "io.kinoplan" %% "utils-reactivemongo-bson-zio-prelude" % ${version}, // JVM only
   "io.kinoplan" %% "utils-redisson-core" % ${version}, // JVM only
   "io.kinoplan" %% "utils-redisson-codec-base" % ${version}, // JVM and Scala.js
   "io.kinoplan" %% "utils-redisson-codec-circe" % ${version}, // JVM and Scala.js

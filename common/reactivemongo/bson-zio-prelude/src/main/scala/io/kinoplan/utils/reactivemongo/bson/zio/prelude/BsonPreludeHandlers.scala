@@ -6,7 +6,7 @@ import reactivemongo.api.bson.{BSONValue, _}
 import zio.NonEmptyChunk
 import zio.prelude.{NonEmptyList, NonEmptyMap, NonEmptySet, NonEmptySortedMap, NonEmptySortedSet}
 
-trait BsonZioPreludeHandlers {
+trait BsonPreludeHandlers {
 
   implicit private class SeqTrySyntax[A](seq: Seq[Try[A]]) {
 
@@ -126,4 +126,4 @@ trait BsonZioPreludeHandlers {
 
 }
 
-object BsonZioPreludeHandlers extends BsonZioPreludeHandlers
+object BsonPreludeHandlers extends BsonPreludeHandlers

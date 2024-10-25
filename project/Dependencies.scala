@@ -24,6 +24,7 @@ object Dependencies {
     // Cross-platform dependencies
     val circeCore                = Def.setting("io.circe" %%% "circe-core" % circeV)
     val circeGeneric             = Def.setting("io.circe" %%% "circe-generic" % circeV)
+    val circeParser              = Def.setting("io.circe" %%% "circe-parser" % circeV)
     val localesFullDb            = Def.setting("io.github.cquiroz" %%% "locales-full-db" % "1.5.4")
     val scalaJavaLocales         = Def.setting("io.github.cquiroz" %%% "scala-java-locales" % "1.5.4")
     val scalaJavaTime            = Def.setting("io.github.cquiroz" %%% "scala-java-time" % scalaJavaTimeV)
@@ -37,7 +38,6 @@ object Dependencies {
     val zioTestSbt               = Def.setting("dev.zio" %%% "zio-test-sbt" % zioV)
 
     // A -> Z
-    val circeParser                      = "io.circe"                      %% "circe-parser"                           % circeV
     val http4sBlazeServer                = "org.http4s"                    %% "http4s-blaze-server"                    % "0.23.16"
     val http4sDsl                        = "org.http4s"                    %% "http4s-dsl"                             % "0.23.29"
     val http4sServer                     = "org.http4s"                    %% "http4s-server"                          % "0.23.29"

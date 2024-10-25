@@ -8,6 +8,20 @@ import locales.LocalesPlugin.autoImport.*
 
 object ModulesCommon {
 
+  lazy val circeZioPreludeProfile: CrossProject => CrossProject = _
+    .configure(ProjectSettings.commonProfile)
+    .jsConfigure(ProjectSettings.scalaJsProfile)
+    .settings(name := "utils-circe-zio-prelude")
+    .settings(
+      libraryDependencies ++=
+        Seq(
+          Libraries.circeCore.value    % Provided,
+          Libraries.circeGeneric.value % Test,
+          Libraries.circeParser.value  % Test,
+          Libraries.zioPrelude.value
+        )
+    )
+
   lazy val crossCollectionProfile: CrossProject => CrossProject = _
     .configure(ProjectSettings.commonProfile)
     .jsConfigure(ProjectSettings.scalaJsProfile)
@@ -127,7 +141,7 @@ object ModulesCommon {
     .settings(name := "utils-redisson-codec-circe")
     .settings(
       libraryDependencies ++=
-        Seq(Libraries.circeCore.value % Provided, Libraries.circeParser % Provided)
+        Seq(Libraries.circeCore.value % Provided, Libraries.circeParser.value % Provided)
     )
 
   lazy val redissonCodecPlayJsonProfile: Project => Project = _
