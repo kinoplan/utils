@@ -78,6 +78,10 @@ lazy val reactivemongoBsonRefined = project
   .in(file("common/reactivemongo/bson-refined"))
   .configure(ModulesCommon.reactivemongoBsonRefinedProfile)
 
+lazy val reactivemongoBsonZioPrelude = project
+  .in(file("common/reactivemongo/bson-zio-prelude"))
+  .configure(ModulesCommon.reactivemongoBsonZioPreludeProfile)
+
 lazy val redissonCore = project
   .in(file("common/redisson/core"))
   .configure(ModulesCommon.redissonCoreProfile)

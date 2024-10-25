@@ -101,6 +101,13 @@ object ModulesCommon {
     .settings(name := "utils-reactivemongo-bson-refined")
     .settings(libraryDependencies ++= Seq(Libraries.reactiveMongo % Provided, Libraries.refined))
 
+  lazy val reactivemongoBsonZioPreludeProfile: Project => Project = _
+    .configure(ProjectSettings.commonProfile)
+    .settings(name := "utils-reactivemongo-bson-zio-prelude")
+    .settings(
+      libraryDependencies ++= Seq(Libraries.reactiveMongo % Provided, Libraries.zioPrelude.value)
+    )
+
   lazy val redissonCoreProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-redisson-core")
