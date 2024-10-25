@@ -49,7 +49,7 @@ trait RedisValueOperations {
 
   protected def setExNx[T: RedisEncoder](key: String, seconds: Long, value: T): Future[Boolean] =
     Future {
-      bucket(key).setIfExists(RedisEncoder[T].encode(value), Duration.ofSeconds(seconds))
+      bucket(key).setIfAbsent(RedisEncoder[T].encode(value), Duration.ofSeconds(seconds))
     }
 
   protected def expire(key: String, seconds: Long): Future[Boolean] = Future {
