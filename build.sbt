@@ -2,6 +2,11 @@ ThisBuild / resolvers += "Artima Maven Repository".at("https://repo.artima.com/r
 
 // zzzzzzzzzzzzzzzzzzzz Common Modules zzzzzzzzzzzzzzzzzzzz
 
+lazy val circeZioPrelude = crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Pure)
+  .in(file("common/circe/zio-prelude"))
+  .configureCross(ModulesCommon.circeZioPreludeProfile)
+
 lazy val crossCollection = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
   .in(file("common/cross/collection"))

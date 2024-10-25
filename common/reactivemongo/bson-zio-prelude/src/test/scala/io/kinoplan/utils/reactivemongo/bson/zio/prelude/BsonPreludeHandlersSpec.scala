@@ -5,14 +5,14 @@ import reactivemongo.api.bson.BSONDocument.pretty
 
 import io.kinoplan.utils.reactivemongo.bson.zio.prelude.TestData._
 
-class BsonZioPreludeHandlersSpec extends AnyWordSpec {
+class BsonPreludeHandlersSpec extends AnyWordSpec {
 
-  "BsonZioPreludeHandlers#writeTry" should {
+  "BsonPreludeHandlers#writeTry" should {
     "return correct value" in
       assert(handler.writeTry(data).toOption.map(pretty).contains(pretty(bson)))
   }
 
-  "BsonZioPreludeHandlers#readTry" should {
+  "BsonPreludeHandlers#readTry" should {
     "return correct value" in assert(handler.readTry(bson).toOption.contains(data))
     "return IllegalArgumentException for NonEmptySet" in {
       assert(handler.readTry(emptyNesBson).failed.toOption.map(_.getMessage).nonEmpty)

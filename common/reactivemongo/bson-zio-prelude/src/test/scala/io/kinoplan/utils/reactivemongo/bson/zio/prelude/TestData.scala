@@ -20,7 +20,7 @@ case class TestData(
   nesm: NonEmptySortedMap[String, Int]
 )
 
-trait TestDataBson extends BsonZioPreludeHandlers {
+trait TestDataBson extends BsonPreludeHandlers {
   implicit val handler: BSONDocumentHandler[TestData] = Macros.handler
 }
 
