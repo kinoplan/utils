@@ -31,6 +31,7 @@ object Dependencies {
     val scalaJavaTimeZone        = Def.setting("io.github.cquiroz" %%% "scala-java-time-tzdb" % scalaJavaTimeV)
     val scalaJsMacrotaskExecutor = Def.setting("org.scala-js" %%% "scala-js-macrotask-executor" % "1.1.1")
     val scalatest                = Def.setting("org.scalatest" %%% "scalatest" % "3.2.19" % Test)
+    val scalatestPlusScalacheck  = Def.setting("org.scalatestplus" %%% "scalacheck-1-18" % "3.2.19.0" % Test)
     val tapirCore                = Def.setting("com.softwaremill.sttp.tapir" %%% "tapir-core" % tapirV)
     val zio                      = Def.setting("dev.zio" %%% "zio" % zioV)
     val zioPrelude               = Def.setting("dev.zio" %%% "zio-prelude" % "1.0.0-RC31")

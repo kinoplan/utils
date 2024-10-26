@@ -58,10 +58,6 @@ lazy val nullableCodecTapir = crossProject(JSPlatform, JVMPlatform)
   .configureCross(ModulesCommon.nullableCodecTapirProfile)
   .dependsOn(nullableCore)
 
-lazy val scalaLogging = project
-  .in(file("common/scala-logging"))
-  .configure(ModulesCommon.scalaLoggingProfile)
-
 lazy val reactivemongoBase = project
   .in(file("common/reactivemongo/base"))
   .configure(ModulesCommon.reactivemongoBaseProfile)
@@ -107,6 +103,15 @@ lazy val redissonCodecPlayJson = project
   .in(file("common/redisson/codec/play-json"))
   .configure(ModulesCommon.redissonCodecPlayJsonProfile)
   .dependsOn(redissonCodecBase.jvm)
+
+lazy val scalaLogging = project
+  .in(file("common/scala-logging"))
+  .configure(ModulesCommon.scalaLoggingProfile)
+
+lazy val tapirZioPrelude = crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Pure)
+  .in(file("common/tapir/zio-prelude"))
+  .configureCross(ModulesCommon.tapirZioPreludeProfile)
 
 // zzzzzzzzzzzzzzzzzzzz Implicits Modules zzzzzzzzzzzzzzzzzzzz
 

@@ -149,4 +149,17 @@ object ModulesCommon {
     .settings(name := "utils-redisson-codec-play-json")
     .settings(libraryDependencies ++= Seq(Libraries.playJson % Provided))
 
+  lazy val tapirZioPreludeProfile: CrossProject => CrossProject = _
+    .configure(ProjectSettings.commonProfile)
+    .jsConfigure(ProjectSettings.scalaJsProfile)
+    .settings(name := "utils-tapir-zio-prelude")
+    .settings(
+      libraryDependencies ++=
+        Seq(
+          Libraries.tapirCore.value % Provided,
+          Libraries.zioPrelude.value,
+          Libraries.scalatestPlusScalacheck.value
+        )
+    )
+
 }
