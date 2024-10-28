@@ -1,4 +1,4 @@
-import Dependencies.{Batches, Libraries, ShadingEntity}
+import Dependencies.{Libraries, ShadingEntity}
 import coursier.ShadingPlugin
 import coursier.ShadingPlugin.autoImport.*
 import org.typelevel.sbt.tpolecat.TpolecatPlugin.autoImport.tpolecatExcludeOptions

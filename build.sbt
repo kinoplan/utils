@@ -152,6 +152,11 @@ lazy val implicitsZio = crossProject(JSPlatform, JVMPlatform)
   .in(file("implicits/zio"))
   .configureCross(ModulesImplicits.zioProfile)
 
+lazy val implicitsZioPrelude = crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Pure)
+  .in(file("implicits/zio-prelude"))
+  .configureCross(ModulesImplicits.zioPreludeProfile)
+
 // zzzzzzzzzzzzzzzzzzzz Play Modules zzzzzzzzzzzzzzzzzzzz
 
 lazy val playErrorHandler = project
