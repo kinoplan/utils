@@ -8,6 +8,12 @@ import locales.LocalesPlugin.autoImport.*
 
 object ModulesCommon {
 
+  lazy val chimneyZioPreludeProfile: CrossProject => CrossProject = _
+    .configure(ProjectSettings.commonProfile)
+    .jsConfigure(ProjectSettings.scalaJsProfile)
+    .settings(name := "utils-chimney-zio-prelude")
+    .settings(libraryDependencies ++= Seq(Libraries.chimney.value, Libraries.zioPrelude.value))
+
   lazy val circeZioPreludeProfile: CrossProject => CrossProject = _
     .configure(ProjectSettings.commonProfile)
     .jsConfigure(ProjectSettings.scalaJsProfile)
