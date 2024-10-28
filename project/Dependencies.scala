@@ -56,7 +56,7 @@ object Dependencies {
     val openTelemetrySdk                 = "io.opentelemetry"               % "opentelemetry-sdk"                      % openTelemetryV
     val openTelemetrySemconvIncubating   = "io.opentelemetry.semconv"       % "opentelemetry-semconv-incubating"       % "1.24.0-alpha"
     val play                             = "com.typesafe.play"             %% "play"                                   % playV
-    val playJson                         = "com.typesafe.play"             %% "play-json"                              % "2.10.6"
+    val playJson                         = "org.playframework"             %% "play-json"                              % "3.0.4"
     val playReactiveMongo                = "org.reactivemongo"             %% "play2-reactivemongo"                    % s"$reactivemongoV-play28"
     val prometheusExporterHttpServer     = "io.prometheus"                  % "prometheus-metrics-exporter-httpserver" % "1.3.2"
     val reactiveMongo                    = "org.reactivemongo"             %% "reactivemongo"                          % reactivemongoV
