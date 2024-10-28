@@ -26,6 +26,7 @@ Here is the complete list of published artifacts:
 libraryDependencies ++= Seq(
   // base
   "io.kinoplan" %% "utils-chimney-zio-prelude" % ${version}, // JVM and Scala.js
+  "io.kinoplan" %% "utils-circe-reactivemongo-bson" % ${version}, // JVM only
   "io.kinoplan" %% "utils-circe-zio-prelude" % ${version}, // JVM and Scala.js
   "io.kinoplan" %% "utils-date" % ${version}, // JVM and Scala.js
   "io.kinoplan" %% "utils-http4s-server" % ${version}, // JVM and Scala.js

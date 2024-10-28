@@ -7,6 +7,10 @@ lazy val chimneyZioPrelude = crossProject(JSPlatform, JVMPlatform)
   .in(file("common/chimney/zio-prelude"))
   .configureCross(ModulesCommon.chimneyZioPreludeProfile)
 
+lazy val circeReactivemongoBson = project
+  .in(file("common/circe/reactivemongo-bson"))
+  .configure(ModulesCommon.circeReactivemongoBsonProfile)
+
 lazy val circeZioPrelude = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
   .in(file("common/circe/zio-prelude"))
