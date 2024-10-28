@@ -52,4 +52,10 @@ object ModulesImplicits {
     .settings(libraryDependencies ++= Seq(Libraries.zio.value % Provided))
     .jsSettings(libraryDependencies += Libraries.scalaJsMacrotaskExecutor.value % Test)
 
+  lazy val zioPreludeProfile: CrossProject => CrossProject = _
+    .configure(ProjectSettings.commonProfile)
+    .jsConfigure(ProjectSettings.scalaJsProfile)
+    .settings(name := "utils-implicits-zio-prelude")
+    .settings(libraryDependencies ++= Seq(Libraries.zioPrelude.value))
+
 }
