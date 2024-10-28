@@ -60,6 +60,7 @@ object Dependencies {
     val playReactiveMongo                = "org.reactivemongo"             %% "play2-reactivemongo"                    % s"$reactivemongoV-play28"
     val prometheusExporterHttpServer     = "io.prometheus"                  % "prometheus-metrics-exporter-httpserver" % "1.3.2"
     val reactiveMongo                    = "org.reactivemongo"             %% "reactivemongo"                          % reactivemongoV
+    val reactiveMongoBsonApi             = "org.reactivemongo"             %% "reactivemongo-bson-api"                 % reactivemongoV
     val redisson                         = "org.redisson"                   % "redisson"                               % "3.24.2"
     val refined                          = "eu.timepit"                    %% "refined"                                % "0.11.2"
     val scalaCollectionCompat            = "org.scala-lang.modules"        %% "scala-collection-compat"                % "2.12.0"

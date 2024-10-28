@@ -14,6 +14,19 @@ object ModulesCommon {
     .settings(name := "utils-chimney-zio-prelude")
     .settings(libraryDependencies ++= Seq(Libraries.chimney.value, Libraries.zioPrelude.value))
 
+  lazy val circeReactivemongoBsonProfile: Project => Project = _
+    .configure(ProjectSettings.commonProfile)
+    .settings(name := "utils-circe-reactivemongo-bson")
+    .settings(
+      libraryDependencies ++=
+        Seq(
+          Libraries.circeCore.value      % Provided,
+          Libraries.reactiveMongoBsonApi % Provided,
+          Libraries.circeGeneric.value   % Test,
+          Libraries.circeParser.value    % Test
+        )
+    )
+
   lazy val circeZioPreludeProfile: CrossProject => CrossProject = _
     .configure(ProjectSettings.commonProfile)
     .jsConfigure(ProjectSettings.scalaJsProfile)
@@ -109,23 +122,28 @@ object ModulesCommon {
   lazy val reactivemongoBsonAnyProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-reactivemongo-bson-any")
-    .settings(libraryDependencies ++= Seq(Libraries.reactiveMongo % Provided))
+    .settings(libraryDependencies ++= Seq(Libraries.reactiveMongoBsonApi % Provided))
 
   lazy val reactivemongoBsonJodaTimeProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-reactivemongo-bson-joda-time")
-    .settings(libraryDependencies ++= Seq(Libraries.reactiveMongo % Provided, Libraries.jodaTime))
+    .settings(
+      libraryDependencies ++= Seq(Libraries.reactiveMongoBsonApi % Provided, Libraries.jodaTime)
+    )
 
   lazy val reactivemongoBsonRefinedProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-reactivemongo-bson-refined")
-    .settings(libraryDependencies ++= Seq(Libraries.reactiveMongo % Provided, Libraries.refined))
+    .settings(
+      libraryDependencies ++= Seq(Libraries.reactiveMongoBsonApi % Provided, Libraries.refined)
+    )
 
   lazy val reactivemongoBsonZioPreludeProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-reactivemongo-bson-zio-prelude")
     .settings(
-      libraryDependencies ++= Seq(Libraries.reactiveMongo % Provided, Libraries.zioPrelude.value)
+      libraryDependencies ++=
+        Seq(Libraries.reactiveMongoBsonApi % Provided, Libraries.zioPrelude.value)
     )
 
   lazy val redissonCoreProfile: Project => Project = _
