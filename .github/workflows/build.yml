@@ -34,6 +34,8 @@ jobs:
 
     - name: Send coverage report to codecov
       uses: codecov/codecov-action@v4.6.0
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
 
 #    - name: Send coverage report to codacy
 #      uses: codacy/codacy-coverage-reporter-action@master
