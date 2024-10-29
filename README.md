@@ -46,7 +46,8 @@ libraryDependencies ++= Seq(
   "io.kinoplan" %% "utils-redisson-core" % ${version}, // JVM only
   "io.kinoplan" %% "utils-redisson-codec-base" % ${version}, // JVM and Scala.js
   "io.kinoplan" %% "utils-redisson-codec-circe" % ${version}, // JVM and Scala.js
-  "io.kinoplan" %% "utils-redisson-codec-play-json" % ${version}, // JVM only
+  "io.kinoplan" %% "utils-redisson-codec-play-json" % ${version}, // JVM and Scala.js
+  "io.kinoplan" %% "utils-redisson-codec-play2-json" % ${version}, // JVM only
   "io.kinoplan" %% "utils-scala-logging" % ${version}, // JVM only
   "io.kinoplan" %% "utils-tapir-zio-prelude" % ${version}, // JVM and Scala.js
   // implicits
