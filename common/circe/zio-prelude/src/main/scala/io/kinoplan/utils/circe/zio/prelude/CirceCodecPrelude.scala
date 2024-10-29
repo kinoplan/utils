@@ -3,7 +3,14 @@ package io.kinoplan.utils.circe.zio.prelude
 import scala.collection.immutable.{SortedMap, SortedSet}
 import scala.collection.mutable
 
-import io.circe.{CirceAccessors, Decoder, Encoder, KeyDecoder, KeyEncoder, NonEmptyMapDecoder}
+import io.circe.{
+  Decoder,
+  Encoder,
+  KeyDecoder,
+  KeyEncoder,
+  NonEmptyMapDecoder,
+  NonEmptySequenceDecoder
+}
 import io.circe.Encoder.{AsArray, AsObject, encodeMap}
 import zio.NonEmptyChunk
 import zio.prelude.{NonEmptyList, NonEmptyMap, NonEmptySet, NonEmptySortedMap, NonEmptySortedSet}
@@ -16,10 +23,11 @@ trait CirceCodecPrelude {
 
   implicit final def decodeNonEmptySet[A](implicit
     decoder: Decoder[A]
-  ): Decoder[NonEmptySet[A]] = CirceAccessors.nonEmptySeqDecoder[A, Set, NonEmptySet[A]](
-    Set.newBuilder[A],
-    (h, t) => NonEmptySet.fromSet(h, t)
-  )
+  ): Decoder[NonEmptySet[A]] = new NonEmptySequenceDecoder[A, Set, NonEmptySet[A]] {
+    override protected def createBuilder(): mutable.Builder[A, Set[A]] = Set.newBuilder[A]
+    override protected def create: (A, Set[A]) => NonEmptySet[A] =
+      (h, t) => NonEmptySet.fromSet(h, t)
+  }
 
   implicit final def encodeNonEmptySortedSet[A](implicit
     encoder: Encoder[A]
@@ -28,11 +36,13 @@ trait CirceCodecPrelude {
   implicit final def decodeNonEmptySortedSet[A](implicit
     decoder: Decoder[A],
     ordering: Ordering[A]
-  ): Decoder[NonEmptySortedSet[A]] = CirceAccessors
-    .nonEmptySeqDecoder[A, SortedSet, NonEmptySortedSet[A]](
-      SortedSet.newBuilder[A],
-      (h, t) => NonEmptySortedSet.fromSet(h, t)
-    )
+  ): Decoder[NonEmptySortedSet[A]] =
+    new NonEmptySequenceDecoder[A, SortedSet, NonEmptySortedSet[A]] {
+      override protected def createBuilder(): mutable.Builder[A, SortedSet[A]] = SortedSet
+        .newBuilder[A]
+      override protected def create: (A, SortedSet[A]) => NonEmptySortedSet[A] =
+        (h, t) => NonEmptySortedSet.fromSet(h, t)
+    }
 
   implicit final def encodeNonEmptyList[A](implicit
     encoder: Encoder[A]
@@ -40,10 +50,11 @@ trait CirceCodecPrelude {
 
   implicit final def decodeNonEmptyList[A](implicit
     decoder: Decoder[A]
-  ): Decoder[NonEmptyList[A]] = CirceAccessors.nonEmptySeqDecoder[A, List, NonEmptyList[A]](
-    List.newBuilder[A],
-    (h, t) => NonEmptyList.fromIterable(h, t)
-  )
+  ): Decoder[NonEmptyList[A]] = new NonEmptySequenceDecoder[A, List, NonEmptyList[A]] {
+    override protected def createBuilder(): mutable.Builder[A, List[A]] = List.newBuilder[A]
+    override protected def create: (A, List[A]) => NonEmptyList[A] =
+      (h, t) => NonEmptyList.fromIterable(h, t)
+  }
 
   implicit final def encodeNonEmptyChunk[A](implicit
     encoder: Encoder[A]
@@ -51,10 +62,11 @@ trait CirceCodecPrelude {
 
   implicit final def decodeNonEmptyChunk[A](implicit
     decoder: Decoder[A]
-  ): Decoder[NonEmptyChunk[A]] = CirceAccessors.nonEmptySeqDecoder[A, Iterable, NonEmptyChunk[A]](
-    Iterable.newBuilder[A],
-    (h, t) => NonEmptyChunk.fromIterable(h, t)
-  )
+  ): Decoder[NonEmptyChunk[A]] = new NonEmptySequenceDecoder[A, List, NonEmptyChunk[A]] {
+    override protected def createBuilder(): mutable.Builder[A, List[A]] = List.newBuilder[A]
+    override protected def create: (A, List[A]) => NonEmptyChunk[A] =
+      (h, t) => NonEmptyChunk.fromIterable(h, t)
+  }
 
   implicit final def encodeNonEmptyMap[K, V](implicit
     keyEncoder: KeyEncoder[K],
@@ -65,7 +77,7 @@ trait CirceCodecPrelude {
     keyDecoder: KeyDecoder[K],
     decoder: Decoder[V]
   ): Decoder[NonEmptyMap[K, V]] = new NonEmptyMapDecoder[K, V, Map](keyDecoder, decoder) {
-    final protected def createBuilder(): mutable.Builder[(K, V), Map[K, V]] = Map.newBuilder[K, V]
+    override protected def createBuilder(): mutable.Builder[(K, V), Map[K, V]] = Map.newBuilder[K, V]
   }.emap(NonEmptyMap.fromMapOption(_).toRight("[K, V]NonEmptyMap[K, V]"))
 
   implicit final def encodeNonEmptySortedMap[K, V](implicit
@@ -79,7 +91,7 @@ trait CirceCodecPrelude {
     decoder: Decoder[V],
     ordering: Ordering[K]
   ): Decoder[NonEmptySortedMap[K, V]] = new NonEmptyMapDecoder[K, V, SortedMap](keyDecoder, decoder) {
-    final protected def createBuilder(): mutable.Builder[(K, V), SortedMap[K, V]] = SortedMap
+    override protected def createBuilder(): mutable.Builder[(K, V), SortedMap[K, V]] = SortedMap
       .newBuilder[K, V]
   }.emap(NonEmptySortedMap.fromMapOption(_).toRight("[K, V]NonEmptySortedMap[K, V]"))
 
