@@ -168,10 +168,16 @@ object ModulesCommon {
         Seq(Libraries.circeCore.value % Provided, Libraries.circeParser.value % Provided)
     )
 
-  lazy val redissonCodecPlayJsonProfile: Project => Project = _
+  lazy val redissonCodecPlayJsonProfile: CrossProject => CrossProject = _
     .configure(ProjectSettings.commonProfile)
+    .jsConfigure(ProjectSettings.scalaJsProfile)
     .settings(name := "utils-redisson-codec-play-json")
     .settings(libraryDependencies ++= Seq(Libraries.playJson % Provided))
+
+  lazy val redissonCodecPlay2JsonProfile: Project => Project = _
+    .configure(ProjectSettings.commonProfile)
+    .settings(name := "utils-redisson-codec-play2-json")
+    .settings(libraryDependencies ++= Seq(Libraries.play2Json % Provided))
 
   lazy val tapirZioPreludeProfile: CrossProject => CrossProject = _
     .configure(ProjectSettings.commonProfile)

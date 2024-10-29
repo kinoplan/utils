@@ -108,9 +108,15 @@ lazy val redissonCodecCirce = crossProject(JSPlatform, JVMPlatform)
   .configureCross(ModulesCommon.redissonCodecCirceProfile)
   .dependsOn(redissonCodecBase)
 
-lazy val redissonCodecPlayJson = project
+lazy val redissonCodecPlayJson = crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Pure)
   .in(file("common/redisson/codec/play-json"))
-  .configure(ModulesCommon.redissonCodecPlayJsonProfile)
+  .configureCross(ModulesCommon.redissonCodecPlayJsonProfile)
+  .dependsOn(redissonCodecBase)
+
+lazy val redissonCodecPlay2Json = project
+  .in(file("common/redisson/codec/play-json"))
+  .configure(ModulesCommon.redissonCodecPlay2JsonProfile)
   .dependsOn(redissonCodecBase.jvm)
 
 lazy val scalaLogging = project
