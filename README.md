@@ -59,10 +59,14 @@ libraryDependencies ++= Seq(
   "io.kinoplan" %% "utils-implicits-identity" % ${version}, // JVM and Scala.js
   "io.kinoplan" %% "utils-implicits-zio" % ${version}, // JVM and Scala.js
   "io.kinoplan" %% "utils-implicits-zio-prelude" % ${version}, // JVM and Scala.js
-  // play
+  // play 3.x.x
   "io.kinoplan" %% "utils-play-error-handler" % ${version}, // JVM only
   "io.kinoplan" %% "utils-play-filters-logging" % ${version}, // JVM only
   "io.kinoplan" %% "utils-play-reactivemongo" % ${version}, // JVM only
+  // play 2.x.x
+  "io.kinoplan" %% "utils-play2-error-handler" % ${version}, // JVM only
+  "io.kinoplan" %% "utils-play2-filters-logging" % ${version}, // JVM only
+  "io.kinoplan" %% "utils-play2-reactivemongo" % ${version}, // JVM only
   // zio
   "io.kinoplan" %% "utils-zio-integration-check" % ${version}, // JVM and Scala.js
   "io.kinoplan" %% "utils-zio-http4s-healthcheck" % ${version}, // JVM only

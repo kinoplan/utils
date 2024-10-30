@@ -32,6 +32,10 @@ val commonJsSettings = ProjectSettings.scalaJsSettings
 
 val scopesDescription = "Scala version can be: 2.12, 2.13; platform: JVM, JS"
 
+val cleanScoped = inputKey[Unit](
+  s"Run clean in the given scope. Usage: cleanScoped [scala version] [platform]. $scopesDescription"
+)
+
 val compileScoped = inputKey[Unit](
   s"Compiles sources in the given scope. Usage: compileScoped [scala version] [platform]. $scopesDescription"
 )
@@ -73,6 +77,13 @@ lazy val root = project
   .in(file("."))
   .configure(ProjectSettings.rootProfile)
   .settings(
+    cleanScoped :=
+      Def
+        .inputTaskDyn {
+          val args = spaceDelimited("<arg>").parsed
+          Def.taskDyn(clean.all(filterByVersionAndPlatform(args.head, args(1))))
+        }
+        .evaluated,
     compileScoped :=
       Def
         .inputTaskDyn {
@@ -325,28 +336,63 @@ lazy val implicitsZioPrelude = projectMatrix
 
 // zzzzzzzzzzzzzzzzzzzz Play Modules zzzzzzzzzzzzzzzzzzzz
 
+lazy val play2Axis = CustomAxis("Play_2", "play2")
+lazy val play3Axis = CustomAxis("Play", "play3")
+
 lazy val playErrorHandler = projectMatrix
   .in(file("play/error-handler"))
-  .jvmPlatform(ProjectSettings.scala2Versions)
-  .configure(ModulesPlay.errorHandlerProfile)
+  .customRow(
+    ProjectSettings.scala2Versions,
+    Seq(play2Axis, VirtualAxis.jvm),
+    ModulesPlay.errorHandler2Profile
+  )
+  .customRow(
+    ProjectSettings.scala2_13Versions,
+    Seq(play3Axis, VirtualAxis.jvm),
+    ModulesPlay.errorHandlerProfile
+  )
   .dependsOn(scalaLogging, playRequestMapContext, playFiltersLogging % "test->test")
 
 lazy val playFiltersLogging = projectMatrix
   .in(file("play/filters/logging"))
-  .jvmPlatform(ProjectSettings.scala2Versions)
-  .configure(ModulesPlay.filtersLoggingProfile)
+  .customRow(
+    ProjectSettings.scala2Versions,
+    Seq(play2Axis, VirtualAxis.jvm),
+    ModulesPlay.filtersLogging2Profile
+  )
+  .customRow(
+    ProjectSettings.scala2_13Versions,
+    Seq(play3Axis, VirtualAxis.jvm),
+    ModulesPlay.filtersLoggingProfile
+  )
   .dependsOn(scalaLogging, playRequestMapContext)
 
 lazy val playReactivemongo = projectMatrix
   .in(file("play/reactivemongo"))
-  .jvmPlatform(ProjectSettings.scala2Versions)
-  .configure(ModulesPlay.reactivemongoProfile)
+  .customRow(
+    ProjectSettings.scala2Versions,
+    Seq(play2Axis, VirtualAxis.jvm),
+    ModulesPlay.reactivemongo2Profile
+  )
+  .customRow(
+    ProjectSettings.scala2_13Versions,
+    Seq(play3Axis, VirtualAxis.jvm),
+    ModulesPlay.reactivemongoProfile
+  )
   .dependsOn(reactivemongoBase)
 
 lazy val playRequestMapContext = projectMatrix
   .in(file("play/request/map-context"))
-  .jvmPlatform(ProjectSettings.scala2Versions)
-  .configure(ModulesPlay.requestMapContextProfile)
+  .customRow(
+    ProjectSettings.scala2Versions,
+    Seq(play2Axis, VirtualAxis.jvm),
+    ModulesPlay.requestMapContext2Profile
+  )
+  .customRow(
+    ProjectSettings.scala2_13Versions,
+    Seq(play3Axis, VirtualAxis.jvm),
+    ModulesPlay.requestMapContextProfile
+  )
   .dependsOn(scalaLogging)
 
 // zzzzzzzzzzzzzzzzzzzz ZIO Modules zzzzzzzzzzzzzzzzzzzz

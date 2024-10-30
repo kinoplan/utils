@@ -16,6 +16,7 @@ object ProjectSettings {
   val scala2_13 = "2.13.15"
 
   val scala2Versions: Seq[String] = Seq(scala2_12, scala2_13)
+  val scala2_13Versions: Seq[String] = Seq(scala2_13)
 
   lazy val commonProfile: Project => Project = _
     .enablePlugins(ScalafixPlugin)
@@ -35,9 +36,8 @@ object ProjectSettings {
         Set(ScalacOptions.privateWarnDeadCode, ScalacOptions.warnNonUnitStatement),
       Test / fork := true,
       Test / javaOptions += "-Duser.timezone=UTC",
-      libraryDependencies ++= Seq(Libraries.scalatest.value, Libraries.mockitoScala),
-      coverageEnabled := true,
-      coverageHighlighting := true
+      coverageHighlighting := true,
+      libraryDependencies ++= Seq(Libraries.scalatest.value, Libraries.mockitoScala)
     )
 
   val scalaJsSettings = Seq(Test / fork := false)
