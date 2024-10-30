@@ -8,7 +8,6 @@ object Dependencies {
     val circeV         = "0.14.10"
     val logbackV       = "1.5.12"
     val openTelemetryV = "1.43.0"
-    val playV          = "2.8.22"
     val reactivemongoV = "1.1.0-RC13"
     val scalaJavaTimeV = "2.6.0"
     val sttpV          = "3.10.1"
@@ -54,10 +53,12 @@ object Dependencies {
     val openTelemetryExporterLoggingOtlp = "io.opentelemetry"               % "opentelemetry-exporter-logging-otlp"    % openTelemetryV
     val openTelemetrySdk                 = "io.opentelemetry"               % "opentelemetry-sdk"                      % openTelemetryV
     val openTelemetrySemconvIncubating   = "io.opentelemetry.semconv"       % "opentelemetry-semconv-incubating"       % "1.24.0-alpha"
-    val play                             = "com.typesafe.play"             %% "play"                                   % playV
+    val play                             = "org.playframework"             %% "play"                                   % "3.0.5"
+    val play2                            = "com.typesafe.play"             %% "play"                                   % "2.8.22"
     val playJson                         = "org.playframework"             %% "play-json"                              % "3.0.4"
     val play2Json                        = "com.typesafe.play"             %% "play-json"                              % "2.10.6"
-    val playReactiveMongo                = "org.reactivemongo"             %% "play2-reactivemongo"                    % "1.1.0-play28.RC13"
+    val playReactiveMongo                = "org.reactivemongo"             %% "play2-reactivemongo"                    % "1.1.0-play30.RC13"
+    val play2ReactiveMongo               = "org.reactivemongo"             %% "play2-reactivemongo"                    % "1.1.0-play28.RC13"
     val prometheusExporterHttpServer     = "io.prometheus"                  % "prometheus-metrics-exporter-httpserver" % "1.3.2"
     val reactiveMongo                    = "org.reactivemongo"             %% "reactivemongo"                          % "1.1.0-pekko.RC13"
     val reactiveMongoBsonApi             = "org.reactivemongo"             %% "reactivemongo-bson-api"                 % reactivemongoV
@@ -65,7 +66,8 @@ object Dependencies {
     val refined                          = "eu.timepit"                    %% "refined"                                % "0.11.2"
     val scalaCollectionCompat            = "org.scala-lang.modules"        %% "scala-collection-compat"                % "2.12.0"
     val scalaLogging                     = "com.typesafe.scala-logging"    %% "scala-logging"                          % "3.9.5"
-    val scalatestPlay                    = "org.scalatestplus.play"        %% "scalatestplus-play"                     % "5.1.0"    % Test
+    val scalatestPlay                    = "org.scalatestplus.play"        %% "scalatestplus-play"                     % "7.0.1"    % Test
+    val scalatestPlay2                   = "org.scalatestplus.play"        %% "scalatestplus-play"                     % "5.1.0"    % Test
     val sourcecode                       = "com.lihaoyi"                   %% "sourcecode"                             % "0.4.2"
     val sttpCore                         = "com.softwaremill.sttp.client3" %% "core"                                   % sttpV
     val sttpSlf4jBackend                 = "com.softwaremill.sttp.client3" %% "slf4j-backend"                          % sttpV

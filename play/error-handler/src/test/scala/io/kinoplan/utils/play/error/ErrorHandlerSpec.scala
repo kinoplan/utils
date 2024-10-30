@@ -2,8 +2,6 @@ package io.kinoplan.utils.play.error
 
 import scala.concurrent.{ExecutionContext, ExecutionContextExecutor}
 
-import akka.stream.Materializer
-
 import ch.qos.logback.classic.Logger
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.read.ListAppender
@@ -18,6 +16,7 @@ import play.api.{Configuration, Environment}
 import play.api.mvc.{AnyContentAsEmpty, Result, Results}
 import play.api.test.FakeRequest
 
+import io.kinoplan.utils.play.compat.Materializer
 import io.kinoplan.utils.play.filters.logging.kit.ListAppenderSyntax
 import io.kinoplan.utils.play.request.RequestMapContext
 

@@ -3,8 +3,6 @@ package io.kinoplan.utils.play.filters.logging
 import scala.concurrent.{ExecutionContext, ExecutionContextExecutor, Future}
 import scala.xml.Elem
 
-import akka.stream.Materializer
-
 import ch.qos.logback.classic.Logger
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.read.ListAppender
@@ -21,6 +19,7 @@ import play.api.libs.json.{JsObject, Json}
 import play.api.mvc._
 import play.api.test._
 
+import io.kinoplan.utils.play.compat.Materializer
 import io.kinoplan.utils.play.filters.logging.kit.ListAppenderSyntax
 import io.kinoplan.utils.play.request.RequestMapContext
 import io.kinoplan.utils.scala.logging.context.MapContext
