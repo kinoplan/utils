@@ -11,14 +11,14 @@ pull_request_rules:
     conditions:
       - author=scala-steward
       - "body~=(labels:.*semver-patch.*)|(labels:.*semver-minor.*)"
-      - check-success~=Build and Test \(ubuntu-latest, 2\.1[23]\.\d+,
+      - check-success~=Build and Test \(ubuntu-latest, 2\.1[23],
     actions:
       merge:
         method: squash
   - name: automatic merge for dependabot pull requests
     conditions:
       - author=dependabot[bot]
-      - check-success~=Build and Test \(ubuntu-latest, 2\.1[23]\.\d+,
+      - check-success~=Build and Test \(ubuntu-latest, 2\.1[23],
     actions:
       merge:
         method: squash

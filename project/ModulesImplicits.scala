@@ -1,31 +1,28 @@
 import Dependencies.Libraries
+import org.scalajs.sbtplugin.ScalaJSJUnitPlugin
 import sbt.Keys.*
 import sbt.*
-import sbtcrossproject.CrossProject
-import scalajscrossproject.ScalaJSCrossPlugin.autoImport.*
 
 object ModulesImplicits {
 
-  lazy val anyProfile: CrossProject => CrossProject = _
-    .configure(ProjectSettings.commonProfile)
-    .jsConfigure(ProjectSettings.scalaJsProfile)
-    .settings(name := "utils-implicits-any")
+  lazy val anyProfile: Project => Project =
+    _.configure(ProjectSettings.commonProfile).settings(name := "utils-implicits-any")
 
-  lazy val booleanProfile: CrossProject => CrossProject = _
-    .configure(ProjectSettings.commonProfile)
-    .jsConfigure(ProjectSettings.scalaJsProfile)
-    .settings(name := "utils-implicits-boolean")
+  lazy val booleanProfile: Project => Project =
+    _.configure(ProjectSettings.commonProfile).settings(name := "utils-implicits-boolean")
 
-  lazy val collectionProfile: CrossProject => CrossProject = _
-    .configure(ProjectSettings.commonProfile)
-    .jsConfigure(ProjectSettings.scalaJsProfile)
-    .settings(name := "utils-implicits-collection")
+  lazy val collectionProfile: Project => Project =
+    _.configure(ProjectSettings.commonProfile).settings(name := "utils-implicits-collection")
 
-  lazy val javaTimeProfile: CrossProject => CrossProject = _
-    .configure(ProjectSettings.commonProfile)
-    .jsConfigure(ProjectSettings.scalaJsProfile)
-    .settings(name := "utils-implicits-java-time")
-    .jsSettings(
+  lazy val identityProfile: Project => Project =
+    _.configure(ProjectSettings.commonProfile).settings(name := "utils-implicits-identity")
+
+  lazy val javaTimeProfile: Project => Project =
+    _.configure(ProjectSettings.commonProfile).settings(name := "utils-implicits-java-time")
+
+  val javaTimeJsProfile: Project => Project = _
+    .enablePlugins(ScalaJSJUnitPlugin)
+    .settings(
       libraryDependencies ++=
         Seq(
           Libraries.scalaJavaTime.value     % Provided,
@@ -40,21 +37,19 @@ object ModulesImplicits {
     .settings(name := "utils-implicits-joda-time")
     .settings(libraryDependencies ++= Seq(Libraries.jodaTime))
 
-  lazy val identityProfile: CrossProject => CrossProject = _
-    .configure(ProjectSettings.commonProfile)
-    .jsConfigure(ProjectSettings.scalaJsProfile)
-    .settings(name := "utils-implicits-identity")
-
-  lazy val zioProfile: CrossProject => CrossProject = _
+  lazy val zioProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile, ProjectSettings.zioTestProfile)
-    .jsConfigure(ProjectSettings.scalaJsProfile)
     .settings(name := "utils-implicits-zio")
     .settings(libraryDependencies ++= Seq(Libraries.zio.value % Provided))
-    .jsSettings(libraryDependencies += Libraries.scalaJsMacrotaskExecutor.value % Test)
 
-  lazy val zioPreludeProfile: CrossProject => CrossProject = _
+  lazy val zioJvmProfile: Project => Project =
+    _.configure(ProjectSettings.unmanagedSourceProfile("scalajvm"))
+
+  lazy val zioJsProfile: Project => Project =
+    _.configure(ProjectSettings.scalaJsProfile, ProjectSettings.unmanagedSourceProfile("scalajs"))
+
+  lazy val zioPreludeProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
-    .jsConfigure(ProjectSettings.scalaJsProfile)
     .settings(name := "utils-implicits-zio-prelude")
     .settings(libraryDependencies ++= Seq(Libraries.zioPrelude.value))
 
