@@ -2,13 +2,12 @@ package io.kinoplan.utils.implicits.zio
 
 import scala.concurrent.Future
 
-import org.scalatest.flatspec.AsyncFlatSpec
-import org.scalatest.matchers.should.Matchers
 import zio.ZIO
 
 import io.kinoplan.utils.implicits.zio.ZioSyntax.syntaxZioOps
 
-class ZioSyntaxSpec extends AsyncFlatSpec with Matchers {
+trait ZioSyntaxSpecExtensions {
+  self: ZioSyntaxSpec =>
 
   "ZioSyntax#runToFuture" should "return success value" in {
     val zio = ZIO.succeed(42)

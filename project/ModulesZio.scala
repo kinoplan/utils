@@ -22,7 +22,7 @@ object ModulesZio {
     )
 
   lazy val integrationCheckProfile: Project => Project = _
-    .configure(ProjectSettings.commonProfile, ProjectSettings.scalaJsProfile)
+    .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-zio-integration-check")
     .settings(libraryDependencies ++= Seq(Libraries.zio.value))
 
@@ -73,11 +73,7 @@ object ModulesZio {
     )
 
   lazy val tapirServerProfile: Project => Project = _
-    .configure(
-      ProjectSettings.commonProfile,
-      ProjectSettings.scalaJsProfile,
-      ProjectSettings.kindProjectorProfile
-    )
+    .configure(ProjectSettings.commonProfile, ProjectSettings.kindProjectorProfile)
     .settings(name := "utils-zio-tapir-server")
     .settings(libraryDependencies ++= Seq(Libraries.tapirServer, Libraries.zio.value % Provided))
 

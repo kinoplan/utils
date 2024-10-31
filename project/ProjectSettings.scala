@@ -12,11 +12,14 @@ object ProjectSettings {
 
   private val namespace = "io.kinoplan.utils"
 
+  val scala2_12 = "2.12.20"
+  val scala2_13 = "2.13.15"
+
+  val scala2Versions: Seq[String] = Seq(scala2_12, scala2_13)
+
   lazy val commonProfile: Project => Project = _
     .enablePlugins(ScalafixPlugin)
     .settings(
-      crossScalaVersions := Seq("2.12.20", "2.13.15"),
-      scalaVersion := crossScalaVersions.value.last,
       tpolecatExcludeOptions :=
         Set(
           ScalacOptions.warnError,
@@ -33,10 +36,12 @@ object ProjectSettings {
       Test / fork := true,
       Test / javaOptions += "-Duser.timezone=UTC",
       libraryDependencies ++= Seq(Libraries.scalatest.value, Libraries.mockitoScala),
+      coverageEnabled := true,
       coverageHighlighting := true
     )
 
-  lazy val scalaJsProfile: Project => Project = _.settings(Test / fork := false)
+  val scalaJsSettings = Seq(Test / fork := false)
+  lazy val scalaJsProfile: Project => Project = _.settings(scalaJsSettings)
 
   lazy val zioTestProfile: Project => Project = _.settings(
     testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework"),
@@ -47,6 +52,11 @@ object ProjectSettings {
     _.settings(addCompilerPlugin(Libraries.kindProjector.cross(CrossVersion.full)))
 
   lazy val publishSkipProfile: Project => Project = _.settings(publish / skip := true)
+
+  lazy val rootProfile: Project => Project = _
+    .configure(commonProfile, publishSkipProfile)
+    .settings(publish / skip := true)
+    .settings(name := "utils")
 
   def shadingProfile(shadingEntities: ShadingEntity*): Project => Project = _
     .enablePlugins(ShadingPlugin)
@@ -60,5 +70,12 @@ object ProjectSettings {
       validNamespaces ++= Set(namespace, "io"),
       validEntries ++= Set("LICENSE", "NOTICE", "README")
     )
+
+  def unmanagedSourceProfile(path: String): Project => Project = _.settings(
+    Compile / unmanagedSourceDirectories +=
+      (Compile / sourceDirectory).value / path,
+    Test / unmanagedSourceDirectories +=
+      (Test / sourceDirectory).value / path
+  )
 
 }

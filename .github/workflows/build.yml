@@ -2,13 +2,17 @@ name: build
 
 on: [push, pull_request]
 
+env:
+  SBT_JAVA_OPTS: -J-Xms4G -J-Xmx4G
+
 jobs:
   build:
     name: Build and Test
     strategy:
       matrix:
         os: [ubuntu-latest]
-        scala: [2.12.20, 2.13.15]
+        scala: ["2.12", "2.13"]
+        platform: ["JVM", "JS"]
         java: ["temurin:1.17.0.9"]
     runs-on: ${{ matrix.os }}
     steps:
@@ -23,14 +27,27 @@ jobs:
       with:
         jvm: ${{ matrix.java }}
     - uses: sbt/setup-sbt@v1
-      
+
+    - name: Compile
+      run: sbt $SBT_JAVA_OPTS -v "compileScoped ${{ matrix.scala }} ${{ matrix.platform }}"
+
     - name: Test
       run: |
         export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS --add-opens=java.base/java.lang=ALL-UNNAMED";
-        sbt ++${{ matrix.scala }} clean coverage test scalafmtCheckAll scalafmtSbtCheck "scalafixAll --check"
+        sbt $SBT_JAVA_OPTS -v "testScoped ${{ matrix.scala }} ${{ matrix.platform }}"
+
+    - name: Scalafmt check sbt
+      if: matrix.scala == '2.12' && matrix.platform == 'JS'
+      run: sbt $SBT_JAVA_OPTS -v scalafmtSbtCheck
+
+    - name: Scalafmt check sources
+      run: sbt $SBT_JAVA_OPTS -v "scalafmtCheckScoped ${{ matrix.scala }} ${{ matrix.platform }}"
+
+    - name: Scalafix check sources
+      run: sbt $SBT_JAVA_OPTS -v "scalafixCheckScoped ${{ matrix.scala }} ${{ matrix.platform }}"
 
     - name: Coverage
-      run: sbt ++${{ matrix.scala }} coverageReport
+      run: sbt $SBT_JAVA_OPTS -v "coverageReportScoped ${{ matrix.scala }} ${{ matrix.platform }}"
 
     - name: Send coverage report to codecov
       uses: codecov/codecov-action@v4.6.0
