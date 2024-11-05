@@ -38,7 +38,7 @@ object Dependencies {
     val zioTestSbt              = Def.setting("dev.zio" %%% "zio-test-sbt" % zioV)
 
     // A -> Z
-    val http4sBlazeServer                = "org.http4s"                    %% "http4s-blaze-server"                    % "0.23.16"
+    val http4sBlazeServer                = "org.http4s"                    %% "http4s-blaze-server"                    % "0.23.17"
     val http4sDsl                        = "org.http4s"                    %% "http4s-dsl"                             % "0.23.29"
     val http4sServer                     = "org.http4s"                    %% "http4s-server"                          % "0.23.29"
     val jacksonModule                    = "com.fasterxml.jackson.module"  %% "jackson-module-scala"                   % "2.18.1"
