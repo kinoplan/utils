@@ -3,6 +3,7 @@ package io.kinoplan.utils.redisson.core.operation
 import scala.concurrent.{ExecutionContext, Future}
 
 import org.redisson.api.RedissonClient
+import org.redisson.api.options.KeysScanOptions
 
 import io.kinoplan.utils.cross.collection.converters._
 
@@ -13,7 +14,7 @@ trait RedisKeysOperations {
   private lazy val keys = redissonClient.getKeys
 
   def scan(pattern: String): Future[Iterable[String]] = Future {
-    keys.getKeysByPattern(pattern).asScala
+    keys.getKeys(KeysScanOptions.defaults().pattern(pattern)).asScala
   }
 
   protected def del(keySet: Set[String]): Future[Long] = Future {
