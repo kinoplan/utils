@@ -136,7 +136,12 @@ object ModulesCommon {
     .settings(name := "utils-redisson-core")
     .settings(
       libraryDependencies ++=
-        Seq(Libraries.redisson, Libraries.jacksonModule, Libraries.scalaCollectionCompat)
+        Seq(
+          Libraries.redisson,
+          Libraries.jacksonModule,
+          Libraries.scalaCollectionCompat,
+          Libraries.scalaJavaCompat
+        )
     )
 
   lazy val redissonCodecBaseProfile: Project => Project =

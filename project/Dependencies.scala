@@ -65,6 +65,7 @@ object Dependencies {
     val redisson                         = "org.redisson"                   % "redisson"                               % "3.24.2"
     val refined                          = "eu.timepit"                    %% "refined"                                % "0.11.2"
     val scalaCollectionCompat            = "org.scala-lang.modules"        %% "scala-collection-compat"                % "2.12.0"
+    val scalaJavaCompat                  = "org.scala-lang.modules"        %% "scala-java8-compat"                     % "1.0.2"
     val scalaLogging                     = "com.typesafe.scala-logging"    %% "scala-logging"                          % "3.9.5"
     val scalatestPlay                    = "org.scalatestplus.play"        %% "scalatestplus-play"                     % "7.0.1"    % Test
     val scalatestPlay2                   = "org.scalatestplus.play"        %% "scalatestplus-play"                     % "5.1.0"    % Test
