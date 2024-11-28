@@ -7,35 +7,38 @@ import org.redisson.client.codec.StringCodec
 
 import io.kinoplan.utils.redisson.codec.{RedisDecoder, RedisEncoder}
 import io.kinoplan.utils.redisson.core.JavaDecoders._
+import io.kinoplan.utils.redisson.core.compat.crossFutureConverters.CompletionStageOps
 
 trait RedisSetOperations {
   implicit protected val executionContext: ExecutionContext
   protected val redissonClient: RedissonClient
 
-  private lazy val set: String => RSet[String] =
+  protected lazy val set: String => RSet[String] =
     redissonClient.getSet[String](_, StringCodec.INSTANCE)
 
-  protected def sAdd[T: RedisEncoder](key: String, value: T): Future[Boolean] = Future {
-    set(key).add(RedisEncoder[T].encode(value))
-  }
+  protected def sAdd[T: RedisEncoder](key: String, value: T): Future[Boolean] = set(key)
+    .addAsync(RedisEncoder[T].encode(value))
+    .asScala
+    .map(_.booleanValue())
 
-  protected def sMembers[T: RedisDecoder](key: String): Future[Set[T]] = Future {
-    set(key).readAll()
-  }.flatMap(decodeSet[T])
+  protected def sMembers[T: RedisDecoder](key: String): Future[Set[T]] = set(key)
+    .readAllAsync()
+    .asScala
+    .flatMap(decodeSet[T])
 
-  protected def sCard(key: String): Future[Int] = Future {
-    set(key).size()
-  }
+  protected def sCard(key: String): Future[Int] = set(key).sizeAsync().asScala.map(_.intValue())
 
   @deprecated(message = "use sCard instead", since = "0.0.40")
   protected def sLen(key: String): Future[Int] = sCard(key)
 
-  protected def sIsMember[T: RedisEncoder](key: String, value: T): Future[Boolean] = Future {
-    set(key).contains(RedisEncoder[T].encode(value))
-  }
+  protected def sIsMember[T: RedisEncoder](key: String, value: T): Future[Boolean] = set(key)
+    .containsAsync(RedisEncoder[T].encode(value))
+    .asScala
+    .map(_.booleanValue())
 
-  protected def sRem[T: RedisEncoder](key: String, value: T): Future[Boolean] = Future {
-    set(key).remove(RedisEncoder[T].encode(value))
-  }
+  protected def sRem[T: RedisEncoder](key: String, value: T): Future[Boolean] = set(key)
+    .removeAsync(RedisEncoder[T].encode(value))
+    .asScala
+    .map(_.booleanValue())
 
 }
