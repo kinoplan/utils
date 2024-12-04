@@ -1,6 +1,6 @@
 package io.kinoplan.utils.zio.reactivemongo
 
-import reactivemongo.api.{Collation, CursorProducer, FailoverStrategy, ReadConcern, ReadPreference}
+import reactivemongo.api._
 import reactivemongo.api.bson._
 import reactivemongo.api.bson.collection.BSONCollection
 import reactivemongo.api.bson.collection.BSONSerializationPack.NarrowValueReader
@@ -8,13 +8,8 @@ import reactivemongo.api.commands.WriteResult
 import reactivemongo.api.indexes.Index
 import zio.{Task, Unsafe, ZIO}
 
-import io.kinoplan.utils.reactivemongo.base.{
-  BsonDocumentSyntax,
-  BsonNoneAsNullProducer,
-  Queries,
-  QueryComment,
-  SmartIndex
-}
+import io.kinoplan.utils.reactivemongo.base._
+import io.kinoplan.utils.zio.reactivemongo.metrics.ReactiveMongoMetric._
 
 abstract class ReactiveMongoDaoBase[T](
   reactiveMongoApi: ReactiveMongoApi,
@@ -68,7 +63,7 @@ abstract class ReactiveMongoDaoBase[T](
       coll <- collection
       result <- ZIO.fromFuture(implicit ec =>
         Queries.countQ(coll)(selector, limit, skip, readConcern, readPreference)
-      )
+      ) @@ aspect.commandQueryTimer(coll) @@ aspect.commandQueriesCounter(coll)
     } yield result
 
     def countGrouped(
@@ -80,7 +75,8 @@ abstract class ReactiveMongoDaoBase[T](
       coll <- collection
       result <- ZIO.fromFuture(implicit ec =>
         Queries.countGroupedQ(coll)(groupBy, matchQuery, readConcern, readPreference)
-      )
+      ) @@ aspect.commandQueryTimer(coll) @@ aspect.commandQueriesCounter(coll) @@
+        aspect.commandReceivedDocumentsCounter[Map[String, Int]](coll)(_.size.toLong)
     } yield result
 
     def distinct[R](
@@ -92,8 +88,10 @@ abstract class ReactiveMongoDaoBase[T](
       reader: NarrowValueReader[R]
     ): ZIO[Any, Throwable, Set[R]] = for {
       coll <- collection
-      result <- ZIO
-        .fromFuture(implicit ec => Queries.distinctQ[R](coll)(key, selector, readConcern, collation))
+      result <- ZIO.fromFuture(implicit ec =>
+        Queries.distinctQ[R](coll)(key, selector, readConcern, collation)
+      ) @@ aspect.commandQueryTimer(coll) @@ aspect.commandQueriesCounter(coll) @@
+        aspect.commandReceivedDocumentsCounter[Set[R]](coll)(_.size.toLong)
     } yield result
 
     def findAll(
@@ -130,7 +128,8 @@ abstract class ReactiveMongoDaoBase[T](
           readPreference,
           withQueryComment
         )
-      )
+      ) @@ aspect.findQueryTimer(coll) @@ aspect.findQueriesCounter(coll) @@
+        aspect.findReceivedDocumentsCounter[List[T]](coll)(_.length.toLong)
     } yield result
 
     def findManyC[M <: T](
@@ -144,16 +143,18 @@ abstract class ReactiveMongoDaoBase[T](
       r: BSONDocumentReader[M],
       enclosing: sourcecode.Enclosing,
       cursorProducer: CursorProducer[M]
-    ): Task[cursorProducer.ProducedCursor] = collection.map(coll =>
-      Queries.findManyCursorQ[M](coll)(
-        selector,
-        projection,
-        sort,
-        batchSize,
-        readConcern,
-        readPreference,
-        withQueryComment
-      )(r, cursorProducer)
+    ): Task[cursorProducer.ProducedCursor] = collection.flatMap(coll =>
+      ZIO.succeed(
+        Queries.findManyCursorQ[M](coll)(
+          selector,
+          projection,
+          sort,
+          batchSize,
+          readConcern,
+          readPreference,
+          withQueryComment
+        )(r, cursorProducer)
+      ) @@ aspect.findQueriesCounter(coll)
     )
 
     def findManyByIds(
@@ -182,7 +183,11 @@ abstract class ReactiveMongoDaoBase[T](
       result <- ZIO.fromFuture(implicit ec =>
         Queries
           .findOneQ[T](coll)(selector, projection, readConcern, readPreference, withQueryComment)
-      )
+      ) @@ aspect.findQueryTimer(coll) @@ aspect.findQueriesCounter(coll) @@
+        aspect.findReceivedDocumentsCounter[Option[T]](coll)(opt =>
+          if (opt.isEmpty) 0L
+          else 1L
+        )
     } yield result
 
     def findOneById(
