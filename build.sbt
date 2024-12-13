@@ -13,7 +13,8 @@ lazy val rawAllAggregates = chimneyZioPrelude.projectRefs ++ circeReactivemongoB
   reactivemongoBase.projectRefs ++ reactivemongoBson.projectRefs ++
   reactivemongoBsonAny.projectRefs ++ reactivemongoBsonJodaTime.projectRefs ++
   reactivemongoBsonRefined.projectRefs ++ reactivemongoBsonZioPrelude.projectRefs ++
-  redissonCore.projectRefs ++ redissonCodecBase.projectRefs ++ redissonCodecCirce.projectRefs ++
+  reactivemongoKamonInstrumentation.projectRefs ++ redissonCore.projectRefs ++
+  redissonCodecBase.projectRefs ++ redissonCodecCirce.projectRefs ++
   redissonCodecPlayJson.projectRefs ++ redissonCodecPlay2Json.projectRefs ++
   scalaLogging.projectRefs ++ tapirZioPrelude.projectRefs ++ implicitsAny.projectRefs ++
   implicitsBoolean.projectRefs ++ implicitsCollection.projectRefs ++
@@ -235,6 +236,11 @@ lazy val reactivemongoBsonZioPrelude = projectMatrix
   .in(file("common/reactivemongo/bson-zio-prelude"))
   .jvmPlatform(ProjectSettings.scala2Versions)
   .configure(ModulesCommon.reactivemongoBsonZioPreludeProfile)
+
+lazy val reactivemongoKamonInstrumentation = projectMatrix
+  .in(file("common/reactivemongo/kamon-instrumentation"))
+  .jvmPlatform(ProjectSettings.scala2Versions)
+  .configure(ModulesCommon.reactivemongoKamonInstrumentationProfile)
 
 lazy val redissonCore = projectMatrix
   .in(file("common/redisson/core"))

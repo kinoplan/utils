@@ -3,7 +3,7 @@ package io.kinoplan.utils.play.reactivemongo
 import scala.concurrent.{ExecutionContext, Future}
 
 import play.modules.reactivemongo.ReactiveMongoApi
-import reactivemongo.api.{Collation, CursorProducer, FailoverStrategy, ReadConcern, ReadPreference}
+import reactivemongo.api._
 import reactivemongo.api.bson.{
   BSONDocument,
   BSONDocumentReader,
@@ -15,12 +15,6 @@ import reactivemongo.api.bson.collection.BSONCollection
 import reactivemongo.api.bson.collection.BSONSerializationPack.NarrowValueReader
 import reactivemongo.api.indexes.Index
 
-import io.kinoplan.utils.play.reactivemongo.metrics.ReactiveMongoMetrics.wrapper.{
-  commandQueryTimerWrapper,
-  commandReceivedDocumentsCounterWrapper,
-  findQueryTimerWrapper,
-  findReceivedDocumentsCounterWrapper
-}
 import io.kinoplan.utils.reactivemongo.base._
 
 abstract class ReactiveMongoDaoBase[T](
@@ -67,9 +61,7 @@ abstract class ReactiveMongoDaoBase[T](
       enclosing: sourcecode.Enclosing
     ): Future[Long] = collection
       .flatMap { coll =>
-        Queries
-          .countQ(coll)(selector, limit, skip, readConcern, readPreference)
-          .withCommandQueryTimer(coll)
+        Queries.countQ(coll)(selector, limit, skip, readConcern, readPreference)
       }
       .withDiagnostic
 
@@ -82,10 +74,7 @@ abstract class ReactiveMongoDaoBase[T](
       enclosing: sourcecode.Enclosing
     ): Future[Map[String, Int]] = collection
       .flatMap { coll =>
-        Queries
-          .countGroupedQ(coll)(groupBy, matchQuery, readConcern, readPreference)
-          .withCommandQueryTimer(coll)
-          .withCommandReceivedDocumentsCounter(coll)(_.size.toLong)
+        Queries.countGroupedQ(coll)(groupBy, matchQuery, readConcern, readPreference)
       }
       .withDiagnostic
 
@@ -96,13 +85,12 @@ abstract class ReactiveMongoDaoBase[T](
       collation: Option[Collation] = None
     )(implicit
       reader: NarrowValueReader[R],
-      ec: ExecutionContext
-    ): Future[Set[R]] = collection.flatMap { coll =>
-      Queries
-        .distinctQ[R](coll)(key, selector, readConcern, collation)
-        .withCommandQueryTimer(coll)
-        .withCommandReceivedDocumentsCounter(coll)(_.size.toLong)
-    }
+      enclosing: sourcecode.Enclosing
+    ): Future[Set[R]] = collection
+      .flatMap { coll =>
+        Queries.distinctQ[R](coll)(key, selector, readConcern, collation)
+      }
+      .withDiagnostic
 
     def findAll(
       readConcern: Option[ReadConcern] = None,
@@ -126,20 +114,18 @@ abstract class ReactiveMongoDaoBase[T](
       enclosing: sourcecode.Enclosing
     ): Future[List[M]] = collection
       .flatMap { coll =>
-        Queries
-          .findManyQ(coll)(
-            selector,
-            projection,
-            sort,
-            hint,
-            skip,
-            limit,
-            readConcern,
-            readPreference,
-            withQueryComment
-          )
-          .withFindQueryTimer(coll)
-          .withFindReceivedDocumentsCounter(coll)(_.length.toLong)
+        Queries.findManyQ(coll)(
+          selector,
+          projection,
+          sort,
+          hint,
+          skip,
+          limit,
+          readConcern,
+          readPreference,
+          withQueryComment
+        )
+
       }
       .withDiagnostic
 
@@ -168,8 +154,8 @@ abstract class ReactiveMongoDaoBase[T](
       enclosing: sourcecode.Enclosing,
       cursorProducer: CursorProducer[M]
     ): Future[cursorProducer.ProducedCursor] = collection
-      .map {
-        Queries.findManyCursorQ(_)(
+      .map { coll =>
+        Queries.findManyCursorQ(coll)(
           selector,
           projection,
           sort,
@@ -178,6 +164,7 @@ abstract class ReactiveMongoDaoBase[T](
           readPreference,
           withQueryComment
         )(r, cursorProducer)
+
       }
       .withDiagnostic
 
@@ -191,13 +178,8 @@ abstract class ReactiveMongoDaoBase[T](
       enclosing: sourcecode.Enclosing
     ): Future[Option[T]] = collection
       .flatMap { coll =>
-        Queries
-          .findOneQ(coll)(selector, projection, readConcern, readPreference, withQueryComment)
-          .withFindQueryTimer(coll)
-          .withFindReceivedDocumentsCounter(coll)(opt =>
-            if (opt.isEmpty) 0L
-            else 1L
-          )
+        Queries.findOneQ(coll)(selector, projection, readConcern, readPreference, withQueryComment)
+
       }
       .withDiagnostic
 
@@ -267,52 +249,6 @@ abstract class ReactiveMongoDaoBase[T](
 
   }
 
-  def findAll(
-    readConcern: Option[ReadConcern] = None,
-    readPreference: ReadPreference = readPreferenceO.getOrElse(ReadPreference.secondaryPreferred)
-  )(implicit
-    r: BSONDocumentReader[T],
-    enclosing: sourcecode.Enclosing
-  ): Future[List[T]] = dao.findAll(readConcern, readPreference)
-
-  def findManyByIds(
-    ids: Set[BSONObjectID],
-    readConcern: Option[ReadConcern] = None,
-    readPreference: ReadPreference = readPreferenceO.getOrElse(ReadPreference.secondaryPreferred)
-  )(implicit
-    r: BSONDocumentReader[T],
-    enclosing: sourcecode.Enclosing
-  ): Future[List[T]] = dao.findManyByIds(ids, readConcern, readPreference)
-
-  def findOneById(
-    id: BSONObjectID,
-    readConcern: Option[ReadConcern] = None,
-    readPreference: Option[ReadPreference] = readPreferenceO
-  )(implicit
-    r: BSONDocumentReader[T],
-    enclosing: sourcecode.Enclosing
-  ): Future[Option[T]] = dao.findOneById(id, readConcern, readPreference)
-
-  def insertMany(values: List[T])(implicit
-    w: BSONDocumentWriter[T],
-    enclosing: sourcecode.Enclosing
-  ) = dao.insertMany(values)
-
-  def insertOne(value: T)(implicit
-    w: BSONDocumentWriter[T],
-    enclosing: sourcecode.Enclosing
-  ) = dao.insertOne(value)
-
-  def deleteByIds(ids: Set[BSONObjectID])(implicit
-    ec: ExecutionContext,
-    enclosing: sourcecode.Enclosing
-  ) = dao.deleteByIds(ids)
-
-  def deleteById(id: BSONObjectID)(implicit
-    ec: ExecutionContext,
-    enclosing: sourcecode.Enclosing
-  ) = dao.deleteById(id)
-
   private def createIndexes(
     coll: BSONCollection,
     smartIndexes: Seq[SmartIndex]
@@ -355,19 +291,6 @@ abstract class ReactiveMongoDaoBase[T](
       }
 
   implicit protected class FutureSyntax[A](future: Future[A]) {
-
-    def withFindQueryTimer(collection: BSONCollection): Future[A] =
-      findQueryTimerWrapper(collection)(future)
-
-    def withCommandQueryTimer(collection: BSONCollection): Future[A] =
-      commandQueryTimerWrapper(collection)(future)
-
-    def withFindReceivedDocumentsCounter(collection: BSONCollection)(count: A => Long): Future[A] =
-      findReceivedDocumentsCounterWrapper(collection)(future)(count)
-
-    def withCommandReceivedDocumentsCounter(collection: BSONCollection)(
-      count: A => Long
-    ): Future[A] = commandReceivedDocumentsCounterWrapper(collection)(future)(count)
 
     def withDiagnostic(implicit
       enclosing: sourcecode.Enclosing
