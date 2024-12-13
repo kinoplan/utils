@@ -6,9 +6,10 @@ object Dependencies {
 
   object Versions {
     val circeV                = "0.14.10"
+    val kamonV                = "2.7.5"
     val logbackV              = "1.5.15"
     val openTelemetryV        = "1.45.0"
-    val openTelemetrySemconvV = "1.24.0-alpha"
+    val openTelemetrySemconvV = "1.29.0-alpha"
     val reactivemongoV        = "1.1.0-RC13"
     val scalaJavaTimeV        = "2.6.0"
     val sttpV                 = "3.10.2"
@@ -44,12 +45,16 @@ object Dependencies {
     val http4sServer                     = "org.http4s"                    %% "http4s-server"                          % "0.23.30"
     val jacksonModule                    = "com.fasterxml.jackson.module"  %% "jackson-module-scala"                   % "2.18.2"
     val jodaTime                         = "joda-time"                      % "joda-time"                              % "2.13.0"
-    val kamonCore                        = "io.kamon"                      %% "kamon-core"                             % "2.7.5"
+    val kamonCore                        = "io.kamon"                      %% "kamon-core"                             % kamonV
+    val kamonInstrumentationCommon       = "io.kamon"                      %% "kamon-instrumentation-common"           % kamonV
+    val kamonTestkit                     = "io.kamon"                      %% "kamon-testkit"                          % kamonV     % Test
+    val kanelaAgent                      = "io.kamon"                       % "kanela-agent"                           % "1.0.18"
     val kindProjector                    = "org.typelevel"                 %% "kind-projector"                         % "0.13.3"
     val logbackClassic                   = "ch.qos.logback"                 % "logback-classic"                        % logbackV
     val logbackCore                      = "ch.qos.logback"                 % "logback-core"                           % logbackV
     val micrometerRegistryPrometheus     = "io.micrometer"                  % "micrometer-registry-prometheus"         % "1.14.2"
     val mockitoScala                     = "org.scalatestplus"             %% "mockito-3-4"                            % "3.2.10.0" % Test
+    val openTelemetryApi                 = "io.opentelemetry"               % "opentelemetry-api"                      % openTelemetryV
     val openTelemetryExporterOtlp        = "io.opentelemetry"               % "opentelemetry-exporter-otlp"            % openTelemetryV
     val openTelemetryExporterLoggingOtlp = "io.opentelemetry"               % "opentelemetry-exporter-logging-otlp"    % openTelemetryV
     val openTelemetrySdk                 = "io.opentelemetry"               % "opentelemetry-sdk"                      % openTelemetryV
@@ -76,6 +81,7 @@ object Dependencies {
     val sttpSlf4jBackend                 = "com.softwaremill.sttp.client3" %% "slf4j-backend"                          % sttpV
     val sttpZio                          = "com.softwaremill.sttp.client3" %% "zio"                                    % sttpV
     val tapirServer                      = "com.softwaremill.sttp.tapir"   %% "tapir-server"                           % tapirV
+    val testContainersMongodb            = "org.testcontainers"             % "mongodb"                                % "1.20.0"   % Test
     val typesafeConfig                   = "com.typesafe"                   % "config"                                 % "1.4.3"
     val zioConfig                        = "dev.zio"                       %% "zio-config"                             % zioConfigV
     val zioConfigMagnolia                = "dev.zio"                       %% "zio-config-magnolia"                    % zioConfigV

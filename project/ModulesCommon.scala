@@ -1,4 +1,6 @@
 import Dependencies.Libraries
+import com.lightbend.sbt.javaagent.JavaAgent
+import com.lightbend.sbt.javaagent.JavaAgent.JavaAgentKeys.javaAgents
 import sbt.Keys.*
 import locales.{CLDRVersion, LocalesFilter, LocalesPlugin}
 import sbt.*
@@ -129,6 +131,26 @@ object ModulesCommon {
     .settings(
       libraryDependencies ++=
         Seq(Libraries.reactiveMongoBsonApi % Provided, Libraries.zioPrelude.value)
+    )
+
+  lazy val reactivemongoKamonInstrumentationProfile: Project => Project = _
+    .configure(ProjectSettings.commonProfile)
+    .enablePlugins(JavaAgent)
+    .settings(name := "utils-reactivemongo-kamon-instrumentation")
+    .settings(javaAgents := Seq(Libraries.kanelaAgent % "runtime;test"))
+    .settings(
+      libraryDependencies ++=
+        Seq(
+          Libraries.kamonCore % Provided,
+          Libraries.kamonInstrumentationCommon,
+          Libraries.kamonTestkit,
+          Libraries.kanelaAgent,
+          Libraries.logbackClassic % Test,
+          Libraries.openTelemetryApi,
+          Libraries.openTelemetrySemconvIncubating,
+          Libraries.reactiveMongo % Provided,
+          Libraries.testContainersMongodb
+        )
     )
 
   lazy val redissonCoreProfile: Project => Project = _
