@@ -1,19 +1,20 @@
 import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport.*
-import sbt.{Def, *}
 import sbt.librarymanagement.DependencyBuilders
+import sbt.{Def, *}
 
 object Dependencies {
 
   object Versions {
-    val circeV         = "0.14.10"
-    val logbackV       = "1.5.15"
-    val openTelemetryV = "1.45.0"
-    val reactivemongoV = "1.1.0-RC13"
-    val scalaJavaTimeV = "2.6.0"
-    val sttpV          = "3.10.2"
-    val tapirV         = "1.11.11"
-    val zioV           = "2.1.14"
-    val zioConfigV     = "4.0.3"
+    val circeV                = "0.14.10"
+    val logbackV              = "1.5.15"
+    val openTelemetryV        = "1.45.0"
+    val openTelemetrySemconvV = "1.24.0-alpha"
+    val reactivemongoV        = "1.1.0-RC13"
+    val scalaJavaTimeV        = "2.6.0"
+    val sttpV                 = "3.10.2"
+    val tapirV                = "1.11.11"
+    val zioV                  = "2.1.14"
+    val zioConfigV            = "4.0.3"
   }
 
   import Versions.*
@@ -52,7 +53,8 @@ object Dependencies {
     val openTelemetryExporterOtlp        = "io.opentelemetry"               % "opentelemetry-exporter-otlp"            % openTelemetryV
     val openTelemetryExporterLoggingOtlp = "io.opentelemetry"               % "opentelemetry-exporter-logging-otlp"    % openTelemetryV
     val openTelemetrySdk                 = "io.opentelemetry"               % "opentelemetry-sdk"                      % openTelemetryV
-    val openTelemetrySemconvIncubating   = "io.opentelemetry.semconv"       % "opentelemetry-semconv-incubating"       % "1.24.0-alpha"
+    val openTelemetrySemconv             = "io.opentelemetry.semconv"       % "opentelemetry-semconv"                  % openTelemetrySemconvV
+    val openTelemetrySemconvIncubating   = "io.opentelemetry.semconv"       % "opentelemetry-semconv-incubating"       % openTelemetrySemconvV
     val play                             = "org.playframework"             %% "play"                                   % "3.0.6"
     val play2                            = "com.typesafe.play"             %% "play"                                   % "2.8.22"
     val playJson                         = "org.playframework"             %% "play-json"                              % "3.0.4"
