@@ -1,6 +1,10 @@
 package io.kinoplan.utils.zio.tapir.opentelemetry
 
+import scala.collection.mutable
+
 import io.opentelemetry.api.trace.{SpanKind, StatusCode}
+import io.opentelemetry.semconv.{HttpAttributes, UrlAttributes, UserAgentAttributes}
+import sttp.model.HeaderNames
 import sttp.monad.MonadError
 import sttp.tapir.AnyEndpoint
 import sttp.tapir.model.ServerRequest
@@ -9,7 +13,10 @@ import sttp.tapir.server.interceptor._
 import sttp.tapir.server.interpreter.BodyListener
 import sttp.tapir.server.model.ServerResponse
 import zio._
+import zio.telemetry.opentelemetry.common.{Attribute, Attributes}
+import zio.telemetry.opentelemetry.context.IncomingContextCarrier
 import zio.telemetry.opentelemetry.tracing.{StatusMapper, Tracing}
+import zio.telemetry.opentelemetry.tracing.propagation.TraceContextPropagator
 
 class TracingInterceptor[R1](tracing: Tracing, ignoreEndpoints: Seq[AnyEndpoint])
     extends RequestInterceptor[ZIO[R1, Throwable, *]] {
@@ -26,20 +33,29 @@ class TracingInterceptor[R1](tracing: Tracing, ignoreEndpoints: Seq[AnyEndpoint]
 
       val statusMapper = StatusMapper.failureThrowable(_ => StatusCode.ERROR)
 
-      val response = for {
-        _ <- tracing.setAttribute("http.method", request.method.method)
-        _ <- tracing.setAttribute("http.url", request.uri.toString())
-        response <- requestHandler(new EndpointTracingInterceptor[R1](tracing))(
+      val attributes = List(
+        Attribute(HttpAttributes.HTTP_REQUEST_METHOD, request.method.method),
+        Attribute(UrlAttributes.URL_FULL, request.uri.toString())
+      ) ++ request.uri.scheme.map(Attribute(UrlAttributes.URL_SCHEME, _)).toList ++
+        request
+          .header(HeaderNames.UserAgent)
+          .map(Attribute(UserAgentAttributes.USER_AGENT_ORIGINAL, _))
+          .toList
+
+      tracing.extractSpan(
+        TraceContextPropagator.default,
+        IncomingContextCarrier
+          .default(mutable.Map(request.headers.map(header => header.name -> header.value): _*)),
+        request.method.method,
+        spanKind = SpanKind.SERVER,
+        statusMapper = statusMapper,
+        attributes = Attributes.fromList(attributes)
+      )(
+        requestHandler(new EndpointTracingInterceptor[R1](tracing))(
           request,
           endpoints.filterNot(serverEndpoint => ignoreEndpoints.contains(serverEndpoint.endpoint))
         )
-      } yield response
-
-      tracing.span(
-        request.method.method + " " + request.uri.toString(),
-        spanKind = SpanKind.SERVER,
-        statusMapper = statusMapper
-      )(response)
+      )
     }
 
   }
@@ -57,23 +73,33 @@ private class EndpointTracingInterceptor[R1](tracing: Tracing)
     override def onDecodeSuccess[A, U, I](ctx: DecodeSuccessContext[RIO[R1, *], A, U, I])(implicit
       monad: MonadError[RIO[R1, *]],
       bodyListener: BodyListener[RIO[R1, *], B]
-    ): RIO[R1, ServerResponse[B]] = endpointHandler.onDecodeSuccess(ctx).tap(onResponse)
+    ): RIO[R1, ServerResponse[B]] = onEndpoint(ctx.endpoint) *>
+      endpointHandler.onDecodeSuccess(ctx).tap(onResponse)
 
     override def onSecurityFailure[A](ctx: SecurityFailureContext[RIO[R1, *], A])(implicit
       monad: MonadError[RIO[R1, *]],
       bodyListener: BodyListener[RIO[R1, *], B]
-    ): RIO[R1, ServerResponse[B]] = endpointHandler.onSecurityFailure(ctx).tap(onResponse)
+    ): RIO[R1, ServerResponse[B]] = onEndpoint(ctx.endpoint) *>
+      endpointHandler.onSecurityFailure(ctx).tap(onResponse)
 
     override def onDecodeFailure(ctx: DecodeFailureContext)(implicit
       monad: MonadError[RIO[R1, *]],
       bodyListener: BodyListener[RIO[R1, *], B]
-    ): RIO[R1, Option[ServerResponse[B]]] = endpointHandler
-      .onDecodeFailure(ctx)
-      .tap(responseO => responseO.fold(ZIO.unit)(onResponse))
+    ): RIO[R1, Option[ServerResponse[B]]] = onEndpoint(ctx.endpoint) *>
+      endpointHandler.onDecodeFailure(ctx).tap(responseO => responseO.fold(ZIO.unit)(onResponse))
 
     private def onResponse(response: ServerResponse[B]): ZIO[Any, Nothing, Unit] = tracing
-      .setAttribute("http.status_code", response.code.code.toLong)
+      .setAttribute(HttpAttributes.HTTP_RESPONSE_STATUS_CODE.getKey, response.code.code.toLong)
       .unit
+
+    private def onEndpoint(endpoint: AnyEndpoint): ZIO[Any, Nothing, Unit] = {
+      val route = endpoint.showPathTemplate(showQueryParam = None, includeAuth = false)
+      val method = endpoint.method.fold("")(_.method)
+      tracing
+        .setAttribute(HttpAttributes.HTTP_ROUTE, route)
+        .zipRight(tracing.getCurrentSpanUnsafe.map(_.updateName(s"$method $route")))
+        .unit
+    }
 
   }
 
