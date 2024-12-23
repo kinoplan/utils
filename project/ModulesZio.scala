@@ -82,7 +82,12 @@ object ModulesZio {
     .settings(name := "utils-zio-tapir-opentelemetry")
     .settings(
       libraryDependencies ++=
-        Seq(Libraries.tapirServer, Libraries.zio.value, Libraries.zioOpenTelemetry)
+        Seq(
+          Libraries.openTelemetrySemconv,
+          Libraries.tapirServer,
+          Libraries.zio.value,
+          Libraries.zioOpenTelemetry
+        )
     )
 
 }
