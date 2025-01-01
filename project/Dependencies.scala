@@ -49,10 +49,11 @@ object Dependencies {
     val logbackCore                      = "ch.qos.logback"                 % "logback-core"                           % logbackV
     val micrometerRegistryPrometheus     = "io.micrometer"                  % "micrometer-registry-prometheus"         % "1.14.2"
     val mockitoScala                     = "org.scalatestplus"             %% "mockito-3-4"                            % "3.2.10.0" % Test
+    val openTelemetryApi                 = "io.opentelemetry"               % "opentelemetry-api"                      % openTelemetryV
     val openTelemetryExporterOtlp        = "io.opentelemetry"               % "opentelemetry-exporter-otlp"            % openTelemetryV
     val openTelemetryExporterLoggingOtlp = "io.opentelemetry"               % "opentelemetry-exporter-logging-otlp"    % openTelemetryV
     val openTelemetrySdk                 = "io.opentelemetry"               % "opentelemetry-sdk"                      % openTelemetryV
-    val openTelemetrySemconvIncubating   = "io.opentelemetry.semconv"       % "opentelemetry-semconv-incubating"       % "1.24.0-alpha"
+    val openTelemetrySemconvIncubating   = "io.opentelemetry.semconv"       % "opentelemetry-semconv-incubating"       % "1.29.0-alpha"
     val play                             = "org.playframework"             %% "play"                                   % "3.0.6"
     val play2                            = "com.typesafe.play"             %% "play"                                   % "2.8.22"
     val playJson                         = "org.playframework"             %% "play-json"                              % "3.0.4"

@@ -22,9 +22,11 @@ object ModulesPlay {
     .settings(
       libraryDependencies ++=
         Seq(
+          Libraries.kamonCore % Provided,
+          Libraries.openTelemetryApi,
+          Libraries.openTelemetrySemconvIncubating,
           Libraries.play2              % Provided,
-          Libraries.play2ReactiveMongo % Provided,
-          Libraries.kamonCore          % Provided
+          Libraries.play2ReactiveMongo % Provided
         )
     )
 
@@ -51,9 +53,11 @@ object ModulesPlay {
     .settings(
       libraryDependencies ++=
         Seq(
+          Libraries.kamonCore % Provided,
+          Libraries.openTelemetryApi,
+          Libraries.openTelemetrySemconvIncubating,
           Libraries.play              % Provided,
-          Libraries.playReactiveMongo % Provided,
-          Libraries.kamonCore         % Provided
+          Libraries.playReactiveMongo % Provided
         )
     )
 

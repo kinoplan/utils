@@ -6,7 +6,7 @@ import io.opentelemetry.exporter.otlp.trace.OtlpGrpcSpanExporter
 import io.opentelemetry.sdk.resources.Resource
 import io.opentelemetry.sdk.trace.SdkTracerProvider
 import io.opentelemetry.sdk.trace.`export`.{BatchSpanProcessor, SimpleSpanProcessor}
-import io.opentelemetry.semconv.incubating.ServiceIncubatingAttributes
+import io.opentelemetry.semconv.ServiceAttributes
 import zio.{Scope, URIO, ZIO}
 
 import io.kinoplan.utils.zio.opentelemetry.config.TracingConfig
@@ -22,8 +22,7 @@ private[opentelemetry] object TracerProvider {
         SdkTracerProvider
           .builder()
           .setResource(
-            Resource
-              .create(Attributes.of(ServiceIncubatingAttributes.SERVICE_NAME, config.serviceName))
+            Resource.create(Attributes.of(ServiceAttributes.SERVICE_NAME, config.serviceName))
           )
           .addSpanProcessor(spanProcessor)
           .setSampler(new TracerSampler(config.ignoreNamePatterns.asJava))
@@ -49,8 +48,7 @@ private[opentelemetry] object TracerProvider {
         SdkTracerProvider
           .builder()
           .setResource(
-            Resource
-              .create(Attributes.of(ServiceIncubatingAttributes.SERVICE_NAME, config.serviceName))
+            Resource.create(Attributes.of(ServiceAttributes.SERVICE_NAME, config.serviceName))
           )
           .addSpanProcessor(spanProcessor)
           .setSampler(new TracerSampler(config.ignoreNamePatterns.asJava))
