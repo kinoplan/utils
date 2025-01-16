@@ -1,10 +1,10 @@
 import Dependencies.Libraries
 import com.lightbend.sbt.javaagent.JavaAgent
 import com.lightbend.sbt.javaagent.JavaAgent.JavaAgentKeys.javaAgents
-import sbt.Keys.*
+import locales.LocalesPlugin.autoImport.*
 import locales.{CLDRVersion, LocalesFilter, LocalesPlugin}
 import sbt.*
-import locales.LocalesPlugin.autoImport.*
+import sbt.Keys.*
 
 object ModulesCommon {
 
@@ -150,6 +150,33 @@ object ModulesCommon {
           Libraries.openTelemetrySemconvIncubating,
           Libraries.reactiveMongo % Provided,
           Libraries.testContainersMongodb
+        )
+    )
+
+  lazy val reactivemongoOpentelemetryJavaagentExtensionProfile: Project => Project = _
+    .configure(ProjectSettings.commonProfile)
+    .enablePlugins(JavaAgent)
+    .settings(name := "utils-reactivemongo-opentelemetry-javaagent-extension")
+    .settings(javaAgents := Seq(Libraries.openTelemetryJavaagentTestingAgent))
+    .settings(
+      libraryDependencies ++=
+        Seq(
+          Libraries.googleAutoService                  % Provided,
+          Libraries.openTelemetryJavaagentExtensionApi % Provided,
+          Libraries.openTelemetryJavaagentTesting,
+          Libraries.openTelemetryJavaagentTestingAgent,
+          Libraries.openTelemetrySdk % Provided,
+          Libraries.logbackClassic   % Test,
+          Libraries.reactiveMongo    % Provided,
+          Libraries.testContainersMongodb
+        )
+    )
+    .settings(
+      Test / javaOptions ++=
+        Seq(
+          s"-Dotel.javaagent.extensions=${(Compile / packageBin).value.getAbsolutePath}",
+          "-Dio.opentelemetry.javaagent.shaded.io.opentelemetry.context.enableStrictContext=false",
+          "-Dotel.semconv-stability.opt-in=database"
         )
     )
 
