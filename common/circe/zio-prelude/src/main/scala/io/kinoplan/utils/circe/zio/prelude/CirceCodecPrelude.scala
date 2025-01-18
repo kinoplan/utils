@@ -36,13 +36,12 @@ trait CirceCodecPrelude {
   implicit final def decodeNonEmptySortedSet[A](implicit
     decoder: Decoder[A],
     ordering: Ordering[A]
-  ): Decoder[NonEmptySortedSet[A]] =
-    new NonEmptySequenceDecoder[A, SortedSet, NonEmptySortedSet[A]] {
-      override protected def createBuilder(): mutable.Builder[A, SortedSet[A]] = SortedSet
-        .newBuilder[A]
-      override protected def create: (A, SortedSet[A]) => NonEmptySortedSet[A] =
-        (h, t) => NonEmptySortedSet.fromSet(h, t)
-    }
+  ): Decoder[NonEmptySortedSet[A]] = new NonEmptySequenceDecoder[A, SortedSet, NonEmptySortedSet[A]] {
+    override protected def createBuilder(): mutable.Builder[A, SortedSet[A]] =
+      SortedSet.newBuilder[A]
+    override protected def create: (A, SortedSet[A]) => NonEmptySortedSet[A] =
+      (h, t) => NonEmptySortedSet.fromSet(h, t)
+  }
 
   implicit final def encodeNonEmptyList[A](implicit
     encoder: Encoder[A]

@@ -10,8 +10,8 @@ object JavaTime {
 
     def fromUnixTimestamp(value: Int): OffsetDateTime = fromUnixTimestamp(value.toLong)
 
-    def fromUnixTimestamp(value: Long): OffsetDateTime = OffsetDateTime
-      .ofInstant(Instant.ofEpochSecond(value), ZoneId.systemDefault())
+    def fromUnixTimestamp(value: Long): OffsetDateTime =
+      OffsetDateTime.ofInstant(Instant.ofEpochSecond(value), ZoneId.systemDefault())
 
     def fromUnixTimestampO(value: Int): Option[OffsetDateTime] = fromUnixTimestampO(value.toLong)
 
@@ -50,8 +50,8 @@ object JavaTime {
   object localDateTime {
     def fromUnixTimestamp(value: Int): LocalDateTime = fromUnixTimestamp(value.toLong)
 
-    def fromUnixTimestamp(value: Long): LocalDateTime = LocalDateTime
-      .ofInstant(Instant.ofEpochSecond(value), ZoneId.systemDefault())
+    def fromUnixTimestamp(value: Long): LocalDateTime =
+      LocalDateTime.ofInstant(Instant.ofEpochSecond(value), ZoneId.systemDefault())
 
     def fromUnixTimestampO(value: Int): Option[LocalDateTime] = fromUnixTimestampO(value.toLong)
 

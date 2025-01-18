@@ -8,7 +8,9 @@ import ch.qos.logback.core.read.ListAppender
 
 class ListAppenderOps(private val value: ListAppender[ILoggingEvent]) extends AnyVal {
 
-  def getLogMessages: Seq[String] = collection.immutable.Seq(value.list.asScala.map(_.getMessage): _*)
+  def getLogMessages: Seq[String] = collection
+    .immutable
+    .Seq(value.list.asScala.map(_.getMessage): _*)
 
   def getLogMdcProperties: Map[String, String] = value
     .list

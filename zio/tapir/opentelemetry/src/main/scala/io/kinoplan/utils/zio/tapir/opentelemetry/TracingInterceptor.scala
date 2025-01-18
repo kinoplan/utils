@@ -44,8 +44,9 @@ class TracingInterceptor[R1](tracing: Tracing, ignoreEndpoints: Seq[AnyEndpoint]
 
       tracing.extractSpan(
         TraceContextPropagator.default,
-        IncomingContextCarrier
-          .default(mutable.Map(request.headers.map(header => header.name -> header.value): _*)),
+        IncomingContextCarrier.default(
+          mutable.Map(request.headers.map(header => header.name -> header.value): _*)
+        ),
         request.method.method,
         spanKind = SpanKind.SERVER,
         statusMapper = statusMapper,
@@ -62,8 +63,7 @@ class TracingInterceptor[R1](tracing: Tracing, ignoreEndpoints: Seq[AnyEndpoint]
 
 }
 
-private class EndpointTracingInterceptor[R1](tracing: Tracing)
-    extends EndpointInterceptor[RIO[R1, *]] {
+private class EndpointTracingInterceptor[R1](tracing: Tracing) extends EndpointInterceptor[RIO[R1, *]] {
 
   override def apply[B](
     responder: Responder[RIO[R1, *], B],

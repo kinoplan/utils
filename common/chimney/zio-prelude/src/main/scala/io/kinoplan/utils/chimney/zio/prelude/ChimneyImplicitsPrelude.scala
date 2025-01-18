@@ -10,11 +10,14 @@ import zio.prelude.{NonEmptyList, NonEmptyMap, NonEmptySet, NonEmptySortedMap, N
 
 trait ChimneyImplicitsPrelude {
 
-  implicit def totalOuterTransformerForNonEmptyList[A, B]: TotalOuterTransformer[NonEmptyList[A], NonEmptyList[B], A, B] =
+  implicit def totalOuterTransformerForNonEmptyList[
+    A,
+    B
+  ]: TotalOuterTransformer[NonEmptyList[A], NonEmptyList[B], A, B] =
     new TotalOuterTransformer[NonEmptyList[A], NonEmptyList[B], A, B] {
 
-      def transformWithTotalInner(src: NonEmptyList[A], inner: A => B): NonEmptyList[B] = src
-        .map(inner)
+      def transformWithTotalInner(src: NonEmptyList[A], inner: A => B): NonEmptyList[B] =
+        src.map(inner)
 
       def transformWithPartialInner(
         src: NonEmptyList[A],
@@ -26,11 +29,14 @@ trait ChimneyImplicitsPrelude {
         .map(seq => NonEmptyList(seq.head, seq.tail: _*))
     }
 
-  implicit def totalOuterTransformerForNonEmptyChunk[A, B]: TotalOuterTransformer[NonEmptyChunk[A], NonEmptyChunk[B], A, B] =
+  implicit def totalOuterTransformerForNonEmptyChunk[
+    A,
+    B
+  ]: TotalOuterTransformer[NonEmptyChunk[A], NonEmptyChunk[B], A, B] =
     new TotalOuterTransformer[NonEmptyChunk[A], NonEmptyChunk[B], A, B] {
 
-      def transformWithTotalInner(src: NonEmptyChunk[A], inner: A => B): NonEmptyChunk[B] = src
-        .map(inner)
+      def transformWithTotalInner(src: NonEmptyChunk[A], inner: A => B): NonEmptyChunk[B] =
+        src.map(inner)
 
       def transformWithPartialInner(
         src: NonEmptyChunk[A],
@@ -42,11 +48,14 @@ trait ChimneyImplicitsPrelude {
         .map(seq => NonEmptyChunk(seq.head, seq.tail: _*))
     }
 
-  implicit def totalOuterTransformerForNonEmptySet[A, B]: TotalOuterTransformer[NonEmptySet[A], NonEmptySet[B], A, B] =
+  implicit def totalOuterTransformerForNonEmptySet[
+    A,
+    B
+  ]: TotalOuterTransformer[NonEmptySet[A], NonEmptySet[B], A, B] =
     new TotalOuterTransformer[NonEmptySet[A], NonEmptySet[B], A, B] {
 
-      def transformWithTotalInner(src: NonEmptySet[A], inner: A => B): NonEmptySet[B] = src
-        .map(inner)
+      def transformWithTotalInner(src: NonEmptySet[A], inner: A => B): NonEmptySet[B] =
+        src.map(inner)
 
       def transformWithPartialInner(
         src: NonEmptySet[A],
@@ -58,7 +67,10 @@ trait ChimneyImplicitsPrelude {
         .map(seq => NonEmptySet(seq.head, seq.tail: _*))
     }
 
-  implicit def totalOuterTransformerForNonEmptySortedSet[A, B: Ordering]: TotalOuterTransformer[NonEmptySortedSet[A], NonEmptySortedSet[B], A, B] =
+  implicit def totalOuterTransformerForNonEmptySortedSet[
+    A,
+    B: Ordering
+  ]: TotalOuterTransformer[NonEmptySortedSet[A], NonEmptySortedSet[B], A, B] =
     new TotalOuterTransformer[NonEmptySortedSet[A], NonEmptySortedSet[B], A, B] {
 
       def transformWithTotalInner(src: NonEmptySortedSet[A], inner: A => B): NonEmptySortedSet[B] =
@@ -74,7 +86,12 @@ trait ChimneyImplicitsPrelude {
         .map(seq => NonEmptySortedSet(seq.head, seq.tail: _*))
     }
 
-  implicit def totalOuterTransformerForNonEmptyMap[A, B, C, D]: TotalOuterTransformer[NonEmptyMap[A, B], NonEmptyMap[C, D], (A, B), (C, D)] =
+  implicit def totalOuterTransformerForNonEmptyMap[
+    A,
+    B,
+    C,
+    D
+  ]: TotalOuterTransformer[NonEmptyMap[A, B], NonEmptyMap[C, D], (A, B), (C, D)] =
     new TotalOuterTransformer[NonEmptyMap[A, B], NonEmptyMap[C, D], (A, B), (C, D)] {
 
       def transformWithTotalInner(
@@ -155,27 +172,30 @@ trait ChimneyImplicitsPrelude {
       def iterator(collection: NonEmptySet[A]): Iterator[A] = collection.iterator
     }
 
-  implicit def nonEmptyChunkIsPartiallyBuildIterable[A]: PartiallyBuildIterable[NonEmptyChunk[A], A] =
-    new PartiallyBuildIterable[NonEmptyChunk[A], A] {
-      def partialFactory: Factory[A, partial.Result[NonEmptyChunk[A]]] =
-        new FactoryCompat[A, partial.Result[NonEmptyChunk[A]]] {
-          def newBuilder: mutable.Builder[A, partial.Result[NonEmptyChunk[A]]] =
-            new FactoryCompat.Builder[A, partial.Result[NonEmptyChunk[A]]] {
-              private val impl = List.newBuilder[A]
-              def clear(): Unit = impl.clear()
-              def result(): partial.Result[NonEmptyChunk[A]] = partial
-                .Result
-                .fromOption(NonEmptyChunk.fromIterableOption(impl.result()))
-              def addOne(elem: A): this.type = {
-                impl += elem
-                this
-              }
+  implicit def nonEmptyChunkIsPartiallyBuildIterable[
+    A
+  ]: PartiallyBuildIterable[NonEmptyChunk[A], A] = new PartiallyBuildIterable[NonEmptyChunk[A], A] {
+    def partialFactory: Factory[A, partial.Result[NonEmptyChunk[A]]] =
+      new FactoryCompat[A, partial.Result[NonEmptyChunk[A]]] {
+        def newBuilder: mutable.Builder[A, partial.Result[NonEmptyChunk[A]]] =
+          new FactoryCompat.Builder[A, partial.Result[NonEmptyChunk[A]]] {
+            private val impl = List.newBuilder[A]
+            def clear(): Unit = impl.clear()
+            def result(): partial.Result[NonEmptyChunk[A]] = partial
+              .Result
+              .fromOption(NonEmptyChunk.fromIterableOption(impl.result()))
+            def addOne(elem: A): this.type = {
+              impl += elem
+              this
             }
-        }
-      def iterator(collection: NonEmptyChunk[A]): Iterator[A] = collection.iterator
-    }
+          }
+      }
+    def iterator(collection: NonEmptyChunk[A]): Iterator[A] = collection.iterator
+  }
 
-  implicit def nonEmptySortedSetIsPartiallyBuildIterable[A: Ordering]: PartiallyBuildIterable[NonEmptySortedSet[A], A] =
+  implicit def nonEmptySortedSetIsPartiallyBuildIterable[
+    A: Ordering
+  ]: PartiallyBuildIterable[NonEmptySortedSet[A], A] =
     new PartiallyBuildIterable[NonEmptySortedSet[A], A] {
       def partialFactory: Factory[A, partial.Result[NonEmptySortedSet[A]]] =
         new FactoryCompat[A, partial.Result[NonEmptySortedSet[A]]] {
@@ -215,7 +235,10 @@ trait ChimneyImplicitsPrelude {
       def iterator(collection: NonEmptyMap[K, V]): Iterator[(K, V)] = collection.iterator
     }
 
-  implicit def nonEmptySortedMapIsPartiallyBuildMap[K: Ordering, V]: PartiallyBuildMap[NonEmptySortedMap[K, V], K, V] =
+  implicit def nonEmptySortedMapIsPartiallyBuildMap[
+    K: Ordering,
+    V
+  ]: PartiallyBuildMap[NonEmptySortedMap[K, V], K, V] =
     new PartiallyBuildMap[NonEmptySortedMap[K, V], K, V] {
       def partialFactory: Factory[(K, V), partial.Result[NonEmptySortedMap[K, V]]] =
         new FactoryCompat[(K, V), partial.Result[NonEmptySortedMap[K, V]]] {

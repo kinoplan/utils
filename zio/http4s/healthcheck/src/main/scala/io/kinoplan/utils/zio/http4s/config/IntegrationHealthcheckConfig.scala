@@ -11,8 +11,8 @@ private[http4s] case class IntegrationHealthcheckConfig(
 
 private[http4s] object IntegrationHealthcheckConfig {
 
-  private val config = deriveConfig[IntegrationHealthcheckConfig]
-    .nested("server", "healthcheck", "integration")
+  private val config =
+    deriveConfig[IntegrationHealthcheckConfig].nested("server", "healthcheck", "integration")
 
   val live: Layer[Error, IntegrationHealthcheckConfig] = ZLayer.fromZIO(ZIO.config(config))
 

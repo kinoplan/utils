@@ -10,8 +10,8 @@ trait TransactionSupport {
   ): Task[T] = for {
     db <- reactiveMongoApi.database
     dbWithSession <- ZIO.fromFuture(implicit ec => db.startSession(failIfAlreadyStarted))
-    dbWithTx <- ZIO
-      .fromFuture(implicit ec => dbWithSession.startTransaction(None, failIfAlreadyStarted))
+    dbWithTx <-
+      ZIO.fromFuture(implicit ec => dbWithSession.startTransaction(None, failIfAlreadyStarted))
     result <- requests(ZIO.attempt(dbWithTx)).foldZIO(
       error =>
         ZIO

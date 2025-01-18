@@ -56,7 +56,8 @@ trait OpenTelemetryZioTracer {
 object OpenTelemetryZioTracer {
 
   def default(tracing: Tracing): OpenTelemetryZioTracer = new OpenTelemetryZioTracer {
-    override def spanName[T](request: Request[T, Nothing]): String = s"HTTP ${request.method.method}"
+    override def spanName[T](request: Request[T, Nothing]): String =
+      s"HTTP ${request.method.method}"
 
     override def before[T](request: Request[T, Nothing]): RIO[Tracing, Unit] =
       (

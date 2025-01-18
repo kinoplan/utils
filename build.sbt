@@ -111,9 +111,7 @@ lazy val root = project
         .inputTaskDyn {
           val args = spaceDelimited("<arg>").parsed
           Def.taskDyn(
-            (Compile / scalafix)
-              .toTask(" --check")
-              .all(filterByVersionAndPlatform(args.head, args(1)))
+            (Compile / scalafix).toTask(" --check").all(filterByVersionAndPlatform(args.head, args(1)))
           )
         }
         .evaluated,

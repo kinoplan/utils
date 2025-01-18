@@ -10,8 +10,8 @@ import io.kinoplan.utils.zio.http4s.config.ServerConfig
 
 object HealthcheckServer {
 
-  private def routesWithLogger = Logger
-    .httpRoutes(logHeaders = true, logBody = true)(new Healthcheck[Any].routes())
+  private def routesWithLogger =
+    Logger.httpRoutes(logHeaders = true, logBody = true)(new Healthcheck[Any].routes())
 
   def start(): Task[Unit] = ZIO
     .serviceWithZIO[ServerConfig] { serverConfig =>

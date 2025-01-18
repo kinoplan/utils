@@ -14,11 +14,11 @@ trait BsonJodaTimeHandlers {
 
   implicit val bsonDateTimeHandler: BSONHandler[DateTime] = BsonJodaTimeHandlers.dateTime
 
-  implicit val bsonLocalTimeHandler: BSONHandler[LocalTime] = BsonJodaTimeHandlers
-    .localTime(bsonLocalTimeHandlerStrategy)
+  implicit val bsonLocalTimeHandler: BSONHandler[LocalTime] =
+    BsonJodaTimeHandlers.localTime(bsonLocalTimeHandlerStrategy)
 
-  implicit val bsonLocalDateHandler: BSONHandler[LocalDate] = BsonJodaTimeHandlers
-    .localDate(bsonLocalDateHandlerStrategy)
+  implicit val bsonLocalDateHandler: BSONHandler[LocalDate] =
+    BsonJodaTimeHandlers.localDate(bsonLocalDateHandlerStrategy)
 
 }
 

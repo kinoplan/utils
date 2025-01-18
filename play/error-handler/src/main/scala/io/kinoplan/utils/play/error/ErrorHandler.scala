@@ -30,8 +30,8 @@ class ErrorHandler @Inject() (configuration: Configuration) extends HttpErrorHan
     implicit val mapContext: MapContext = RequestMapContext.extractMapContext(request)
 
     Try {
-      val usefulException = HttpErrorHandlerExceptions
-        .throwableToUsefulException(None, isProd, exception)
+      val usefulException =
+        HttpErrorHandlerExceptions.throwableToUsefulException(None, isProd, exception)
 
       val result =
         if (isProd) InternalServerError
