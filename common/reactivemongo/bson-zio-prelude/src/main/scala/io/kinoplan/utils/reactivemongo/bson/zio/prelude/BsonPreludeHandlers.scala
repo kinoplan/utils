@@ -105,8 +105,8 @@ trait BsonPreludeHandlers {
   implicit final def sortedNemHandler[V](implicit
     r: BSONReader[V],
     w: BSONWriter[V]
-  ): BSONDocumentHandler[NonEmptySortedMap[String, V]] = BSONDocumentHandler
-    .from[NonEmptySortedMap[String, V]](
+  ): BSONDocumentHandler[NonEmptySortedMap[String, V]] =
+    BSONDocumentHandler.from[NonEmptySortedMap[String, V]](
       bson =>
         bson
           .elements

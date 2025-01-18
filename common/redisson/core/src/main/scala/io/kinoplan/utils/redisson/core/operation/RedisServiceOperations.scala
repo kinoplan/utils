@@ -9,8 +9,8 @@ trait RedisServiceOperations {
   implicit protected val executionContext: ExecutionContext
   protected val redissonClient: RedissonClient
 
-  private lazy val sentinelMasterSlaveNodes = redissonClient
-    .getRedisNodes(RedisNodes.SENTINEL_MASTER_SLAVE)
+  private lazy val sentinelMasterSlaveNodes =
+    redissonClient.getRedisNodes(RedisNodes.SENTINEL_MASTER_SLAVE)
 
   private lazy val singleNode = redissonClient.getRedisNodes(RedisNodes.SINGLE)
 

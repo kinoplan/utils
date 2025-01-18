@@ -24,7 +24,7 @@ private[reactivemongo] object MongoConfig {
     .collectAll(databasesConfig(dbNames).head, databasesConfig(dbNames).tail: _*)
     .to[MongoConfig]
 
-  def live(dbNames: Seq[String]): Layer[Error, MongoConfig] = ZLayer
-    .fromZIO(ZIO.config(config(dbNames)))
+  def live(dbNames: Seq[String]): Layer[Error, MongoConfig] =
+    ZLayer.fromZIO(ZIO.config(config(dbNames)))
 
 }

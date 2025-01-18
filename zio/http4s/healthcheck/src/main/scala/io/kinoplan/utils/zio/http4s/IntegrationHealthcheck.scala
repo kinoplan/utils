@@ -18,8 +18,8 @@ class IntegrationHealthcheck[R <: IntegrationHealthcheck.Env: EnvironmentTag]
       for {
         config <- ZIO.service[IntegrationHealthcheckConfig]
         integrationChecks <- ZIO.service[Set[IntegrationCheck[Task]]]
-        integrationCompletedChecks <- ZIO
-          .foreachPar(integrationChecks ++ additionalIntegrationChecks) { integrationCheck =>
+        integrationCompletedChecks <-
+          ZIO.foreachPar(integrationChecks ++ additionalIntegrationChecks) { integrationCheck =>
             integrationCheck
               .checkAvailability
               .timeout(config.timeout)

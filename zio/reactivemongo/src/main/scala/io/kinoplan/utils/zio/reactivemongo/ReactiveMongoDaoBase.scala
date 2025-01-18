@@ -92,8 +92,9 @@ abstract class ReactiveMongoDaoBase[T](
       reader: NarrowValueReader[R]
     ): ZIO[Any, Throwable, Set[R]] = for {
       coll <- collection
-      result <- ZIO
-        .fromFuture(implicit ec => Queries.distinctQ[R](coll)(key, selector, readConcern, collation))
+      result <- ZIO.fromFuture(implicit ec =>
+        Queries.distinctQ[R](coll)(key, selector, readConcern, collation)
+      )
     } yield result
 
     def findAll(
@@ -180,8 +181,13 @@ abstract class ReactiveMongoDaoBase[T](
     ): Task[Option[T]] = for {
       coll <- collection
       result <- ZIO.fromFuture(implicit ec =>
-        Queries
-          .findOneQ[T](coll)(selector, projection, readConcern, readPreference, withQueryComment)
+        Queries.findOneQ[T](coll)(
+          selector,
+          projection,
+          readConcern,
+          readPreference,
+          withQueryComment
+        )
       )
     } yield result
 

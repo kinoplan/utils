@@ -10,9 +10,7 @@ private[implicits] object CollectionOperation {
   case object Difference extends CollectionOperation
 }
 
-abstract private[implicits] class CollectionSeqLike[A, Repr](
-  private val value: IterableLike[A, Repr]
-) {
+abstract private[implicits] class CollectionSeqLike[A, Repr](private val value: IterableLike[A, Repr]) {
 
   def computesOperationBy[B, That](
     f: A => B,

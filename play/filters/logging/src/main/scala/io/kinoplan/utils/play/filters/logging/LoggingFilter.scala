@@ -54,16 +54,17 @@ class LoggingFilter @Inject() (configuration: Configuration)(implicit
     val startTime = System.currentTimeMillis
 
     implicit val mapContext: MapContext = RequestMapContext.extractMapContext(request)
-    val requestWithMapContext = request
-      .addAttr(RequestMapContext.Keys.MapContextTypedKey, mapContext)
+    val requestWithMapContext =
+      request.addAttr(RequestMapContext.Keys.MapContextTypedKey, mapContext)
 
     logger.info(s"[START] ${requestWithMapContext.method} ${requestWithMapContext.uri}")
 
     next(request).flatMap { result =>
       val endTime = System.currentTimeMillis
       val requestTime = endTime - startTime
-      val message =
-        s"[END] ${requestWithMapContext.method} ${requestWithMapContext.uri} took ${requestTime}ms and returned ${result.header.status}"
+      val message = s"[END] ${requestWithMapContext.method} ${requestWithMapContext.uri} took ${
+          requestTime
+        }ms and returned ${result.header.status}"
 
       mapContext.put(
         "response_time" -> requestTime,

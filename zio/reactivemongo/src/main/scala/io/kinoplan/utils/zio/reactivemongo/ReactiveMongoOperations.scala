@@ -86,7 +86,9 @@ object ReactiveMongoOperations {
     collectionName: String,
     failoverStrategyO: Option[FailoverStrategy] = None
   ) = new ReactiveMongoOperations[T](
-    db.map(db => failoverStrategyO.fold(db.collection(collectionName))(db.collection(collectionName, _)))
+    db.map(db =>
+      failoverStrategyO.fold(db.collection(collectionName))(db.collection(collectionName, _))
+    )
   )
 
 }

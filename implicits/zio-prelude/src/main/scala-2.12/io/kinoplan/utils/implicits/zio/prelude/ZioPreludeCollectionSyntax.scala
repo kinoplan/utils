@@ -30,8 +30,8 @@ final private[prelude] class ZioPreludeCollectionOps[A, Repr](private val it: It
   def toSortedNem[K, V](implicit
     ev: A <:< (K, V),
     ordering: Ordering[K]
-  ): Option[NonEmptySortedMap[K, V]] = NonEmptySortedMap
-    .fromIterableOption[K, V](it.toIterable.map(ev))
+  ): Option[NonEmptySortedMap[K, V]] =
+    NonEmptySortedMap.fromIterableOption[K, V](it.toIterable.map(ev))
 
 }
 

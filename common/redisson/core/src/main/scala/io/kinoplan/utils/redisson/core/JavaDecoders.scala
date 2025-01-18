@@ -17,8 +17,8 @@ object JavaDecoders {
 
   def decodeArray[T: RedisDecoder](jArray: java.util.Collection[String])(implicit
     executionContext: ExecutionContext
-  ): Future[List[T]] = Future
-    .traverse(jArray.asScala.map(RedisDecoder[T].decode).toList)(Future.fromTry)
+  ): Future[List[T]] =
+    Future.traverse(jArray.asScala.map(RedisDecoder[T].decode).toList)(Future.fromTry)
 
   def decodeSet[T: RedisDecoder](jSet: java.util.Collection[String])(implicit
     executionContext: ExecutionContext

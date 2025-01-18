@@ -29,8 +29,8 @@ object CustomLogger {
       .map(_.head.value)
       .getOrElse(UUID.randomUUID().toString)
 
-    val routesWithRequestId: Http[G, F] = CustomRequestId
-      .apply(fk, genReqId = F.pure(requestId))(http)
+    val routesWithRequestId: Http[G, F] =
+      CustomRequestId.apply(fk, genReqId = F.pure(requestId))(http)
 
     val logActionWithRequestId = logAction(requestId)
 

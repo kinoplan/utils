@@ -26,8 +26,13 @@ private[utils] object Queries extends QueryBuilderSyntax {
   )(implicit
     ec: ExecutionContext
   ): Future[Long] = (readConcern, readPreference) match {
-    case (Some(readConcern), Some(readPreference)) => collection
-        .count(selector, limit, skip, readConcern = readConcern, readPreference = readPreference)
+    case (Some(readConcern), Some(readPreference)) => collection.count(
+        selector,
+        limit,
+        skip,
+        readConcern = readConcern,
+        readPreference = readPreference
+      )
     case (Some(readConcern), None) =>
       collection.count(selector, limit, skip, readConcern = readConcern)
     case (None, Some(readPreference)) =>
@@ -43,8 +48,8 @@ private[utils] object Queries extends QueryBuilderSyntax {
   )(implicit
     ec: ExecutionContext
   ): Future[Map[String, Int]] = {
-    implicit val resultTupleReader: BSONDocumentReader[(String, Int)] = BSONDocumentReader
-      .from[(String, Int)](doc =>
+    implicit val resultTupleReader: BSONDocumentReader[(String, Int)] =
+      BSONDocumentReader.from[(String, Int)](doc =>
         for {
           groupId <- doc.getAsTry[String]("_id")
           count <- doc.getAsTry[Int]("count")
@@ -53,25 +58,26 @@ private[utils] object Queries extends QueryBuilderSyntax {
 
     (
       (readConcern, readPreference) match {
-        case (Some(readConcern), Some(readPreference)) => collection
-            .aggregateWith[(String, Int)](readConcern = readConcern, readPreference = readPreference) {
-              framework =>
-                import framework.{GroupField, Match, SumAll}
+        case (Some(readConcern), Some(readPreference)) => collection.aggregateWith[(String, Int)](
+            readConcern = readConcern,
+            readPreference = readPreference
+          ) { framework =>
+            import framework.{GroupField, Match, SumAll}
 
-                List(Match(matchQuery), GroupField(groupBy)("count" -> SumAll))
-            }
-        case (Some(readConcern), None) => collection
-            .aggregateWith[(String, Int)](readConcern = readConcern) { framework =>
-              import framework.{GroupField, Match, SumAll}
+            List(Match(matchQuery), GroupField(groupBy)("count" -> SumAll))
+          }
+        case (Some(readConcern), None) =>
+          collection.aggregateWith[(String, Int)](readConcern = readConcern) { framework =>
+            import framework.{GroupField, Match, SumAll}
 
-              List(Match(matchQuery), GroupField(groupBy)("count" -> SumAll))
-            }
-        case (None, Some(readPreference)) => collection
-            .aggregateWith[(String, Int)](readPreference = readPreference) { framework =>
-              import framework.{GroupField, Match, SumAll}
+            List(Match(matchQuery), GroupField(groupBy)("count" -> SumAll))
+          }
+        case (None, Some(readPreference)) =>
+          collection.aggregateWith[(String, Int)](readPreference = readPreference) { framework =>
+            import framework.{GroupField, Match, SumAll}
 
-              List(Match(matchQuery), GroupField(groupBy)("count" -> SumAll))
-            }
+            List(Match(matchQuery), GroupField(groupBy)("count" -> SumAll))
+          }
         case _ => collection.aggregateWith[(String, Int)]() { framework =>
             import framework.{GroupField, Match, SumAll}
 
@@ -89,10 +95,9 @@ private[utils] object Queries extends QueryBuilderSyntax {
   )(implicit
     reader: NarrowValueReader[R],
     ec: ExecutionContext
-  ): Future[Set[R]] = readConcern
-    .fold(collection.distinct[R, Set](key = key, selector = selector, collation = collation))(rc =>
-      collection.distinct[R, Set](key, selector, rc, collation)
-    )
+  ): Future[Set[R]] = readConcern.fold(
+    collection.distinct[R, Set](key = key, selector = selector, collation = collation)
+  )(rc => collection.distinct[R, Set](key, selector, rc, collation))
 
   def findManyQ[T: BSONDocumentReader](collection: BSONCollection)(
     selector: BSONDocument = document,
@@ -108,8 +113,8 @@ private[utils] object Queries extends QueryBuilderSyntax {
     ec: ExecutionContext
   ): Future[List[T]] = {
     val queryBuilder = collection.find(selector, projection).sort(sort).skip(skip)
-    val queryBuilderWithHint = hint
-      .fold(queryBuilder)(specification => queryBuilder.hint(collection.hint(specification)))
+    val queryBuilderWithHint =
+      hint.fold(queryBuilder)(specification => queryBuilder.hint(collection.hint(specification)))
     val queryBuilderWithComment = comment.fold(queryBuilderWithHint)(queryBuilderWithHint.comment(_))
 
     queryBuilderWithComment.all[T](limit, readConcern = readConcern, readPreference = readPreference)
@@ -144,8 +149,8 @@ private[utils] object Queries extends QueryBuilderSyntax {
   ): Future[Option[T]] = {
     val queryBuilder = collection.find(selector, projection)
     val queryBuilderWithReadConcern = readConcern.fold(queryBuilder)(queryBuilder.readConcern(_))
-    val queryBuilderWithComment = comment
-      .fold(queryBuilderWithReadConcern)(queryBuilderWithReadConcern.comment(_))
+    val queryBuilderWithComment =
+      comment.fold(queryBuilderWithReadConcern)(queryBuilderWithReadConcern.comment(_))
 
     readPreference.fold(queryBuilderWithComment.one[T])(rp =>
       queryBuilderWithComment.one[T](readPreference = rp)

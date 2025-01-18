@@ -12,8 +12,7 @@ class QueryBindablesSpec extends AnyWordSpec with Matchers with QueryBindables {
 
   "BSONBooleanQueryBindable" should {
     "be valid bind" in {
-      BSONBooleanQueryBindable.bind(keyParam, bindValue("true")) mustBe
-        Some(Right(BSONBoolean(true)))
+      BSONBooleanQueryBindable.bind(keyParam, bindValue("true")) mustBe Some(Right(BSONBoolean(true)))
       BSONBooleanQueryBindable.bind(keyParam, bindValue("false")) mustBe
         Some(Right(BSONBoolean(false)))
     }

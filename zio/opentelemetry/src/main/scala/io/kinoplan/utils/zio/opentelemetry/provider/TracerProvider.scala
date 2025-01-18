@@ -41,8 +41,8 @@ private[opentelemetry] object TracerProvider {
         builderWithEndpoint.build()
       }
     )
-    spanProcessor <- ZIO
-      .fromAutoCloseable(ZIO.succeed(BatchSpanProcessor.builder(spanExporter).build()))
+    spanProcessor <-
+      ZIO.fromAutoCloseable(ZIO.succeed(BatchSpanProcessor.builder(spanExporter).build()))
     tracerProvider <- ZIO.fromAutoCloseable(
       ZIO.succeed(
         SdkTracerProvider

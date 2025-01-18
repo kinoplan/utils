@@ -36,8 +36,9 @@ class ReactiveMongoClientInstrumentationSpec
   override def beforeAll(): Unit = {
     super.beforeAll()
 
-    container = new MongoDBContainer(DockerImageName.parse("mongo:5.0"))
-      .withCommand("mongod --replSet \"rs0\"")
+    container = new MongoDBContainer(DockerImageName.parse("mongo:5.0")).withCommand(
+      "mongod --replSet \"rs0\""
+    )
 
     container.start()
   }

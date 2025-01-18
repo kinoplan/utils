@@ -19,8 +19,14 @@ trait RedisScoredSetOperations {
   protected def zAdd[T: RedisEncoder](key: String, score: Double, value: T): Future[Boolean] =
     scoredSet(key).addAsync(score, RedisEncoder[T].encode(value)).asScala.map(_.booleanValue())
 
-  protected def zRange[T: RedisDecoder](key: String, startIndex: Int, endIndex: Int): Future[Set[T]] =
-    scoredSet(key).valueRangeAsync(startIndex, endIndex).asScala.flatMap(decodeSet[T])
+  protected def zRange[T: RedisDecoder](
+    key: String,
+    startIndex: Int,
+    endIndex: Int
+  ): Future[Set[T]] = scoredSet(key)
+    .valueRangeAsync(startIndex, endIndex)
+    .asScala
+    .flatMap(decodeSet[T])
 
   protected def zRangeByScore[T: RedisDecoder](
     key: String,

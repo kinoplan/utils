@@ -9,21 +9,22 @@ import zio.prelude.{NonEmptyList, NonEmptyMap, NonEmptySet, NonEmptySortedMap, N
 
 trait TapirCodecPrelude extends SchemaDerivation {
 
-  implicit def schemaForNel[T: Schema]: Schema[NonEmptyList[T]] =
-    Schema[NonEmptyList[T]](SchemaType.SArray(implicitly[Schema[T]])(_.toList))
-      .validate(ValidatorPrelude.nonEmptyForEach[NonEmptyList, T])
+  implicit def schemaForNel[T: Schema]: Schema[NonEmptyList[T]] = Schema[NonEmptyList[T]](
+    SchemaType.SArray(implicitly[Schema[T]])(_.toList)
+  ).validate(ValidatorPrelude.nonEmptyForEach[NonEmptyList, T])
 
-  implicit def schemaForNec[T: Schema]: Schema[NonEmptyChunk[T]] =
-    Schema[NonEmptyChunk[T]](SchemaType.SArray(implicitly[Schema[T]])(_.toList))
-      .validate(ValidatorPrelude.nonEmptyForEach[NonEmptyChunk, T])
+  implicit def schemaForNec[T: Schema]: Schema[NonEmptyChunk[T]] = Schema[NonEmptyChunk[T]](
+    SchemaType.SArray(implicitly[Schema[T]])(_.toList)
+  ).validate(ValidatorPrelude.nonEmptyForEach[NonEmptyChunk, T])
 
-  implicit def schemaForNes[T: Schema]: Schema[NonEmptySet[T]] =
-    Schema[NonEmptySet[T]](SchemaType.SArray(implicitly[Schema[T]])(_.toSet))
-      .validate(ValidatorPrelude.nonEmptySet[T])
+  implicit def schemaForNes[T: Schema]: Schema[NonEmptySet[T]] = Schema[NonEmptySet[T]](
+    SchemaType.SArray(implicitly[Schema[T]])(_.toSet)
+  ).validate(ValidatorPrelude.nonEmptySet[T])
 
   implicit def schemaForSortedNes[T: Schema]: Schema[NonEmptySortedSet[T]] =
-    Schema[NonEmptySortedSet[T]](SchemaType.SArray(implicitly[Schema[T]])(_.toSet))
-      .validate(ValidatorPrelude.nonEmptySortedSet[T])
+    Schema[NonEmptySortedSet[T]](SchemaType.SArray(implicitly[Schema[T]])(_.toSet)).validate(
+      ValidatorPrelude.nonEmptySortedSet[T]
+    )
 
   implicit def schemaForStringNem[V: Schema]: Schema[NonEmptyMap[String, V]] = Schema
     .schemaForMap[V]
