@@ -11,11 +11,12 @@ import kamon.trace.Span
 import kamon.util.CallingThreadExecutionContext
 import kanela.agent.libs.net.bytebuddy.asm.Advice
 import reactivemongo.api.bson.BSONDocument
-import reactivemongo.api.bson.BSONDocument.pretty
 import reactivemongo.api.bson.buffer.ReadableBuffer
 import reactivemongo.api.bson.collection.BSONSerializationPack.readFromBuffer
 import reactivemongo.core.actors.ExpectingResponse
 import reactivemongo.core.protocol.{CollectionAwareRequestOp, Response}
+
+import io.kinoplan.utils.reactivemongo.kamon.instrumentation.ReactiveMongoClientInstrumentation
 
 class MongoConnectionSendExpectingResponseAdvice
 
@@ -28,14 +29,14 @@ object MongoConnectionSendExpectingResponseAdvice {
     expectingResponse: ExpectingResponse
   ): Span = {
     val buf = expectingResponse.requestMaker.payload.duplicate()
-    Try[BSONDocument] {
+    Try[(Int, BSONDocument)] {
       val sz = buf.getIntLE(buf.readerIndex)
       val bytes = Array.ofDim[Byte](sz)
       buf.readBytes(bytes)
-      readFromBuffer(ReadableBuffer(bytes))
+      (sz, readFromBuffer(ReadableBuffer(bytes)))
     } match {
       case Failure(_) => Span.Empty
-      case Success(document) =>
+      case Success((size, document)) =>
         buf.resetReaderIndex()
 
         val dbO = expectingResponse.requestMaker.op match {
@@ -69,7 +70,10 @@ object MongoConnectionSendExpectingResponseAdvice {
         Kamon
           .clientSpanBuilder(spanOperationName, "org.reactivemongo")
           .tagMetrics(metricsTag)
-          .tag(DB_QUERY_TEXT.getKey, pretty(document))
+          .tag(
+            DB_QUERY_TEXT.getKey,
+            ReactiveMongoClientInstrumentation.printer.print(document, math.max(16, size))
+          )
           .start()
     }
 
