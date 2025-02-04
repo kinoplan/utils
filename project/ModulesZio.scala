@@ -1,6 +1,6 @@
 import Dependencies.{Libraries, Shades}
 import sbt.Keys.*
-import sbt.{Project, Provided}
+import sbt.*
 
 object ModulesZio {
 
@@ -62,13 +62,20 @@ object ModulesZio {
   lazy val redissonProfile: Project => Project = _
     .configure(
       ProjectSettings.commonProfile,
-      ProjectSettings.macroProfile,
+      ProjectSettings.zioTestProfile,
       ProjectSettings.shadingProfile(Shades.zioConfig)
     )
     .settings(name := "utils-zio-redisson")
     .settings(
       libraryDependencies ++=
-        Seq(Libraries.jacksonModule, Libraries.redisson, Libraries.zio.value, Libraries.zioMacros)
+        Seq(
+          Libraries.jacksonModule,
+          Libraries.logbackClassic % Test,
+          Libraries.redisson,
+          Libraries.testContainersRedis,
+          Libraries.zio.value,
+          Libraries.zioStreams.value
+        )
     )
 
   lazy val sttpLoggingSlf4jProfile: Project => Project = _

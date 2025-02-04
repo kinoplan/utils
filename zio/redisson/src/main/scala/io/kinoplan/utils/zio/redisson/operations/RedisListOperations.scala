@@ -5,35 +5,20 @@ import org.redisson.api.{RBlockingDeque, RBlockingQueue, RDeque, RList, RQueue, 
 import org.redisson.api.queue.DequeMoveArgs
 import org.redisson.client.codec.StringCodec
 import zio.{Duration, Task, URLayer, ZIO, ZLayer}
-import zio.macros.accessible
 import io.kinoplan.utils.redisson.codec.{RedisDecoder, RedisEncoder}
 import io.kinoplan.utils.zio.redisson.utils.JavaDecoders
 
 import scala.jdk.CollectionConverters.{IterableHasAsJava, SeqHasAsJava}
 
-@accessible
 trait RedisListOperations {
+
   def blMove[T: RedisDecoder](source: String, timeout: Duration, args: DequeMoveArgs): Task[T]
 
   def blmPopLeft[T: RedisDecoder](
     key: String,
     timeout: Duration,
     count: Int,
-    keys: String*
-  ): Task[Map[String, List[T]]]
-
-  def blmPopLeft[T: RedisDecoder](
-    key: String,
-    timeout: Duration,
-    count: Int,
     keys: Seq[String]
-  ): Task[Map[String, List[T]]]
-
-  def blmPopRight[T: RedisDecoder](
-    key: String,
-    timeout: Duration,
-    count: Int,
-    keys: String*
   ): Task[Map[String, List[T]]]
 
   def blmPopRight[T: RedisDecoder](
@@ -47,8 +32,6 @@ trait RedisListOperations {
 
   def blPop[T: RedisDecoder](key: String, timeout: Duration): Task[Option[T]]
 
-  def blPop[T: RedisDecoder](key: String, timeout: Duration, keys: String*): Task[Option[T]]
-
   def blPop[T: RedisDecoder](key: String, timeout: Duration, keys: Seq[String]): Task[Option[T]]
 
   def brPop[T: RedisDecoder](key: String): Task[Option[T]]
@@ -56,8 +39,6 @@ trait RedisListOperations {
   def brPopLPush[T: RedisDecoder](source: String, destination: String): Task[Option[T]]
 
   def lIndex[T: RedisDecoder](key: String, index: Int): Task[Option[T]]
-
-  def lIndex[T: RedisDecoder](key: String, indexes: Int*): Task[Iterable[T]]
 
   def lIndex[T: RedisDecoder](key: String, indexes: Seq[Int]): Task[Iterable[T]]
 
@@ -73,11 +54,7 @@ trait RedisListOperations {
 
   def lPop[T: RedisDecoder](key: String, limit: Int): Task[Iterable[T]]
 
-  def lPush[T: RedisEncoder](key: String, elements: T*): Task[Int]
-
   def lPush[T: RedisEncoder](key: String, elements: Seq[T]): Task[Int]
-
-  def lPushX[T: RedisEncoder](key: String, elements: T*): Task[Int]
 
   def lPushX[T: RedisEncoder](key: String, elements: Seq[T]): Task[Int]
 
@@ -111,17 +88,12 @@ trait RedisListOperations {
 
   def rPush[T: RedisEncoder](key: String, index: Int, element: T): Task[Boolean]
 
-  def rPush[T: RedisEncoder](key: String, index: Int, elements: T*): Task[Boolean]
-
   def rPush[T: RedisEncoder](key: String, index: Int, elements: Seq[T]): Task[Boolean]
-
-  def rPush[T: RedisEncoder](key: String, elements: T*): Task[Boolean]
 
   def rPush[T: RedisEncoder](key: String, elements: Seq[T]): Task[Boolean]
 
-  def rPushX[T: RedisEncoder](key: String, elements: T*): Task[Int]
-
   def rPushX[T: RedisEncoder](key: String, elements: Seq[T]): Task[Int]
+
 }
 
 trait RedisListOperationsImpl extends RedisListOperations {
@@ -154,33 +126,19 @@ trait RedisListOperationsImpl extends RedisListOperations {
     key: String,
     timeout: Duration,
     count: Int,
-    keys: String*
+    keys: Seq[String]
   ): Task[Map[String, List[T]]] = ZIO
     .fromCompletionStage(blockingQueue(key).pollFirstFromAnyAsync(timeout, count, keys: _*))
     .flatMap(JavaDecoders.decodeMapListValue(_))
 
-  override def blmPopLeft[T: RedisDecoder](
-    key: String,
-    timeout: Duration,
-    count: Int,
-    keys: Seq[String]
-  ): Task[Map[String, List[T]]] = blmPopLeft(key, timeout, count, keys: _*)
-
   override def blmPopRight[T: RedisDecoder](
     key: String,
     timeout: Duration,
     count: Int,
-    keys: String*
+    keys: Seq[String]
   ): Task[Map[String, List[T]]] = ZIO
     .fromCompletionStage(blockingQueue(key).pollLastFromAnyAsync(timeout, count, keys: _*))
     .flatMap(JavaDecoders.decodeMapListValue(_))
-
-  override def blmPopRight[T: RedisDecoder](
-    key: String,
-    timeout: Duration,
-    count: Int,
-    keys: Seq[String]
-  ): Task[Map[String, List[T]]] = blmPopRight(key, timeout, count, keys: _*)
 
   override def blPop[T: RedisDecoder](key: String): Task[Option[T]] = ZIO
     .fromCompletionStage(blockingQueue(key).takeAsync())
@@ -193,18 +151,12 @@ trait RedisListOperationsImpl extends RedisListOperations {
   override def blPop[T: RedisDecoder](
     key: String,
     timeout: Duration,
-    keys: String*
+    keys: Seq[String]
   ): Task[Option[T]] = ZIO
     .fromCompletionStage(
       blockingQueue(key).pollFromAnyAsync(timeout.toMillis, TimeUnit.MILLISECONDS, keys: _*)
     )
     .flatMap(JavaDecoders.decodeNullableValue(_))
-
-  override def blPop[T: RedisDecoder](
-    key: String,
-    timeout: Duration,
-    keys: Seq[String]
-  ): Task[Option[T]] = blPop(key, timeout, keys: _*)
 
   override def brPop[T: RedisDecoder](key: String): Task[Option[T]] = ZIO
     .fromCompletionStage(blockingDequeue(key).takeLastAsync())
@@ -219,12 +171,9 @@ trait RedisListOperationsImpl extends RedisListOperations {
     .fromCompletionStage(list(key).getAsync(index))
     .flatMap(JavaDecoders.decodeNullableValue(_))
 
-  override def lIndex[T: RedisDecoder](key: String, indexes: Int*): Task[Iterable[T]] = ZIO
+  override def lIndex[T: RedisDecoder](key: String, indexes: Seq[Int]): Task[Iterable[T]] = ZIO
     .fromCompletionStage(list(key).getAsync(indexes: _*))
     .flatMap(JavaDecoders.decodeCollection(_))
-
-  override def lIndex[T: RedisDecoder](key: String, indexes: Seq[Int]): Task[Iterable[T]] =
-    lIndex(key, indexes: _*)
 
   override def lInsertAfter[A: RedisEncoder, B: RedisEncoder](
     key: String,
@@ -262,19 +211,13 @@ trait RedisListOperationsImpl extends RedisListOperations {
     .fromCompletionStage(queue(key).pollAsync(limit))
     .flatMap(JavaDecoders.decodeCollection(_))
 
-  override def lPush[T: RedisEncoder](key: String, elements: T*): Task[Int] = ZIO
+  override def lPush[T: RedisEncoder](key: String, elements: Seq[T]): Task[Int] = ZIO
     .fromCompletionStage(deque(key).addFirstAsync(elements.map(RedisEncoder[T].encode): _*))
     .map(_.toInt)
 
-  override def lPush[T: RedisEncoder](key: String, elements: Seq[T]): Task[Int] =
-    lPush(key, elements: _*)
-
-  override def lPushX[T: RedisEncoder](key: String, elements: T*): Task[Int] = ZIO
+  override def lPushX[T: RedisEncoder](key: String, elements: Seq[T]): Task[Int] = ZIO
     .fromCompletionStage(deque(key).addFirstIfExistsAsync(elements.map(RedisEncoder[T].encode): _*))
     .map(_.toInt)
-
-  override def lPushX[T: RedisEncoder](key: String, elements: Seq[T]): Task[Int] =
-    lPushX(key, elements: _*)
 
   override def lRange[T: RedisDecoder](key: String): Task[Iterable[T]] = ZIO
     .fromCompletionStage(list(key).readAllAsync())
@@ -332,26 +275,18 @@ trait RedisListOperationsImpl extends RedisListOperations {
     .fromCompletionStage(list(key).addAsync(index, RedisEncoder[T].encode(element)))
     .map(_.booleanValue())
 
-  override def rPush[T: RedisEncoder](key: String, index: Int, elements: T*): Task[Boolean] = ZIO
-    .fromCompletionStage(list(key).addAllAsync(index, elements.map(RedisEncoder[T].encode).asJava))
-    .map(_.booleanValue())
-
   override def rPush[T: RedisEncoder](key: String, index: Int, elements: Seq[T]): Task[Boolean] =
-    rPush(key, index, elements: _*)
+    ZIO
+      .fromCompletionStage(list(key).addAllAsync(index, elements.map(RedisEncoder[T].encode).asJava))
+      .map(_.booleanValue())
 
-  override def rPush[T: RedisEncoder](key: String, elements: T*): Task[Boolean] = ZIO
+  override def rPush[T: RedisEncoder](key: String, elements: Seq[T]): Task[Boolean] = ZIO
     .fromCompletionStage(list(key).addAllAsync(elements.map(RedisEncoder[T].encode).asJavaCollection))
     .map(_.booleanValue())
 
-  override def rPush[T: RedisEncoder](key: String, elements: Seq[T]): Task[Boolean] =
-    rPush(key, elements: _*)
-
-  override def rPushX[T: RedisEncoder](key: String, elements: T*): Task[Int] = ZIO
+  override def rPushX[T: RedisEncoder](key: String, elements: Seq[T]): Task[Int] = ZIO
     .fromCompletionStage(deque(key).addLastIfExistsAsync(elements.map(RedisEncoder[T].encode): _*))
     .map(_.toInt)
-
-  override def rPushX[T: RedisEncoder](key: String, elements: Seq[T]): Task[Int] =
-    rPushX(key, elements: _*)
 
 }
 

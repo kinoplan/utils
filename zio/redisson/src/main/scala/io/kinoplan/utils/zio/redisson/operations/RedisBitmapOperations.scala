@@ -1,23 +1,15 @@
 package io.kinoplan.utils.zio.redisson.operations
 
 import org.redisson.api.{RBitSet, RedissonClient}
-import zio.macros.accessible
 import zio.{Task, URLayer, ZIO, ZLayer}
 
-@accessible
 trait RedisBitmapOperations {
 
   def bitCount(key: String): Task[Long]
 
-  def bitOpAnd(key: String, names: String*): Task[Unit]
-
   def bitOpAnd(key: String, names: Seq[String]): Task[Unit]
 
-  def bitOpOr(key: String, names: String*): Task[Unit]
-
   def bitOpOr(key: String, names: Seq[String]): Task[Unit]
-
-  def bitOpXor(key: String, names: String*): Task[Unit]
 
   def bitOpXor(key: String, names: Seq[String]): Task[Unit]
 
@@ -42,6 +34,7 @@ trait RedisBitmapOperations {
   def clearBit(key: String, fromIndex: Long, toIndex: Long): Task[Unit]
 
   def clearBit(key: String): Task[Unit]
+
 }
 
 trait RedisBitmapOperationsImpl extends RedisBitmapOperations {
@@ -53,23 +46,17 @@ trait RedisBitmapOperationsImpl extends RedisBitmapOperations {
     .fromCompletionStage(bitSet(key).cardinalityAsync())
     .map(_.longValue())
 
-  override def bitOpAnd(key: String, names: String*): Task[Unit] = ZIO
+  override def bitOpAnd(key: String, names: Seq[String]): Task[Unit] = ZIO
     .fromCompletionStage(bitSet(key).andAsync(names: _*))
     .unit
 
-  override def bitOpAnd(key: String, names: Seq[String]): Task[Unit] = bitOpAnd(key, names: _*)
-
-  override def bitOpOr(key: String, names: String*): Task[Unit] = ZIO
+  override def bitOpOr(key: String, names: Seq[String]): Task[Unit] = ZIO
     .fromCompletionStage(bitSet(key).orAsync(names: _*))
     .unit
 
-  override def bitOpOr(key: String, names: Seq[String]): Task[Unit] = bitOpOr(key, names: _*)
-
-  override def bitOpXor(key: String, names: String*): Task[Unit] = ZIO
+  override def bitOpXor(key: String, names: Seq[String]): Task[Unit] = ZIO
     .fromCompletionStage(bitSet(key).xorAsync(names: _*))
     .unit
-
-  override def bitOpXor(key: String, names: Seq[String]): Task[Unit] = bitOpXor(key, names: _*)
 
   override def bitOpNot(key: String): Task[Unit] = ZIO
     .fromCompletionStage(bitSet(key).notAsync())

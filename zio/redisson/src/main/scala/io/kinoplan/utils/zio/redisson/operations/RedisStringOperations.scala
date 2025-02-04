@@ -5,15 +5,14 @@ import io.kinoplan.utils.redisson.codec.{RedisDecoder, RedisEncoder}
 import io.kinoplan.utils.zio.redisson.utils.JavaDecoders
 import org.redisson.api._
 import org.redisson.client.codec.StringCodec
-import zio.macros.accessible
 import zio.stream.{ZSink, ZStream}
 import zio.{Duration, Task, URLayer, ZIO, ZLayer}
 
 import java.nio.ByteBuffer
 import scala.jdk.CollectionConverters.MapHasAsJava
 
-@accessible
 trait RedisStringOperations {
+
   def append[T: RedisEncoder](key: String, value: T): Task[Unit]
 
   def decr(key: String): Task[Long]
@@ -28,7 +27,7 @@ trait RedisStringOperations {
 
   def getExPersist[T: RedisDecoder](key: String, duration: Duration): Task[Option[T]]
 
-  def getRange[T: RedisDecoder](key: String, start: Int, end: Int): Task[Option[T]]
+  def getRange[T: RedisDecoder](key: String, start: Long, end: Long): Task[Option[T]]
 
   def getSet[T: RedisEncoder: RedisDecoder](key: String, value: T): Task[Option[T]]
 
@@ -37,8 +36,6 @@ trait RedisStringOperations {
   def incrBy(key: String, increment: Long): Task[Long]
 
   def incrByFloat(key: String, increment: Double): Task[Double]
-
-  def mGet[T: RedisDecoder](keys: String*): Task[Map[String, T]]
 
   def mGet[T: RedisDecoder](keys: Seq[String]): Task[Map[String, T]]
 
@@ -58,9 +55,10 @@ trait RedisStringOperations {
 
   def setExNx[T: RedisEncoder](key: String, duration: Duration, value: T): Task[Boolean]
 
-  def setRange[T: RedisEncoder](key: String, offset: Int, value: T): Task[Unit]
+  def setRange[T: RedisEncoder](key: String, offset: Long, value: T): Task[Unit]
 
   def strLen[T: RedisDecoder](key: String): Task[Long]
+
 }
 
 trait RedisStringOperationsImpl extends RedisStringOperations {
@@ -102,7 +100,7 @@ trait RedisStringOperationsImpl extends RedisStringOperations {
     .fromCompletionStage(bucket(key).getAndExpireAsync(duration))
     .flatMap(JavaDecoders.decodeNullableValue(_))
 
-  override def getRange[T: RedisDecoder](key: String, start: Int, end: Int): Task[Option[T]] = for {
+  override def getRange[T: RedisDecoder](key: String, start: Long, end: Long): Task[Option[T]] = for {
     byteBuffer <- ZIO.attempt(ByteBuffer.wrap(Array.empty[Byte]))
     _ <-
       ZIO.attemptBlocking(binaryStream(key).getChannel.position(start).truncate(end).read(byteBuffer))
@@ -130,11 +128,9 @@ trait RedisStringOperationsImpl extends RedisStringOperations {
     .fromCompletionStage(atomicDouble(key).addAndGetAsync(increment))
     .map(_.doubleValue())
 
-  override def mGet[T: RedisDecoder](keys: String*): Task[Map[String, T]] = ZIO
+  override def mGet[T: RedisDecoder](keys: Seq[String]): Task[Map[String, T]] = ZIO
     .fromCompletionStage(buckets.getAsync[String](keys: _*))
     .flatMap(JavaDecoders.decodeMapValue(_))
-
-  override def mGet[T: RedisDecoder](keys: Seq[String]): Task[Map[String, T]] = mGet(keys: _*)
 
   override def mSet[T: RedisEncoder](params: Map[String, T]): Task[Unit] = ZIO
     .fromCompletionStage(buckets.setAsync(params.crossMapValues(RedisEncoder[T].encode).asJava))
@@ -170,7 +166,7 @@ trait RedisStringOperationsImpl extends RedisStringOperations {
       .fromCompletionStage(bucket(key).setIfExistsAsync(RedisEncoder[T].encode(value), duration))
       .map(_.booleanValue())
 
-  override def setRange[T: RedisEncoder](key: String, offset: Int, value: T): Task[Unit] = for {
+  override def setRange[T: RedisEncoder](key: String, offset: Long, value: T): Task[Unit] = for {
     data <- ZIO.attempt(RedisEncoder[T].encode(value).getBytes)
     byteBuffer <- ZIO.attempt(ByteBuffer.wrap(data))
     _ <- ZIO.attemptBlocking(binaryStream(key).getChannel.position(offset).write(byteBuffer))

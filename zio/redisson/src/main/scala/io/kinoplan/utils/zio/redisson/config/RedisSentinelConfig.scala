@@ -5,7 +5,7 @@ import io.kinoplan.utils.zio.redisson.utils.IdentitySyntax.syntaxIdentityOps
 import org.redisson.client.FailedConnectionDetector
 import org.redisson.config.Config
 import zio.Config.Error
-import zio.config.magnolia.deriveConfig
+import zio.config.magnolia._
 import zio.{Layer, ZIO, ZLayer}
 
 import java.net.URL
@@ -34,7 +34,7 @@ private[redisson] case class RedisSentinelConfig(
   retryAttempts: Option[Int],
   retryInterval: Option[Int],
   failedSlaveReconnectionInterval: Option[Int],
-  failedSlaveNodeDetector: Option[Int],
+  failedSlaveNodeDetector: Option[Long],
   database: Option[Int],
   password: Option[String],
   username: Option[String],
@@ -44,7 +44,7 @@ private[redisson] case class RedisSentinelConfig(
   subscriptionsPerConnection: Option[Int],
   subscriptionTimeout: Option[Int],
   clientName: Option[String],
-  sslProtocols: Option[Array[String]],
+  sslProtocols: Option[Seq[String]],
   sslEnableEndpointIdentification: Option[Boolean],
   sslProvider: Option[SslProviderType],
   sslTruststore: Option[URL],
@@ -115,7 +115,7 @@ private[redisson] case class RedisSentinelConfig(
       )
       .applyOption(subscriptionTimeout)((self, value) => self.setSubscriptionTimeout(value))
       .applyOption(clientName)((self, value) => self.setClientName(value))
-      .applyOption(sslProtocols)((self, value) => self.setSslProtocols(value))
+      .applyOption(sslProtocols)((self, value) => self.setSslProtocols(value.toArray))
       .applyOption(sslEnableEndpointIdentification)((self, value) =>
         self.setSslEnableEndpointIdentification(value)
       )
@@ -134,6 +134,8 @@ private[redisson] case class RedisSentinelConfig(
 }
 
 private[redisson] object RedisSentinelConfig {
+  implicit val deriveURL: DeriveConfig[URL] = DeriveConfig[String].map(new URL(_))
+
   private val config = deriveConfig[RedisSentinelConfig].nested("redis", "sentinel")
 
   val live: Layer[Error, RedisSentinelConfig] = ZLayer.fromZIO(ZIO.config(config))

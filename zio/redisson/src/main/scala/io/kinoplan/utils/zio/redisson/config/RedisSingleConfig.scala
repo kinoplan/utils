@@ -4,7 +4,7 @@ import io.kinoplan.utils.zio.redisson.config.extensions._
 import io.kinoplan.utils.zio.redisson.utils.IdentitySyntax.syntaxIdentityOps
 import org.redisson.config.Config
 import zio.Config.Error
-import zio.config.magnolia.deriveConfig
+import zio.config.magnolia.{DeriveConfig, deriveConfig}
 import zio.{Layer, ZIO, ZLayer}
 
 import java.net.URL
@@ -29,7 +29,7 @@ private[redisson] case class RedisSingleConfig(
   subscriptionsPerConnection: Option[Int],
   subscriptionTimeout: Option[Int],
   clientName: Option[String],
-  sslProtocols: Option[Array[String]],
+  sslProtocols: Option[Seq[String]],
   sslEnableEndpointIdentification: Option[Boolean],
   sslProvider: Option[SslProviderType],
   sslTruststore: Option[URL],
@@ -74,7 +74,7 @@ private[redisson] case class RedisSingleConfig(
       )
       .applyOption(subscriptionTimeout)((self, value) => self.setSubscriptionTimeout(value))
       .applyOption(clientName)((self, value) => self.setClientName(value))
-      .applyOption(sslProtocols)((self, value) => self.setSslProtocols(value))
+      .applyOption(sslProtocols)((self, value) => self.setSslProtocols(value.toArray))
       .applyOption(sslEnableEndpointIdentification)((self, value) =>
         self.setSslEnableEndpointIdentification(value)
       )
@@ -93,6 +93,8 @@ private[redisson] case class RedisSingleConfig(
 }
 
 private[redisson] object RedisSingleConfig {
+  implicit val deriveURL: DeriveConfig[URL] = DeriveConfig[String].map(new URL(_))
+
   private val config = deriveConfig[RedisSingleConfig].nested("redis", "single")
 
   val live: Layer[Error, RedisSingleConfig] = ZLayer.fromZIO(ZIO.config(config))

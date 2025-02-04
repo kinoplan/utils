@@ -35,9 +35,11 @@ object Dependencies {
     val scalatestPlusScalacheck = Def.setting("org.scalatestplus" %%% "scalacheck-1-18" % "3.2.19.0" % Test)
     val tapirCore               = Def.setting("com.softwaremill.sttp.tapir" %%% "tapir-core" % tapirV)
     val zio                     = Def.setting("dev.zio" %%% "zio" % zioV)
-    val zioPrelude              = Def.setting("dev.zio" %%% "zio-prelude" % "1.0.0-RC36")
-    val zioTest                 = Def.setting("dev.zio" %%% "zio-test" % zioV)
-    val zioTestSbt              = Def.setting("dev.zio" %%% "zio-test-sbt" % zioV)
+    val zioStreams              = Def.setting("dev.zio" %%% "zio-streams" % zioV)
+
+    val zioPrelude = Def.setting("dev.zio" %%% "zio-prelude" % "1.0.0-RC36")
+    val zioTest    = Def.setting("dev.zio" %%% "zio-test" % zioV % Test)
+    val zioTestSbt = Def.setting("dev.zio" %%% "zio-test-sbt" % zioV % Test)
 
     // A -> Z
     val http4sBlazeServer                = "org.http4s"                    %% "http4s-blaze-server"                    % "0.23.17"
@@ -83,8 +85,8 @@ object Dependencies {
     val sttpZio                          = "com.softwaremill.sttp.client3" %% "zio"                                    % sttpV
     val tapirServer                      = "com.softwaremill.sttp.tapir"   %% "tapir-server"                           % tapirV
     val testContainersMongodb            = "org.testcontainers"             % "mongodb"                                % "1.20.4"   % Test
+    val testContainersRedis              = "com.redis"                      % "testcontainers-redis"                   % "2.2.2"    % Test
     val typesafeConfig                   = "com.typesafe"                   % "config"                                 % "1.4.3"
-    val zioMacros                        = "dev.zio"                       %% "zio-macros"                             % zioV
     val zioConfig                        = "dev.zio"                       %% "zio-config"                             % zioConfigV
     val zioConfigMagnolia                = "dev.zio"                       %% "zio-config-magnolia"                    % zioConfigV
     val zioConfigEnumeratum              = "dev.zio"                       %% "zio-config-enumeratum"                  % zioConfigV

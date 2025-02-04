@@ -6,34 +6,18 @@ import io.kinoplan.utils.zio.redisson.utils.{JavaDecoders, JavaEncoders}
 import org.redisson.api.RScoredSortedSet.Aggregate
 import org.redisson.api.{RLexSortedSet, RScoredSortedSet, RedissonClient}
 import org.redisson.client.codec.StringCodec
-import zio.macros.accessible
 import zio.{Duration, Task, URLayer, ZIO, ZLayer}
 
 import java.util.concurrent.TimeUnit
 import scala.jdk.CollectionConverters._
 
-@accessible
 trait RedisSortedSetOperations {
 
   def bzmPopMax[T: RedisDecoder](
     key: String,
     timeout: Duration,
     count: Int,
-    names: String*
-  ): Task[Map[String, Map[T, Double]]]
-
-  def bzmPopMax[T: RedisDecoder](
-    key: String,
-    timeout: Duration,
-    count: Int,
     names: Seq[String]
-  ): Task[Map[String, Map[T, Double]]]
-
-  def bzmPopMin[T: RedisDecoder](
-    key: String,
-    timeout: Duration,
-    count: Int,
-    names: String*
   ): Task[Map[String, Map[T, Double]]]
 
   def bzmPopMin[T: RedisDecoder](
@@ -61,21 +45,13 @@ trait RedisSortedSetOperations {
     endScoreInclusive: Boolean
   ): Task[Int]
 
-  def zDiff[T: RedisDecoder](key: String, names: String*): Task[Iterable[T]]
-
   def zDiff[T: RedisDecoder](key: String, names: Seq[String]): Task[Iterable[T]]
-
-  def zDiffStore[T: RedisDecoder](key: String, names: String*): Task[Int]
 
   def zDiffStore[T: RedisDecoder](key: String, names: Seq[String]): Task[Int]
 
   def zIncrBy[T: RedisEncoder](key: String, increment: Number, member: T): Task[Double]
 
-  def zInter[T: RedisDecoder](key: String, names: String*): Task[Iterable[T]]
-
   def zInter[T: RedisDecoder](key: String, names: Seq[String]): Task[Iterable[T]]
-
-  def zInter[T: RedisDecoder](key: String, aggregate: Aggregate, names: String*): Task[Iterable[T]]
 
   def zInter[T: RedisDecoder](
     key: String,
@@ -91,11 +67,7 @@ trait RedisSortedSetOperations {
     nameWithWeight: Map[String, Double]
   ): Task[Iterable[T]]
 
-  def zInterStore(key: String, names: String*): Task[Int]
-
   def zInterStore(key: String, names: Seq[String]): Task[Int]
-
-  def zInterStore(key: String, aggregate: Aggregate, names: String*): Task[Int]
 
   def zInterStore(key: String, aggregate: Aggregate, names: Seq[String]): Task[Int]
 
@@ -119,21 +91,7 @@ trait RedisSortedSetOperations {
     key: String,
     timeout: Duration,
     count: Int,
-    names: String*
-  ): Task[Map[String, Map[T, Double]]]
-
-  def zmPopMax[T: RedisDecoder](
-    key: String,
-    timeout: Duration,
-    count: Int,
     names: Seq[String]
-  ): Task[Map[String, Map[T, Double]]]
-
-  def zmPopMin[T: RedisDecoder](
-    key: String,
-    timeout: Duration,
-    count: Int,
-    names: String*
   ): Task[Map[String, Map[T, Double]]]
 
   def zmPopMin[T: RedisDecoder](
@@ -283,7 +241,7 @@ trait RedisSortedSetOperations {
 
   def zRem[T: RedisEncoder](key: String, member: T): Task[Boolean]
 
-  def zRem[T: RedisEncoder](key: String, members: T*): Task[Boolean]
+  def zRem[T: RedisEncoder](key: String, members: Seq[T]): Task[Boolean]
 
   def zRem[T: RedisEncoder](key: String, members: Set[T]): Task[Boolean]
 
@@ -319,15 +277,11 @@ trait RedisSortedSetOperations {
 
   def zScore[T: RedisEncoder](key: String, member: T): Task[Double]
 
-  def zScore[T: RedisEncoder](key: String, members: T*): Task[List[Double]]
+  def zScore[T: RedisEncoder](key: String, members: Seq[T]): Task[List[Double]]
 
   def zScore[T: RedisEncoder](key: String, members: Set[T]): Task[List[Double]]
 
-  def zUnion[T: RedisDecoder](key: String, names: String*): Task[Iterable[T]]
-
   def zUnion[T: RedisDecoder](key: String, names: Seq[String]): Task[Iterable[T]]
-
-  def zUnion[T: RedisDecoder](key: String, aggregate: Aggregate, names: String*): Task[Iterable[T]]
 
   def zUnion[T: RedisDecoder](
     key: String,
@@ -343,11 +297,7 @@ trait RedisSortedSetOperations {
     nameWithWeight: Map[String, Double]
   ): Task[Iterable[T]]
 
-  def zUnionStore(key: String, names: String*): Task[Int]
-
   def zUnionStore(key: String, names: Seq[String]): Task[Int]
-
-  def zUnionStore(key: String, aggregate: Aggregate, names: String*): Task[Int]
 
   def zUnionStore(key: String, aggregate: Aggregate, names: Seq[String]): Task[Int]
 
@@ -369,33 +319,19 @@ trait RedisSortedSetOperationsImpl extends RedisSortedSetOperations with Default
     key: String,
     timeout: Duration,
     count: Int,
-    names: String*
+    names: Seq[String]
   ): Task[Map[String, Map[T, Double]]] = ZIO
     .attemptBlocking(scoredSortedSet(key).pollLastEntriesFromAny(timeout, count, names: _*))
     .flatMap(JavaDecoders.decodeMapScoredValue(_))
 
-  override def bzmPopMax[T: RedisDecoder](
-    key: String,
-    timeout: Duration,
-    count: Int,
-    names: Seq[String]
-  ): Task[Map[String, Map[T, Double]]] = bzmPopMax(key, timeout, count, names: _*)
-
   override def bzmPopMin[T: RedisDecoder](
     key: String,
     timeout: Duration,
     count: Int,
-    names: String*
+    names: Seq[String]
   ): Task[Map[String, Map[T, Double]]] = ZIO
     .attemptBlocking(scoredSortedSet(key).pollFirstEntriesFromAny(timeout, count, names: _*))
     .flatMap(JavaDecoders.decodeMapScoredValue(_))
-
-  override def bzmPopMin[T: RedisDecoder](
-    key: String,
-    timeout: Duration,
-    count: Int,
-    names: Seq[String]
-  ): Task[Map[String, Map[T, Double]]] = bzmPopMin(key, timeout, count, names: _*)
 
   override def bzPopMax[T: RedisDecoder](key: String, timeout: Duration): Task[Option[T]] = ZIO
     .fromCompletionStage(scoredSortedSet(key).pollLastAsync(timeout.toMillis, TimeUnit.MILLISECONDS))
@@ -429,19 +365,13 @@ trait RedisSortedSetOperationsImpl extends RedisSortedSetOperations with Default
     )
     .map(_.intValue())
 
-  override def zDiff[T: RedisDecoder](key: String, names: String*): Task[Iterable[T]] = ZIO
+  override def zDiff[T: RedisDecoder](key: String, names: Seq[String]): Task[Iterable[T]] = ZIO
     .fromCompletionStage(scoredSortedSet(key).readDiffAsync(names: _*))
     .flatMap(JavaDecoders.decodeCollection(_))
 
-  override def zDiff[T: RedisDecoder](key: String, names: Seq[String]): Task[Iterable[T]] =
-    zDiff(key, names: _*)
-
-  override def zDiffStore[T: RedisDecoder](key: String, names: String*): Task[Int] = ZIO
+  override def zDiffStore[T: RedisDecoder](key: String, names: Seq[String]): Task[Int] = ZIO
     .fromCompletionStage(scoredSortedSet(key).diffAsync(names: _*))
     .map(_.intValue())
-
-  override def zDiffStore[T: RedisDecoder](key: String, names: Seq[String]): Task[Int] =
-    zDiffStore(key, names: _*)
 
   override def zIncrBy[T: RedisEncoder](key: String, increment: Number, member: T): Task[Double] =
     ZIO
@@ -450,26 +380,17 @@ trait RedisSortedSetOperationsImpl extends RedisSortedSetOperations with Default
       )
       .map(_.doubleValue())
 
-  override def zInter[T: RedisDecoder](key: String, names: String*): Task[Iterable[T]] = ZIO
+  override def zInter[T: RedisDecoder](key: String, names: Seq[String]): Task[Iterable[T]] = ZIO
     .fromCompletionStage(scoredSortedSet(key).readIntersectionAsync(names: _*))
-    .flatMap(JavaDecoders.decodeCollection(_))
-
-  override def zInter[T: RedisDecoder](key: String, names: Seq[String]): Task[Iterable[T]] =
-    zInter(key, names: _*)
-
-  override def zInter[T: RedisDecoder](
-    key: String,
-    aggregate: Aggregate,
-    names: String*
-  ): Task[Iterable[T]] = ZIO
-    .fromCompletionStage(scoredSortedSet(key).readIntersectionAsync(aggregate, names: _*))
     .flatMap(JavaDecoders.decodeCollection(_))
 
   override def zInter[T: RedisDecoder](
     key: String,
     aggregate: Aggregate,
     names: Seq[String]
-  ): Task[Iterable[T]] = zInter(key, aggregate, names: _*)
+  ): Task[Iterable[T]] = ZIO
+    .fromCompletionStage(scoredSortedSet(key).readIntersectionAsync(aggregate, names: _*))
+    .flatMap(JavaDecoders.decodeCollection(_))
 
   override def zInter[T: RedisDecoder](
     key: String,
@@ -490,18 +411,13 @@ trait RedisSortedSetOperationsImpl extends RedisSortedSetOperations with Default
     )
     .flatMap(JavaDecoders.decodeCollection(_))
 
-  override def zInterStore(key: String, names: String*): Task[Int] = ZIO
+  override def zInterStore(key: String, names: Seq[String]): Task[Int] = ZIO
     .fromCompletionStage(scoredSortedSet(key).intersectionAsync(names: _*))
     .map(_.intValue())
 
-  override def zInterStore(key: String, names: Seq[String]): Task[Int] = zInterStore(key, names: _*)
-
-  override def zInterStore(key: String, aggregate: Aggregate, names: String*): Task[Int] = ZIO
+  override def zInterStore(key: String, aggregate: Aggregate, names: Seq[String]): Task[Int] = ZIO
     .fromCompletionStage(scoredSortedSet(key).intersectionAsync(aggregate, names: _*))
     .map(_.intValue())
-
-  override def zInterStore(key: String, aggregate: Aggregate, names: Seq[String]): Task[Int] =
-    zInterStore(key, aggregate, names: _*)
 
   override def zInterStore(key: String, nameWithWeight: Map[String, Double]): Task[Int] = ZIO
     .fromCompletionStage(scoredSortedSet(key).intersectionAsync(encodeMapWithWeight(nameWithWeight)))
@@ -542,33 +458,19 @@ trait RedisSortedSetOperationsImpl extends RedisSortedSetOperations with Default
     key: String,
     timeout: Duration,
     count: Int,
-    names: String*
+    names: Seq[String]
   ): Task[Map[String, Map[T, Double]]] = ZIO
     .fromCompletionStage(scoredSortedSet(key).pollLastEntriesFromAnyAsync(timeout, count, names: _*))
     .flatMap(JavaDecoders.decodeMapScoredValue(_))
 
-  override def zmPopMax[T: RedisDecoder](
-    key: String,
-    timeout: Duration,
-    count: Int,
-    names: Seq[String]
-  ): Task[Map[String, Map[T, Double]]] = zmPopMax(key, timeout, count, names: _*)
-
   override def zmPopMin[T: RedisDecoder](
     key: String,
     timeout: Duration,
     count: Int,
-    names: String*
+    names: Seq[String]
   ): Task[Map[String, Map[T, Double]]] = ZIO
     .fromCompletionStage(scoredSortedSet(key).pollFirstEntriesFromAnyAsync(timeout, count, names: _*))
     .flatMap(JavaDecoders.decodeMapScoredValue(_))
-
-  override def zmPopMin[T: RedisDecoder](
-    key: String,
-    timeout: Duration,
-    count: Int,
-    names: Seq[String]
-  ): Task[Map[String, Map[T, Double]]] = zmPopMin(key, timeout, count, names: _*)
 
   override def zPopMax[T: RedisDecoder](key: String): Task[Option[T]] = ZIO
     .fromCompletionStage(scoredSortedSet(key).pollLastAsync())
@@ -609,7 +511,9 @@ trait RedisSortedSetOperationsImpl extends RedisSortedSetOperations with Default
     toScore: Int,
     toInc: Boolean
   ): Task[Iterable[T]] = ZIO
-    .fromCompletionStage(scoredSortedSet(key).valueRangeAsync(fromScore, fromInc, toScore, toInc))
+    .fromCompletionStage(
+      scoredSortedSet(key).valueRangeAsync(fromScore.toDouble, fromInc, toScore.toDouble, toInc)
+    )
     .flatMap(JavaDecoders.decodeCollection(_))
 
   override def zRange[T: RedisDecoder](
@@ -622,7 +526,14 @@ trait RedisSortedSetOperationsImpl extends RedisSortedSetOperations with Default
     count: Int
   ): Task[Iterable[T]] = ZIO
     .fromCompletionStage(
-      scoredSortedSet(key).valueRangeAsync(fromScore, fromInc, toScore, toInc, offset, count)
+      scoredSortedSet(key).valueRangeAsync(
+        fromScore.toDouble,
+        fromInc,
+        toScore.toDouble,
+        toInc,
+        offset,
+        count
+      )
     )
     .flatMap(JavaDecoders.decodeCollection(_))
 
@@ -831,7 +742,7 @@ trait RedisSortedSetOperationsImpl extends RedisSortedSetOperations with Default
     .fromCompletionStage(scoredSortedSet(key).removeAsync(RedisEncoder[T].encode(member)))
     .map(_.booleanValue())
 
-  override def zRem[T: RedisEncoder](key: String, members: T*): Task[Boolean] = ZIO
+  override def zRem[T: RedisEncoder](key: String, members: Seq[T]): Task[Boolean] = ZIO
     .fromCompletionStage(
       scoredSortedSet(key).removeAllAsync(members.map(RedisEncoder[T].encode).asJava)
     )
@@ -908,7 +819,7 @@ trait RedisSortedSetOperationsImpl extends RedisSortedSetOperations with Default
     .attempt(scoredSortedSet(key).getScoreAsync(RedisEncoder[T].encode(member)))
     .map(_.get())
 
-  override def zScore[T: RedisEncoder](key: String, members: T*): Task[List[Double]] = ZIO
+  override def zScore[T: RedisEncoder](key: String, members: Seq[T]): Task[List[Double]] = ZIO
     .attempt(scoredSortedSet(key).getScoreAsync(members.map(RedisEncoder[T].encode).asJava))
     .map(_.get())
     .map(JavaDecoders.decodeListDouble)
@@ -918,26 +829,17 @@ trait RedisSortedSetOperationsImpl extends RedisSortedSetOperations with Default
     .map(_.get())
     .map(JavaDecoders.decodeListDouble)
 
-  override def zUnion[T: RedisDecoder](key: String, names: String*): Task[Iterable[T]] = ZIO
+  override def zUnion[T: RedisDecoder](key: String, names: Seq[String]): Task[Iterable[T]] = ZIO
     .fromCompletionStage(scoredSortedSet(key).readUnionAsync(names: _*))
-    .flatMap(JavaDecoders.decodeCollection(_))
-
-  override def zUnion[T: RedisDecoder](key: String, names: Seq[String]): Task[Iterable[T]] =
-    zUnion(key, names: _*)
-
-  override def zUnion[T: RedisDecoder](
-    key: String,
-    aggregate: Aggregate,
-    names: String*
-  ): Task[Iterable[T]] = ZIO
-    .fromCompletionStage(scoredSortedSet(key).readUnionAsync(aggregate, names: _*))
     .flatMap(JavaDecoders.decodeCollection(_))
 
   override def zUnion[T: RedisDecoder](
     key: String,
     aggregate: Aggregate,
     names: Seq[String]
-  ): Task[Iterable[T]] = zUnion(key, aggregate, names: _*)
+  ): Task[Iterable[T]] = ZIO
+    .fromCompletionStage(scoredSortedSet(key).readUnionAsync(aggregate, names: _*))
+    .flatMap(JavaDecoders.decodeCollection(_))
 
   override def zUnion[T: RedisDecoder](
     key: String,
@@ -958,18 +860,13 @@ trait RedisSortedSetOperationsImpl extends RedisSortedSetOperations with Default
     )
     .flatMap(JavaDecoders.decodeCollection(_))
 
-  override def zUnionStore(key: String, names: String*): Task[Int] = ZIO
+  override def zUnionStore(key: String, names: Seq[String]): Task[Int] = ZIO
     .fromCompletionStage(scoredSortedSet(key).unionAsync(names: _*))
     .map(_.intValue())
 
-  override def zUnionStore(key: String, names: Seq[String]): Task[Int] = zUnionStore(key, names: _*)
-
-  override def zUnionStore(key: String, aggregate: Aggregate, names: String*): Task[Int] = ZIO
+  override def zUnionStore(key: String, aggregate: Aggregate, names: Seq[String]): Task[Int] = ZIO
     .fromCompletionStage(scoredSortedSet(key).unionAsync(aggregate, names: _*))
     .map(_.intValue())
-
-  override def zUnionStore(key: String, aggregate: Aggregate, names: Seq[String]): Task[Int] =
-    zUnionStore(key, aggregate, names: _*)
 
   override def zUnionStore(key: String, nameWithWeight: Map[String, Double]): Task[Int] = ZIO
     .fromCompletionStage(

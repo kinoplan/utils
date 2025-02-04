@@ -4,13 +4,9 @@ import io.kinoplan.utils.redisson.codec.RedisDecoder
 import io.kinoplan.utils.zio.redisson.utils.JavaDecoders
 import org.redisson.api.{RMap, RedissonClient}
 import org.redisson.client.codec.StringCodec
-import zio.macros.accessible
 import zio.{Duration, Task, URLayer, ZIO, ZLayer}
 
-@accessible
 trait RedisHashOperations {
-
-  def hDel(key: String, fields: String*): Task[Long]
 
   def hDel(key: String, fields: Seq[String]): Task[Long]
 
@@ -27,11 +23,9 @@ trait RedisHashOperationsImpl extends RedisHashOperations {
   private lazy val map: String => RMap[String, String] =
     redissonClient.getMap[String, String](_, StringCodec.INSTANCE)
 
-  override def hDel(key: String, fields: String*): Task[Long] = ZIO
+  override def hDel(key: String, fields: Seq[String]): Task[Long] = ZIO
     .fromCompletionStage(map(key).fastRemoveAsync(fields: _*))
     .map(_.longValue())
-
-  override def hDel(key: String, fields: Seq[String]): Task[Long] = hDel(key, fields: _*)
 
   override def hExists(key: String, field: Object): Task[Boolean] = ZIO
     .fromCompletionStage(map(key).containsKeyAsync(field))

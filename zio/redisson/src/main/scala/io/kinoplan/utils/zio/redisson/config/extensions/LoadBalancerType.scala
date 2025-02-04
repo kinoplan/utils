@@ -1,5 +1,6 @@
 package io.kinoplan.utils.zio.redisson.config.extensions
 
+import io.kinoplan.utils.cross.collection.MapSyntax.syntaxMapOps
 import org.redisson.connection.balancer._
 
 import scala.jdk.CollectionConverters.MapHasAsJava
@@ -17,11 +18,14 @@ object LoadBalancerType {
 
   }
 
-  case class WeightedRoundRobinBalancer(weights: Map[String, Integer], defaultWeight: Int)
+  case class WeightedRoundRobinBalancer(weights: Map[String, Int], defaultWeight: Int)
       extends LoadBalancerType {
 
     override def loadBalancer: LoadBalancer =
-      new org.redisson.connection.balancer.WeightedRoundRobinBalancer(weights.asJava, defaultWeight)
+      new org.redisson.connection.balancer.WeightedRoundRobinBalancer(
+        weights.crossMapValues(int2Integer).asJava,
+        defaultWeight
+      )
 
   }
 

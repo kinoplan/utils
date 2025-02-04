@@ -4,11 +4,9 @@ import org.redisson.api.{RPatternTopic, RTopic, RedissonClient}
 import org.redisson.api.listener.{MessageListener, PatternMessageListener}
 import org.redisson.client.codec.StringCodec
 import zio.{Chunk, Task, URLayer, ZIO, ZLayer}
-import zio.macros.accessible
 import zio.stream.{Stream, ZStream}
 import io.kinoplan.utils.redisson.codec.{RedisDecoder, RedisEncoder}
 
-@accessible
 trait RedisTopicOperations {
 
   def pSubscribe[T: RedisDecoder, A](pattern: String)(
@@ -30,6 +28,7 @@ trait RedisTopicOperations {
   def unsubscribe(channel: String): Task[Unit]
 
   def unsubscribe(channel: String, listenerId: Int): Task[Unit]
+
 }
 
 trait RedisTopicOperationsImpl extends RedisTopicOperations {

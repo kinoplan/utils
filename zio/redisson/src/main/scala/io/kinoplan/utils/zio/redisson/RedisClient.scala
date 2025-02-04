@@ -2,10 +2,8 @@ package io.kinoplan.utils.zio.redisson
 
 import io.kinoplan.utils.zio.redisson.operations._
 import org.redisson.api.RedissonClient
-import zio.macros.accessible
 import zio.{URLayer, ZIO, ZLayer}
 
-@accessible
 trait RedisClient
     extends RedisBaseOperations
       with RedisBitmapOperations

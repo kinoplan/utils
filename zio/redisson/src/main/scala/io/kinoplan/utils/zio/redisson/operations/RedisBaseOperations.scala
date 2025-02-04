@@ -3,12 +3,11 @@ package io.kinoplan.utils.zio.redisson.operations
 import org.redisson.api.RedissonClient
 import org.redisson.api.redisnode.RedisNodes
 import zio.{Duration, Task, URLayer, ZIO, ZLayer}
-import zio.macros.accessible
 
 import java.util.concurrent.TimeUnit
 
-@accessible
 trait RedisBaseOperations {
+
   def pingCluster(): Task[Boolean]
 
   def pingCluster(timeout: Duration): Task[Boolean]
@@ -24,6 +23,7 @@ trait RedisBaseOperations {
   def pingSingle(): Task[Boolean]
 
   def pingSingle(timeout: Duration): Task[Boolean]
+
 }
 
 trait RedisBaseOperationsImpl extends RedisBaseOperations {
