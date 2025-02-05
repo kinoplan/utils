@@ -5,7 +5,6 @@ import reactivemongo.api.bson._
 import reactivemongo.api.bson.collection.BSONCollection
 import reactivemongo.api.bson.collection.BSONSerializationPack.NarrowValueReader
 import reactivemongo.api.commands.WriteResult
-import reactivemongo.api.indexes.Index
 import zio.{Task, Unsafe, ZIO}
 
 import io.kinoplan.utils.reactivemongo.base.{
@@ -240,40 +239,25 @@ abstract class ReactiveMongoDaoBase[T](
 
     private def createIndexes(coll: BSONCollection, smartIndexes: Seq[SmartIndex]): Task[Unit] = ZIO
       .foreach(smartIndexes)(smartIndex =>
-        ZIO.fromFuture(implicit ec =>
-          coll
-            .indexesManager
-            .ensure(
-              Index(
-                key = smartIndex.key,
-                name = smartIndex.name,
-                unique = smartIndex.unique,
-                background = smartIndex.background,
-                partialFilter = smartIndex.partialFilter,
-                expireAfterSeconds = smartIndex.expireAfterSeconds
-              )
-            )
-        )
+        ZIO.fromFuture(implicit ec => coll.indexesManager.ensure(smartIndex.toIndex))
       )
       .unit
 
     private def dropIndexes(coll: BSONCollection, smartIndexes: Seq[SmartIndex]): Task[Unit] = for {
       indexes <- ZIO.fromFuture(implicit ec => coll.indexesManager.list())
-      filteredIndexNames = indexes
+      incomingIndexes = smartIndexes.map(_.toIndex)
+      targetIndexNames = indexes
         .filterNot(index =>
-          smartIndexes.exists(smartIndex =>
-            smartIndex.key == index.key &&
-            ((smartIndex.name.nonEmpty && smartIndex.name.exists(index.name.contains(_))) ||
-            smartIndex.name.isEmpty)
-          ) || index.name.contains("_id_")
+          index.name.contains("_id_") ||
+          incomingIndexes.exists(incomingIndex =>
+            incomingIndex.eventualName == index.eventualName && incomingIndex.key == index.key
+          )
         )
         .flatMap(_.name)
       _ <- ZIO
-        .logInfo(
-          s"Index names in collection ${coll.name} to drop ${filteredIndexNames.mkString(",")}"
-        )
-        .when(filteredIndexNames.nonEmpty)
-      _ <- ZIO.foreachDiscard(filteredIndexNames)(indexName =>
+        .logInfo(s"Index names in collection ${coll.name} to drop ${targetIndexNames.mkString(",")}")
+        .when(targetIndexNames.nonEmpty)
+      _ <- ZIO.foreachDiscard(targetIndexNames)(indexName =>
         ZIO.fromFuture(implicit ec => coll.indexesManager.drop(indexName))
       )
     } yield ()
