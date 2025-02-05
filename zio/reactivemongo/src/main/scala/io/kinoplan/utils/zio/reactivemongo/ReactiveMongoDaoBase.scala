@@ -24,6 +24,15 @@ abstract class ReactiveMongoDaoBase[T](
 ) extends BsonNoneAsNullProducer
       with BsonDocumentSyntax {
 
+  def smartEnsureIndexes(smartIndexes: Seq[SmartIndex], clearDiff: Boolean = false): Task[Unit] =
+    for {
+      coll <- dao.collection
+      _ <- ZIO.logDebug(s"Start collection $collectionName smart ensure indexes")
+      _ <- dropIndexes(coll, smartIndexes).when(clearDiff)
+      _ <- createIndexes(coll, smartIndexes)
+      _ <- ZIO.logDebug(s"End collection $collectionName smart ensure indexes")
+    } yield ()
+
   protected object dao {
 
     def collection: Task[BSONCollection] = reactiveMongoApi
@@ -34,25 +43,13 @@ abstract class ReactiveMongoDaoBase[T](
 
     private def operations = ReactiveMongoOperations[T](collection)
 
-    def smartEnsureIndexes(smartIndexes: Seq[SmartIndex], clearDiff: Boolean = false): Unit = Unsafe
-      .unsafe { implicit unsafe =>
+    def smartEnsureIndexesUnsafe(smartIndexes: Seq[SmartIndex], clearDiff: Boolean = false): Unit =
+      Unsafe.unsafe { implicit unsafe =>
         zio
           .Runtime
           .default
           .unsafe
-          .fork(
-            (
-              for {
-                coll <- collection
-                _ <- dropIndexes(coll, smartIndexes).when(clearDiff).unit
-                _ <- createIndexes(coll, smartIndexes)
-              } yield ()
-            ).tapError(ex =>
-              ZIO.logError(
-                s"Failure ensure for $collectionName indexes $smartIndexes with clearDiff=$clearDiff: $ex"
-              )
-            )
-          )
+          .fork(smartEnsureIndexes(smartIndexes, clearDiff))
           .unsafe
           .addObserver(_ => ())
       }
@@ -237,31 +234,6 @@ abstract class ReactiveMongoDaoBase[T](
 
     def deleteById(id: BSONObjectID) = operations.deleteById(id)
 
-    private def createIndexes(coll: BSONCollection, smartIndexes: Seq[SmartIndex]): Task[Unit] = ZIO
-      .foreach(smartIndexes)(smartIndex =>
-        ZIO.fromFuture(implicit ec => coll.indexesManager.ensure(smartIndex.toIndex))
-      )
-      .unit
-
-    private def dropIndexes(coll: BSONCollection, smartIndexes: Seq[SmartIndex]): Task[Unit] = for {
-      indexes <- ZIO.fromFuture(implicit ec => coll.indexesManager.list())
-      incomingIndexes = smartIndexes.map(_.toIndex)
-      targetIndexNames = indexes
-        .filterNot(index =>
-          index.name.contains("_id_") ||
-          incomingIndexes.exists(incomingIndex =>
-            incomingIndex.eventualName == index.eventualName && incomingIndex.key == index.key
-          )
-        )
-        .flatMap(_.name)
-      _ <- ZIO
-        .logInfo(s"Index names in collection ${coll.name} to drop ${targetIndexNames.mkString(",")}")
-        .when(targetIndexNames.nonEmpty)
-      _ <- ZIO.foreachDiscard(targetIndexNames)(indexName =>
-        ZIO.fromFuture(implicit ec => coll.indexesManager.drop(indexName))
-      )
-    } yield ()
-
     private def withQueryComment(implicit
       enclosing: sourcecode.Enclosing
     ): Option[String] =
@@ -269,6 +241,41 @@ abstract class ReactiveMongoDaoBase[T](
       else None
 
   }
+
+  private def createIndexes(coll: BSONCollection, smartIndexes: Seq[SmartIndex]): Task[Unit] = ZIO
+    .foreach(smartIndexes)(smartIndex =>
+      ZIO
+        .fromFuture(implicit ec => coll.indexesManager.ensure(smartIndex.toIndex))
+        .tapError(ex =>
+          ZIO.logError(s"Failure for collection $collectionName create index $smartIndex: $ex")
+        )
+    )
+    .unit
+
+  private def dropIndexes(coll: BSONCollection, smartIndexes: Seq[SmartIndex]): Task[Unit] = for {
+    indexes <- ZIO.fromFuture(implicit ec => coll.indexesManager.list()).logError
+    incomingIndexes = smartIndexes.map(_.toIndex)
+    targetIndexNames = indexes
+      .filterNot(index =>
+        index.name.contains("_id_") ||
+        incomingIndexes.exists(incomingIndex =>
+          incomingIndex.eventualName == index.eventualName && incomingIndex.key == index.key
+        )
+      )
+      .flatMap(_.name)
+    _ <- ZIO
+      .logInfo(
+        s"Index names in collection $collectionName to drop: ${targetIndexNames.mkString(",")}"
+      )
+      .when(targetIndexNames.nonEmpty)
+    _ <- ZIO.foreachDiscard(targetIndexNames)(indexName =>
+      ZIO
+        .fromFuture(implicit ec => coll.indexesManager.drop(indexName))
+        .tapError(ex =>
+          ZIO.logError(s"Failure for collection $collectionName drop index name `$indexName`: $ex")
+        )
+    )
+  } yield ()
 
   implicit protected class WriteResultTaskOps[A <: WriteResult](task: Task[A]) {
 
