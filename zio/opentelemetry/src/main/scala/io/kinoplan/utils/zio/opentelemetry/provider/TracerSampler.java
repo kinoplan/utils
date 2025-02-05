@@ -6,11 +6,15 @@ import io.opentelemetry.context.Context;
 import io.opentelemetry.sdk.trace.data.LinkData;
 import io.opentelemetry.sdk.trace.samplers.Sampler;
 import io.opentelemetry.sdk.trace.samplers.SamplingResult;
+import io.opentelemetry.semconv.HttpAttributes;
+import io.opentelemetry.semconv.UrlAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 class TracerSampler implements Sampler {
 
@@ -29,7 +33,21 @@ class TracerSampler implements Sampler {
 
     @Override
     public SamplingResult shouldSample(Context parentContext, String traceId, String name, SpanKind spanKind, Attributes attributes, List<LinkData> parentLinks) {
-        if (shouldIgnoreName(name))
+
+        String targetName = name;
+
+        if (spanKind == SpanKind.SERVER) {
+            String requestMethod = attributes.get(HttpAttributes.HTTP_REQUEST_METHOD);
+            String requestUrl = attributes.get(UrlAttributes.URL_FULL);
+
+            String requestName = Stream.of(requestMethod, requestUrl)
+                .filter(s -> s != null && !s.isEmpty())
+                .collect(Collectors.joining(" "));
+
+            if (!requestName.isEmpty()) targetName = requestName;
+        }
+
+        if (shouldIgnoreName(targetName))
             return SamplingResult.drop();
         else
             return SamplingResult.recordAndSample();
