@@ -13,7 +13,6 @@ import reactivemongo.api.bson.{
 }
 import reactivemongo.api.bson.collection.BSONCollection
 import reactivemongo.api.bson.collection.BSONSerializationPack.NarrowValueReader
-import reactivemongo.api.indexes.Index
 
 import io.kinoplan.utils.reactivemongo.base._
 
@@ -39,13 +38,13 @@ abstract class ReactiveMongoDaoBase[T](
 
     private def operations = ReactiveMongoOperations[T](collection)
 
-    def smartEnsureIndexes(smartIndexes: Seq[SmartIndex], drop: Boolean = false)(implicit
+    def smartEnsureIndexes(smartIndexes: Seq[SmartIndex], clearDiff: Boolean = false)(implicit
       enclosing: sourcecode.Enclosing
     ): Future[Unit] = (
       for {
         coll <- collection
         _ <-
-          if (drop) dropIndexes(coll, smartIndexes)
+          if (clearDiff) dropIndexes(coll, smartIndexes)
           else Future.successful(List.empty[Int])
         _ <- createIndexes(coll, smartIndexes)
       } yield ()
@@ -252,41 +251,26 @@ abstract class ReactiveMongoDaoBase[T](
   private def createIndexes(
     coll: BSONCollection,
     smartIndexes: Seq[SmartIndex]
-  ): Future[Seq[Boolean]] = Future.sequence(
-    smartIndexes.map { smartIndex =>
-      coll
-        .indexesManager
-        .ensure(
-          Index(
-            key = smartIndex.key,
-            name = smartIndex.name,
-            unique = smartIndex.unique,
-            background = smartIndex.background,
-            partialFilter = smartIndex.partialFilter,
-            expireAfterSeconds = smartIndex.expireAfterSeconds
-          )
-        )
-    }
-  )
+  ): Future[Seq[Boolean]] =
+    Future.sequence(smartIndexes.map(_.toIndex).map(coll.indexesManager.ensure))
 
   private def dropIndexes(coll: BSONCollection, smartIndexes: Seq[SmartIndex]): Future[List[Int]] =
     coll
       .indexesManager
       .list()
       .flatMap { indexes =>
+        val incomingIndexes = smartIndexes.map(_.toIndex)
+
         Future.sequence(
           indexes
             .filterNot(index =>
-              smartIndexes.exists(smartIndex =>
-                smartIndex.key == index.key &&
-                ((smartIndex.name.nonEmpty && smartIndex.name.exists(index.name.contains(_))) ||
-                smartIndex.name.isEmpty)
-              ) || index.name.contains("_id_")
+              index.name.contains("_id_") ||
+              incomingIndexes.exists(incomingIndex =>
+                incomingIndex.eventualName == index.eventualName && incomingIndex.key == index.key
+              )
             )
             .flatMap(_.name)
-            .map { indexName =>
-              coll.indexesManager.drop(indexName)
-            }
+            .map(coll.indexesManager.drop)
         )
       }
 
