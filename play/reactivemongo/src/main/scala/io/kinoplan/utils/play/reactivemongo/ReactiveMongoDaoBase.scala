@@ -265,9 +265,7 @@ abstract class ReactiveMongoDaoBase[T](
           indexes
             .filterNot(index =>
               index.name.contains("_id_") ||
-              incomingIndexes.exists(incomingIndex =>
-                incomingIndex.eventualName == index.eventualName && incomingIndex.key == index.key
-              )
+              incomingIndexes.exists(_.eventualName == index.eventualName)
             )
             .flatMap(_.name)
             .map(coll.indexesManager.drop)

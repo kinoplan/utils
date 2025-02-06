@@ -257,10 +257,7 @@ abstract class ReactiveMongoDaoBase[T](
     incomingIndexes = smartIndexes.map(_.toIndex)
     targetIndexNames = indexes
       .filterNot(index =>
-        index.name.contains("_id_") ||
-        incomingIndexes.exists(incomingIndex =>
-          incomingIndex.eventualName == index.eventualName && incomingIndex.key == index.key
-        )
+        index.name.contains("_id_") || incomingIndexes.exists(_.eventualName == index.eventualName)
       )
       .flatMap(_.name)
     _ <- ZIO
