@@ -9,7 +9,7 @@ object Dependencies {
     val kamonV                = "2.7.5"
     val logbackV              = "1.5.16"
     val openTelemetryV        = "1.47.0"
-    val openTelemetrySemconvV = "1.29.0-alpha"
+    val openTelemetrySemconvV = "1.30.0"
     val reactivemongoV        = "1.1.0-RC13"
     val scalaJavaTimeV        = "2.6.0"
     val sttpV                 = "3.10.3"
