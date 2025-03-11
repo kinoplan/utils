@@ -1,7 +1,5 @@
 package kit.mocks
 
-import java.util.NoSuchElementException
-
 import org.slf4j.Marker
 
 object DummyMarker extends Marker {
