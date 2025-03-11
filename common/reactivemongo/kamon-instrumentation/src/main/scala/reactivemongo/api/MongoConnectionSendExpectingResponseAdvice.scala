@@ -56,12 +56,12 @@ object MongoConnectionSendExpectingResponseAdvice {
           case (Some(op), Some(target)) => s"$op $target"
           case (Some(op), None)         => op
           case (None, Some(target))     => target
-          case (None, None)             => DbSystemIncubatingValues.MONGODB
+          case (None, None)             => DbSystemNameIncubatingValues.MONGODB
         }
 
         val metricsTag = TagSet
           .builder()
-          .add(DB_SYSTEM.getKey, DbSystemIncubatingValues.MONGODB)
+          .add(DB_SYSTEM_NAME.getKey, DbSystemNameIncubatingValues.MONGODB)
           .add(DB_NAMESPACE.getKey, dbO.getOrElse("undefined"))
           .add(DB_OPERATION_NAME.getKey, operationNameO.getOrElse("undefined"))
           .add(collectionNameO.fold(TagSet.Empty)(TagSet.of(DB_COLLECTION_NAME.getKey, _)))

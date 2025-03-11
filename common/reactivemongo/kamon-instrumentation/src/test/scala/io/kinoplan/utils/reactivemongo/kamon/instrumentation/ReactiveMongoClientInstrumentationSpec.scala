@@ -56,7 +56,7 @@ class ReactiveMongoClientInstrumentationSpec
     val span = testSpanReporter().nextSpan().value
     span.metricTags.get(plain("db.namespace")) shouldBe dbNamespace
     span.metricTags.get(plain("db.operation.name")) shouldBe dbOperationName
-    span.metricTags.get(plain("db.system")) shouldBe "mongodb"
+    span.metricTags.get(plain("db.system.name")) shouldBe "mongodb"
     span.tags.get(plain("db.query.text")) should not be null
     extraChecks.foreach(_.apply(span))
     span
