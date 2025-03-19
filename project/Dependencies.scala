@@ -7,7 +7,7 @@ object Dependencies {
   object Versions {
     val circeV         = "0.14.10"
     val kamonV         = "2.7.5"
-    val logbackV       = "1.5.17"
+    val logbackV       = "1.5.18"
     val openTelemetryV = "1.48.0"
     val reactivemongoV = "1.1.0-RC13"
     val scalaJavaTimeV = "2.6.0"
