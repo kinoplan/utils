@@ -85,7 +85,7 @@ trait RedisStringOperationsImpl extends RedisStringOperations {
     .map(_.longValue())
 
   override def decrBy(key: String, decrement: Long): Task[Long] = ZIO
-    .fromCompletionStage(atomicLong(key).addAndGetAsync(decrement))
+    .fromCompletionStage(atomicLong(key).addAndGetAsync(-decrement))
     .map(_.longValue())
 
   override def get[T: RedisDecoder](key: String): Task[Option[T]] = ZIO
@@ -100,17 +100,25 @@ trait RedisStringOperationsImpl extends RedisStringOperations {
     .fromCompletionStage(bucket(key).getAndExpireAsync(duration))
     .flatMap(JavaDecoders.decodeNullableValue(_))
 
-  override def getRange[T: RedisDecoder](key: String, start: Long, end: Long): Task[Option[T]] = for {
-    byteBuffer <- ZIO.attempt(ByteBuffer.wrap(Array.empty[Byte]))
-    _ <-
-      ZIO.attemptBlocking(binaryStream(key).getChannel.position(start).truncate(end).read(byteBuffer))
-    value <- ZIO.attempt(new String(byteBuffer.array()))
-    result <- JavaDecoders.decodeNullableValue(value)
-  } yield result
-
   override def getExPersist[T: RedisDecoder](key: String, duration: Duration): Task[Option[T]] = ZIO
     .fromCompletionStage(bucket(key).getAndClearExpireAsync())
     .flatMap(JavaDecoders.decodeNullableValue(_))
+
+  override def getRange[T: RedisDecoder](key: String, start: Long, end: Long): Task[Option[T]] = for {
+    channel <- ZIO.attemptBlocking(binaryStream(key).getChannel)
+    size <- ZIO.attempt(channel.size())
+    nStart =
+      if (start < 0) size + start
+      else start
+    nEnd =
+      if (end < 0) size + end
+      else end
+    _ <- ZIO.logInfo(s"size: $size")
+    bf <- ZIO.attempt(ByteBuffer.allocate(size.toInt))
+    _ <- ZIO.attemptBlocking(channel.position(nStart).truncate(nEnd + 1).read(bf))
+    value <- ZIO.attempt(new String(bf.array()))
+    result <- JavaDecoders.decodeNullableValue(value)
+  } yield result
 
   override def getSet[T: RedisEncoder: RedisDecoder](key: String, value: T): Task[Option[T]] = ZIO
     .fromCompletionStage(bucket(key).getAndSetAsync(RedisEncoder[T].encode(value)))

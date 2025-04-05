@@ -37,8 +37,10 @@ object RedisClientSpec extends ZIOSpecDefault {
 
   def redisClient: URIO[RedisClient, RedisClient] = ZIO.service[RedisClient]
 
-  override def spec: Spec[TestEnvironment with Scope, Throwable] =
-    suite("RedisClient")(suite("RedisStringOperations")(RedisStringOperationsSpec.tests))
-      .provideLayerShared(redisLayer)
+  override def spec: Spec[TestEnvironment with Scope, Throwable] = suite("RedisClient")(
+    suite("RedisStringOperations")(
+      RedisStringOperationsSpec.tests.map(spec => test(spec.label)(spec.result))
+    )
+  ).provideLayerShared(redisLayer)
 
 }
