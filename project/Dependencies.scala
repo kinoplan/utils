@@ -13,7 +13,7 @@ object Dependencies {
     val scalaJavaTimeV = "2.6.0"
     val sttpV          = "3.11.0"
     val tapirV         = "1.11.24"
-    val zioV           = "2.1.16"
+    val zioV           = "2.1.17"
     val zioConfigV     = "4.0.4"
   }
 
