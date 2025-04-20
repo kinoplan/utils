@@ -30,7 +30,7 @@ object PrometheusServer {
       Scope.default,
       config.RootConfig.live,
       PrometheusModule.live,
-      DefaultJvmMetrics.live.unit
+      DefaultJvmMetrics.liveV2.unit
     )
 
 }
