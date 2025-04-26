@@ -34,7 +34,7 @@ object Dependencies {
     val scalatestPlusScalacheck = Def.setting("org.scalatestplus" %%% "scalacheck-1-18" % "3.2.19.0" % Test)
     val tapirCore               = Def.setting("com.softwaremill.sttp.tapir" %%% "tapir-core" % tapirV)
     val zio                     = Def.setting("dev.zio" %%% "zio" % zioV)
-    val zioPrelude              = Def.setting("dev.zio" %%% "zio-prelude" % "1.0.0-RC39")
+    val zioPrelude              = Def.setting("dev.zio" %%% "zio-prelude" % "1.0.0-RC40")
     val zioTest                 = Def.setting("dev.zio" %%% "zio-test" % zioV)
     val zioTestSbt              = Def.setting("dev.zio" %%% "zio-test-sbt" % zioV)
 
