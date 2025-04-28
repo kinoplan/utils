@@ -1,63 +1,97 @@
 package io.kinoplan.utils.zio.redisson.utils
 
 import io.kinoplan.utils.redisson.codec.RedisDecoder
+import org.redisson.client.protocol.ScoredEntry
 import zio.{Task, ZIO}
 
-import scala.jdk.CollectionConverters.{CollectionHasAsScala, IteratorHasAsScala, MapHasAsScala}
+import scala.jdk.CollectionConverters.{CollectionHasAsScala, MapHasAsScala}
 
 private[redisson] object JavaDecoders {
 
-  def decodeCollection[T: RedisDecoder](
+  def fromCollection[T: RedisDecoder](
     jCollection: java.util.Collection[String]
-  ): Task[Iterable[T]] = ZIO.foreach(jCollection.asScala.map(RedisDecoder[T].decode))(ZIO.fromTry(_))
+  ): Task[Iterable[T]] =
+    if (jCollection == null) ZIO.succeed(Iterable.empty[T])
+    else ZIO.foreach(jCollection.asScala)(fromValue(_))
 
-  def decodeList[T: RedisDecoder](jCollection: java.util.List[String]): Task[List[T]] = ZIO
-    .foreach(jCollection.asScala.map(RedisDecoder[T].decode).toList)(ZIO.fromTry(_))
+  def fromCollectionScored[T: RedisDecoder](
+    jCollection: java.util.Collection[ScoredEntry[String]]
+  ): Task[Map[T, Double]] =
+    if (jCollection == null) ZIO.succeed(Map.empty[T, Double])
+    else ZIO
+      .foreach(jCollection.asScala)(entry =>
+        fromValue(entry.getValue).map(_ -> entry.getScore.toDouble)
+      )
+      .map(_.toMap)
 
-  def decodeIterator[T: RedisDecoder](jCollection: java.util.Iterator[String]): Task[Iterator[T]] =
-    ZIO
-      .foreach(jCollection.asScala.map(RedisDecoder[T].decode).toSeq)(ZIO.fromTry(_))
-      .map(_.iterator)
+  def fromCollectionNullable[T: RedisDecoder](
+    jCollection: java.util.Collection[String]
+  ): Task[Iterable[Option[T]]] =
+    if (jCollection == null) ZIO.succeed(Iterable.empty[Option[T]])
+    else ZIO.foreach(jCollection.asScala)(fromNullableValue(_))
 
-  def decodeSet[T: RedisDecoder](jCollection: java.util.Set[String]): Task[Set[T]] =
-    ZIO.foreach(jCollection.asScala.map(RedisDecoder[T].decode).toSet)(ZIO.fromTry(_))
+  def fromList[T: RedisDecoder](jList: java.util.List[String]): Task[List[T]] =
+    if (jList == null) ZIO.succeed(List.empty[T])
+    else ZIO.foreach(jList.asScala.map(RedisDecoder[T].decode).toList)(ZIO.fromTry(_))
 
-  def decodeListDouble(jList: java.util.List[java.lang.Double]): List[Double] = jList
-    .asScala
-    .map(_.doubleValue())
-    .toList
+  def fromSet[T: RedisDecoder](jSet: java.util.Set[String]): Task[Set[T]] =
+    if (jSet == null) ZIO.succeed(Set.empty[T])
+    else ZIO.foreach(jSet.asScala.map(RedisDecoder[T].decode).toSet)(ZIO.fromTry(_))
 
-  def decodeMapValue[T: RedisDecoder](jMap: java.util.Map[String, String]): Task[Map[String, T]] =
-    ZIO.foreach(jMap.asScala.toMap) { case (k, v) =>
+  def fromSetKeys(jSet: java.util.Set[String]): Set[String] =
+    if (jSet == null) Set.empty[String]
+    else jSet.asScala.toSet
+
+  def fromMap[T: RedisDecoder](jMap: java.util.Map[String, String]): Task[Map[String, T]] =
+    if (jMap == null) ZIO.succeed(Map.empty[String, T])
+    else ZIO.foreach(jMap.asScala.toMap) { case (k, v) =>
       ZIO.fromTry(RedisDecoder[T].decode(v)).map(k -> _)
     }
 
-  def decodeMapScored[T: RedisDecoder](
+  def fromMapKey[T: RedisDecoder](jMap: java.util.Map[String, String]): Task[Map[T, String]] =
+    if (jMap == null) ZIO.succeed(Map.empty[T, String])
+    else ZIO.foreach(jMap.asScala.toMap) { case (k, v) =>
+      ZIO.fromTry(RedisDecoder[T].decode(k)).map(_ -> v)
+    }
+
+  def fromMapEntry[T: RedisDecoder](
+    jMapEntry: java.util.Map.Entry[String, String]
+  ): Task[(String, T)] = ZIO
+    .fromTry(RedisDecoder[T].decode(jMapEntry.getValue))
+    .map(jMapEntry.getKey -> _)
+
+  def fromListScored(jList: java.util.List[java.lang.Double]): List[Double] =
+    if (jList == null) List.empty[Double]
+    else jList.asScala.map(_.toDouble).toList
+
+  def fromMapScored[T: RedisDecoder](
     jMap: java.util.Map[String, java.lang.Double]
-  ): Task[Map[T, Double]] = ZIO.foreach(jMap.asScala.toMap) { case (k, v) =>
-    ZIO.fromTry(RedisDecoder[T].decode(k)).map(_ -> v.doubleValue())
-  }
+  ): Task[Map[T, Double]] =
+    if (jMap == null) ZIO.succeed(Map.empty[T, Double])
+    else ZIO.foreach(jMap.asScala.toMap) { case (k, v) =>
+      ZIO.fromTry(RedisDecoder[T].decode(k)).map(_ -> v.toDouble)
+    }
 
-  def decodeNullableValue[T: RedisDecoder](nullableValue: String): Task[Option[T]] = ZIO
-    .fromOption(Option(nullableValue))
-    .foldZIO(
-      _ => ZIO.succeed(Option.empty[T]),
-      value => ZIO.fromTry(RedisDecoder[T].decode(value)).asSome
-    )
-
-  def decodeValue[T: RedisDecoder](value: String): Task[T] =
-    ZIO.fromTry(RedisDecoder[T].decode(value))
-
-  def decodeMapListValue[T: RedisDecoder, K](
+  def fromMapListValue[T: RedisDecoder, K](
     jMap: java.util.Map[K, java.util.List[String]]
-  ): Task[Map[K, List[T]]] = ZIO.foreach(jMap.asScala.toMap) { case (key, jValue) =>
-    decodeList(jValue).map(value => (key, value))
-  }
+  ): Task[Map[K, List[T]]] =
+    if (jMap == null) ZIO.succeed(Map.empty[K, List[T]])
+    else ZIO.foreach(jMap.asScala.toMap) { case (key, jValue) =>
+      fromList(jValue).map(value => (key, value))
+    }
 
-  def decodeMapScoredValue[T: RedisDecoder, K](
+  def fromMapScoredValue[T: RedisDecoder, K](
     jMap: java.util.Map[K, java.util.Map[String, java.lang.Double]]
-  ): Task[Map[K, Map[T, Double]]] = ZIO.foreach(jMap.asScala.toMap) { case (key, jValue) =>
-    decodeMapScored(jValue).map(value => (key, value))
-  }
+  ): Task[Map[K, Map[T, Double]]] =
+    if (jMap == null) ZIO.succeed(Map.empty[K, Map[T, Double]])
+    else ZIO.foreach(jMap.asScala.toMap) { case (key, jValue) =>
+      fromMapScored(jValue).map(value => (key, value))
+    }
+
+  def fromNullableValue[T: RedisDecoder](nullableValue: String): Task[Option[T]] =
+    if (nullableValue == null) ZIO.succeed(Option.empty[T])
+    else fromValue(nullableValue).asSome
+
+  def fromValue[T: RedisDecoder](value: String): Task[T] = ZIO.fromTry(RedisDecoder[T].decode(value))
 
 }

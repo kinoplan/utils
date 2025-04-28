@@ -2,82 +2,456 @@ package io.kinoplan.utils.zio.redisson.operations
 
 import io.kinoplan.utils.cross.collection.MapSyntax.syntaxMapOps
 import io.kinoplan.utils.redisson.codec.{RedisDecoder, RedisEncoder}
+import io.kinoplan.utils.zio.redisson.codec.RCodec
 import io.kinoplan.utils.zio.redisson.utils.JavaDecoders
 import org.redisson.api._
-import org.redisson.client.codec.StringCodec
 import zio.stream.{ZSink, ZStream}
 import zio.{Duration, Task, URLayer, ZIO, ZLayer}
 
 import java.nio.ByteBuffer
 import scala.jdk.CollectionConverters.MapHasAsJava
 
+/** Interface representing operations that can be performed on Redis string keys.
+  */
 trait RedisStringOperations {
 
+  /** Append a value to a key.
+    *
+    * Similar to the APPEND command.
+    *
+    * @param key
+    *   The key to which the value will be appended.
+    * @param value
+    *   The value to append.
+    * @tparam T
+    *   Type of the value to append, requires RedisEncoder[T].
+    */
   def append[T: RedisEncoder](key: String, value: T): Task[Unit]
 
+  /** Decrement the number stored at key by one.
+    *
+    * Similar to the DECR command.
+    *
+    * @param key
+    *   The key of the number to decrement.
+    * @return
+    *   The new value after decrementing by one.
+    */
   def decr(key: String): Task[Long]
 
+  /** Decrement the number stored at key by a specified amount.
+    *
+    * Similar to the DECRBY command.
+    *
+    * @param key
+    *   The key of the number to decrement.
+    * @param decrement
+    *   The amount to decrement by.
+    * @return
+    *   The new value after the decrement.
+    */
   def decrBy(key: String, decrement: Long): Task[Long]
 
-  def get[T: RedisDecoder](key: String): Task[Option[T]]
+  /** Get the value of a key.
+    *
+    * Similar to the GET command.
+    *
+    * @param key
+    *   The key to retrieve the value from.
+    * @tparam T
+    *   Type of the value, requires RedisDecoder[T].
+    * @param codec
+    *   Wrapper around Redisson codec. Default: taken from config.
+    * @return
+    *   An Option containing the value, or None if the key does not exist.
+    */
+  def get[T: RedisDecoder](key: String)(implicit
+    codec: RCodec
+  ): Task[Option[T]]
 
-  def getDel[T: RedisDecoder](key: String): Task[Option[T]]
+  /** Get the value of a key and delete the key.
+    *
+    * Similar to the GETDEL command.
+    *
+    * @param key
+    *   The key to retrieve and delete.
+    * @tparam T
+    *   Type of the value, requires RedisDecoder[T].
+    * @param codec
+    *   Wrapper around Redisson codec. Default: taken from config.
+    * @return
+    *   An Option containing the value, or None if the key does not exist.
+    */
+  def getDel[T: RedisDecoder](key: String)(implicit
+    codec: RCodec
+  ): Task[Option[T]]
 
-  def getEx[T: RedisDecoder](key: String, duration: Duration): Task[Option[T]]
+  /** Get the value of a key and set its expiration.
+    *
+    * Similar to the GETEX command with EX|PX|EXAT|PXAT option.
+    *
+    * @param key
+    *   The key to retrieve and set expiration for.
+    * @param duration
+    *   Expire time.
+    * @tparam T
+    *   Type of the value, requires RedisDecoder[T].
+    * @param codec
+    *   Wrapper around Redisson codec. Default: taken from config.
+    * @return
+    *   An Option containing the value, or None if the key does not exist.
+    */
+  def getEx[T: RedisDecoder](key: String, duration: Duration)(implicit
+    codec: RCodec
+  ): Task[Option[T]]
 
-  def getExPersist[T: RedisDecoder](key: String, duration: Duration): Task[Option[T]]
+  /** Get the value of a key and make it persistent.
+    *
+    * Similar to the GETEX command with PERSIST option.
+    *
+    * @param key
+    *   The key to retrieve.
+    * @param duration
+    *   Currently used in your description but typically should persist the key.
+    * @tparam T
+    *   Type of the value, requires RedisDecoder[T].
+    * @param codec
+    *   Wrapper around Redisson codec. Default: taken from config.
+    * @return
+    *   An Option containing the value, or None if the key does not exist.
+    */
+  def getExPersist[T: RedisDecoder](key: String, duration: Duration)(implicit
+    codec: RCodec
+  ): Task[Option[T]]
 
+  /** Get a substring of the value stored at a key.
+    *
+    * Similar to the GETRANGE command.
+    *
+    * @param key
+    *   The key of the string.
+    * @param start
+    *   The starting index of the substring.
+    * @param end
+    *   The ending index of the substring.
+    * @tparam T
+    *   Type of the value, requires RedisDecoder[T].
+    * @return
+    *   An Option containing the substring, or None if the key does not exist.
+    */
   def getRange[T: RedisDecoder](key: String, start: Int, end: Int): Task[Option[T]]
 
-  def getSet[T: RedisEncoder: RedisDecoder](key: String, value: T): Task[Option[T]]
+  /** Set the string value of a key and return its old value.
+    *
+    * Similar to the GETSET command.
+    *
+    * @param key
+    *   The key to set.
+    * @param value
+    *   The new value.
+    * @tparam T
+    *   Type of the value, requires RedisEncoder[T] and RedisDecoder[T].
+    * @param codec
+    *   Wrapper around Redisson codec. Default: taken from config.
+    * @return
+    *   An Option containing the old value, or None if the key did not exist.
+    */
+  def getSet[T: RedisEncoder: RedisDecoder](key: String, value: T)(implicit
+    codec: RCodec
+  ): Task[Option[T]]
 
+  /** Increment the number stored at key by one.
+    *
+    * Similar to the INCR command.
+    *
+    * @param key
+    *   The key of the number to increment.
+    * @return
+    *   The new value after incrementing by one.
+    */
   def incr(key: String): Task[Long]
 
+  /** Increment the number stored at key by a specified amount.
+    *
+    * Similar to the INCRBY command.
+    *
+    * @param key
+    *   The key of the number to increment.
+    * @param increment
+    *   The amount to increment by.
+    * @return
+    *   The new value after the increment.
+    */
   def incrBy(key: String, increment: Long): Task[Long]
 
+  /** Increment the float value stored at key by a specified amount.
+    *
+    * Similar to the INCRBYFLOAT command.
+    *
+    * @param key
+    *   The key of the float to increment.
+    * @param increment
+    *   The amount to increment by.
+    * @return
+    *   The new value after the increment.
+    */
   def incrByFloat(key: String, increment: Double): Task[Double]
 
-  def mGet[T: RedisDecoder](keys: Seq[String]): Task[Map[String, T]]
+  /** Get the values of multiple keys.
+    *
+    * Similar to the MGET command.
+    *
+    * @param keys
+    *   The sequence of keys to retrieve values for.
+    * @tparam T
+    *   Type of the values, requires RedisDecoder[T].
+    * @param codec
+    *   Wrapper around Redisson codec. Default: taken from config.
+    * @return
+    *   A Map of keys to their corresponding values.
+    */
+  def mGet[T: RedisDecoder](keys: Seq[String])(implicit
+    codec: RCodec
+  ): Task[Map[String, T]]
 
-  def mSet[T: RedisEncoder](params: Map[String, T]): Task[Unit]
+  /** Set multiple keys to multiple values.
+    *
+    * Similar to the MSET command.
+    *
+    * @param params
+    *   A map of key-value pairs to set.
+    * @tparam T
+    *   Type of the values, requires RedisEncoder[T].
+    * @param codec
+    *   Wrapper around Redisson codec. Default: taken from config.
+    */
+  def mSet[T: RedisEncoder](params: Map[String, T])(implicit
+    codec: RCodec
+  ): Task[Unit]
 
-  def mSetNx[T: RedisEncoder](params: Map[String, T]): Task[Boolean]
+  /** Set multiple keys to multiple values, only if none of the keys exist.
+    *
+    * Similar to the MSETNX command.
+    *
+    * @param params
+    *   A map of key-value pairs to set.
+    * @tparam T
+    *   Type of the values, requires RedisEncoder[T].
+    * @param codec
+    *   Wrapper around Redisson codec. Default: taken from config.
+    * @return
+    *   Boolean indicating if the operation was successful.
+    */
+  def mSetNx[T: RedisEncoder](params: Map[String, T])(implicit
+    codec: RCodec
+  ): Task[Boolean]
 
-  def pSetEx[T: RedisEncoder](key: String, duration: Duration, value: T): Task[Unit]
+  /** Set the value of a key with expire time.
+    *
+    * Similar to the PSETEX command.
+    *
+    * @param key
+    *   The key to set.
+    * @param duration
+    *   Expire time.
+    * @param value
+    *   The value to set.
+    * @tparam T
+    *   Type of the value, requires RedisEncoder[T].
+    * @param codec
+    *   Wrapper around Redisson codec. Default: taken from config.
+    */
+  def pSetEx[T: RedisEncoder](key: String, duration: Duration, value: T)(implicit
+    codec: RCodec
+  ): Task[Unit]
 
-  def set[T: RedisEncoder](key: String, value: T): Task[Unit]
+  /** Set the value of a key.
+    *
+    * Similar to the SET command.
+    *
+    * @param key
+    *   The key to set.
+    * @param value
+    *   The value to set.
+    * @tparam T
+    *   Type of the value, requires RedisEncoder[T].
+    * @param codec
+    *   Wrapper around Redisson codec. Default: taken from config.
+    */
+  def set[T: RedisEncoder](key: String, value: T)(implicit
+    codec: RCodec
+  ): Task[Unit]
 
-  def setKeepTtl[T: RedisEncoder](key: String, value: T): Task[Unit]
+  /** Set the value of a key and retain its current time-to-live (TTL).
+    *
+    * Similar to the SET command with KEEPTTL option.
+    *
+    * @param key
+    *   The key to set.
+    * @param value
+    *   The value to set.
+    * @tparam T
+    *   Type of the value, requires RedisEncoder[T].
+    * @param codec
+    *   Wrapper around Redisson codec. Default: taken from config.
+    */
+  def setKeepTtl[T: RedisEncoder](key: String, value: T)(implicit
+    codec: RCodec
+  ): Task[Unit]
 
-  def setEx[T: RedisEncoder](key: String, duration: Duration, value: T): Task[Unit]
+  /** Set the value of a key with expire time.
+    *
+    * Similar to the SET command with EX option.
+    *
+    * @param key
+    *   The key to set.
+    * @param duration
+    *   Expire time.
+    * @param value
+    *   The value to set.
+    * @tparam T
+    *   Type of the value, requires RedisEncoder[T].
+    * @param codec
+    *   Wrapper around Redisson codec. Default: taken from config.
+    */
+  def setEx[T: RedisEncoder](key: String, duration: Duration, value: T)(implicit
+    codec: RCodec
+  ): Task[Unit]
 
-  def setNx[T: RedisEncoder](key: String, value: T): Task[Boolean]
+  /** Set the value of a key, only if the key does not exist.
+    *
+    * Similar to the SET command with NX option.
+    *
+    * @param key
+    *   The key to set.
+    * @param value
+    *   The value to set.
+    * @tparam T
+    *   Type of the value, requires RedisEncoder[T].
+    * @param codec
+    *   Wrapper around Redisson codec. Default: taken from config.
+    * @return
+    *   Boolean indicating if the operation was successful.
+    */
+  def setNx[T: RedisEncoder](key: String, value: T)(implicit
+    codec: RCodec
+  ): Task[Boolean]
 
-  def setNxEx[T: RedisEncoder](key: String, duration: Duration, value: T): Task[Boolean]
+  /** Set the value of a key with expire time, only if the key does not exist.
+    *
+    * Combines SET command with NX and EX options.
+    *
+    * @param key
+    *   The key to set.
+    * @param duration
+    *   Expire time.
+    * @param value
+    *   The value to set.
+    * @tparam T
+    *   Type of the value, requires RedisEncoder[T].
+    * @param codec
+    *   Wrapper around Redisson codec. Default: taken from config.
+    * @return
+    *   Boolean indicating if the operation was successful.
+    */
+  def setNxEx[T: RedisEncoder](key: String, duration: Duration, value: T)(implicit
+    codec: RCodec
+  ): Task[Boolean]
 
-  def setXx[T: RedisEncoder](key: String, value: T): Task[Boolean]
+  /** Set the value of a key only if the key exists.
+    *
+    * Similar to the SET command with XX option.
+    *
+    * @param key
+    *   The key to set.
+    * @param value
+    *   The value to set.
+    * @tparam T
+    *   Type of the value, requires RedisEncoder[T].
+    * @param codec
+    *   Wrapper around Redisson codec. Default: taken from config.
+    * @return
+    *   Boolean indicating if the operation was successful.
+    */
+  def setXx[T: RedisEncoder](key: String, value: T)(implicit
+    codec: RCodec
+  ): Task[Boolean]
 
-  def setXxEx[T: RedisEncoder](key: String, duration: Duration, value: T): Task[Boolean]
+  /** Set the value of a key with expire time, only if the key exists.
+    *
+    * Combines SET command with XX and EX options.
+    *
+    * @param key
+    *   The key to set.
+    * @param duration
+    *   Expire time.
+    * @param value
+    *   The value to set.
+    * @tparam T
+    *   Type of the value, requires RedisEncoder[T].
+    * @param codec
+    *   Wrapper around Redisson codec. Default: taken from config.
+    * @return
+    *   Boolean indicating if the operation was successful.
+    */
+  def setXxEx[T: RedisEncoder](key: String, duration: Duration, value: T)(implicit
+    codec: RCodec
+  ): Task[Boolean]
 
+  /** OOverwrites part of the string stored at key, starting at the specified offset, for the entire
+    * length of value.
+    *
+    * Similar to the SETRANGE command.
+    *
+    * @param key
+    *   The key of the string to modify.
+    * @param offset
+    *   The offset to start overwriting from.
+    * @param value
+    *   The value to write.
+    * @tparam T
+    *   Type of the value, requires RedisEncoder[T].
+    * @return
+    *   The length of the string after modification.
+    */
   def setRange[T: RedisEncoder](key: String, offset: Long, value: T): Task[Long]
 
-  def strLen(key: String): Task[Long]
+  /** Get the length of the string value stored at a key.
+    *
+    * Similar to the STRLEN command.
+    *
+    * @param key
+    *   The key of the string.
+    * @param codec
+    *   Wrapper around Redisson codec. Default: taken from config.
+    * @return
+    *   The length of the string.
+    */
+  def strLen(key: String)(implicit
+    codec: RCodec
+  ): Task[Long]
 
 }
 
 trait RedisStringOperationsImpl extends RedisStringOperations {
   protected val redissonClient: RedissonClient
 
-  private lazy val binaryStream: String => RBinaryStream = redissonClient.getBinaryStream
+  private def binaryStream(key: String): RBinaryStream = redissonClient.getBinaryStream(key)
 
-  private lazy val bucket: String => RBucket[String] =
-    redissonClient.getBucket(_, StringCodec.INSTANCE)
+  private def bucket(key: String)(implicit
+    codec: RCodec
+  ): RBucket[String] = codec
+    .underlying
+    .map(redissonClient.getBucket[String](key, _))
+    .getOrElse(redissonClient.getBucket[String](key))
 
-  private lazy val buckets = redissonClient.getBuckets(StringCodec.INSTANCE)
+  private def buckets(implicit
+    codec: RCodec
+  ): RBuckets = codec.underlying.map(redissonClient.getBuckets).getOrElse(redissonClient.getBuckets)
 
-  private lazy val atomicLong: String => RAtomicLong = redissonClient.getAtomicLong
+  private def atomicLong(key: String): RAtomicLong = redissonClient.getAtomicLong(key)
 
-  private lazy val atomicDouble: String => RAtomicDouble = redissonClient.getAtomicDouble
+  private def atomicDouble(key: String): RAtomicDouble = redissonClient.getAtomicDouble(key)
 
   override def append[T: RedisEncoder](key: String, value: T): Task[Unit] = ZStream
     .fromIterable(RedisEncoder[T].encode(value).getBytes)
@@ -86,27 +460,35 @@ trait RedisStringOperationsImpl extends RedisStringOperations {
 
   override def decr(key: String): Task[Long] = ZIO
     .fromCompletionStage(atomicLong(key).decrementAndGetAsync())
-    .map(_.longValue())
+    .map(_.toLong)
 
   override def decrBy(key: String, decrement: Long): Task[Long] = ZIO
     .fromCompletionStage(atomicLong(key).addAndGetAsync(-decrement))
-    .map(_.longValue())
+    .map(_.toLong)
 
-  override def get[T: RedisDecoder](key: String): Task[Option[T]] = ZIO
+  override def get[T: RedisDecoder](key: String)(implicit
+    codec: RCodec
+  ): Task[Option[T]] = ZIO
     .fromCompletionStage(bucket(key).getAsync)
-    .flatMap(JavaDecoders.decodeNullableValue(_))
+    .flatMap(JavaDecoders.fromNullableValue(_))
 
-  override def getDel[T: RedisDecoder](key: String): Task[Option[T]] = ZIO
+  override def getDel[T: RedisDecoder](key: String)(implicit
+    codec: RCodec
+  ): Task[Option[T]] = ZIO
     .fromCompletionStage(bucket(key).getAndDeleteAsync())
-    .flatMap(JavaDecoders.decodeNullableValue(_))
+    .flatMap(JavaDecoders.fromNullableValue(_))
 
-  override def getEx[T: RedisDecoder](key: String, duration: Duration): Task[Option[T]] = ZIO
+  override def getEx[T: RedisDecoder](key: String, duration: Duration)(implicit
+    codec: RCodec
+  ): Task[Option[T]] = ZIO
     .fromCompletionStage(bucket(key).getAndExpireAsync(duration))
-    .flatMap(JavaDecoders.decodeNullableValue(_))
+    .flatMap(JavaDecoders.fromNullableValue(_))
 
-  override def getExPersist[T: RedisDecoder](key: String, duration: Duration): Task[Option[T]] = ZIO
+  override def getExPersist[T: RedisDecoder](key: String, duration: Duration)(implicit
+    codec: RCodec
+  ): Task[Option[T]] = ZIO
     .fromCompletionStage(bucket(key).getAndClearExpireAsync())
-    .flatMap(JavaDecoders.decodeNullableValue(_))
+    .flatMap(JavaDecoders.fromNullableValue(_))
 
   override def getRange[T: RedisDecoder](key: String, start: Int, end: Int): Task[Option[T]] = for {
     is <- ZIO.attempt(binaryStream(key).getInputStream)
@@ -125,70 +507,90 @@ trait RedisStringOperationsImpl extends RedisStringOperations {
     _ <- ZIO.attempt(is.skip(offset.toLong))
     _ <- ZIO.attempt(is.read(buf, offset, len))
     value <- ZIO.attempt(new String(buf, offset, len))
-    result <- JavaDecoders.decodeNullableValue(value)
+    result <- JavaDecoders.fromNullableValue(value)
   } yield result
 
-  override def getSet[T: RedisEncoder: RedisDecoder](key: String, value: T): Task[Option[T]] = ZIO
+  override def getSet[T: RedisEncoder: RedisDecoder](key: String, value: T)(implicit
+    codec: RCodec
+  ): Task[Option[T]] = ZIO
     .fromCompletionStage(bucket(key).getAndSetAsync(RedisEncoder[T].encode(value)))
-    .flatMap(JavaDecoders.decodeNullableValue(_))
+    .flatMap(JavaDecoders.fromNullableValue(_))
 
   override def incr(key: String): Task[Long] = ZIO
     .fromCompletionStage(atomicLong(key).incrementAndGetAsync())
-    .map(_.longValue())
+    .map(_.toLong)
 
   override def incrBy(key: String, increment: Long): Task[Long] = ZIO
     .fromCompletionStage(atomicLong(key).addAndGetAsync(increment))
-    .map(_.longValue())
+    .map(_.toLong)
 
   override def incrByFloat(key: String, increment: Double): Task[Double] = ZIO
     .fromCompletionStage(atomicDouble(key).addAndGetAsync(increment))
     .map(_.doubleValue())
 
-  override def mGet[T: RedisDecoder](keys: Seq[String]): Task[Map[String, T]] = ZIO
+  override def mGet[T: RedisDecoder](keys: Seq[String])(implicit
+    codec: RCodec
+  ): Task[Map[String, T]] = ZIO
     .fromCompletionStage(buckets.getAsync[String](keys: _*))
-    .flatMap(JavaDecoders.decodeMapValue(_))
+    .flatMap(JavaDecoders.fromMap(_))
 
-  override def mSet[T: RedisEncoder](params: Map[String, T]): Task[Unit] = ZIO
+  override def mSet[T: RedisEncoder](params: Map[String, T])(implicit
+    codec: RCodec
+  ): Task[Unit] = ZIO
     .fromCompletionStage(buckets.setAsync(params.crossMapValues(RedisEncoder[T].encode).asJava))
     .unit
 
-  override def mSetNx[T: RedisEncoder](params: Map[String, T]): Task[Boolean] = ZIO
+  override def mSetNx[T: RedisEncoder](params: Map[String, T])(implicit
+    codec: RCodec
+  ): Task[Boolean] = ZIO
     .fromCompletionStage(buckets.trySetAsync(params.crossMapValues(RedisEncoder[T].encode).asJava))
-    .map(_.booleanValue())
+    .map(Boolean.unbox)
 
-  override def pSetEx[T: RedisEncoder](key: String, duration: Duration, value: T): Task[Unit] = ZIO
+  override def pSetEx[T: RedisEncoder](key: String, duration: Duration, value: T)(implicit
+    codec: RCodec
+  ): Task[Unit] = ZIO
     .fromCompletionStage(bucket(key).setAsync(RedisEncoder[T].encode(value), duration))
     .unit
 
-  override def set[T: RedisEncoder](key: String, value: T): Task[Unit] = ZIO
-    .fromCompletionStage(bucket(key).setAsync(RedisEncoder[T].encode(value)))
-    .unit
+  override def set[T: RedisEncoder](key: String, value: T)(implicit
+    codec: RCodec
+  ): Task[Unit] = ZIO.fromCompletionStage(bucket(key).setAsync(RedisEncoder[T].encode(value))).unit
 
-  override def setKeepTtl[T: RedisEncoder](key: String, value: T): Task[Unit] = ZIO
+  override def setKeepTtl[T: RedisEncoder](key: String, value: T)(implicit
+    codec: RCodec
+  ): Task[Unit] = ZIO
     .fromCompletionStage(bucket(key).setAndKeepTTLAsync(RedisEncoder[T].encode(value)))
     .unit
 
-  override def setEx[T: RedisEncoder](key: String, duration: Duration, value: T): Task[Unit] = ZIO
+  override def setEx[T: RedisEncoder](key: String, duration: Duration, value: T)(implicit
+    codec: RCodec
+  ): Task[Unit] = ZIO
     .fromCompletionStage(bucket(key).setAsync(RedisEncoder[T].encode(value), duration))
     .unit
 
-  override def setNx[T: RedisEncoder](key: String, value: T): Task[Boolean] = ZIO
+  override def setNx[T: RedisEncoder](key: String, value: T)(implicit
+    codec: RCodec
+  ): Task[Boolean] = ZIO
     .fromCompletionStage(bucket(key).setIfAbsentAsync(RedisEncoder[T].encode(value)))
-    .map(_.booleanValue())
+    .map(Boolean.unbox)
 
-  override def setNxEx[T: RedisEncoder](key: String, duration: Duration, value: T): Task[Boolean] =
-    ZIO
-      .fromCompletionStage(bucket(key).setIfAbsentAsync(RedisEncoder[T].encode(value), duration))
-      .map(_.booleanValue())
+  override def setNxEx[T: RedisEncoder](key: String, duration: Duration, value: T)(implicit
+    codec: RCodec
+  ): Task[Boolean] = ZIO
+    .fromCompletionStage(bucket(key).setIfAbsentAsync(RedisEncoder[T].encode(value), duration))
+    .map(Boolean.unbox)
 
-  override def setXx[T: RedisEncoder](key: String, value: T): Task[Boolean] = ZIO
+  override def setXx[T: RedisEncoder](key: String, value: T)(implicit
+    codec: RCodec
+  ): Task[Boolean] = ZIO
     .fromCompletionStage(bucket(key).setIfExistsAsync(RedisEncoder[T].encode(value)))
-    .map(_.booleanValue())
+    .map(Boolean.unbox)
 
-  override def setXxEx[T: RedisEncoder](key: String, duration: Duration, value: T): Task[Boolean] =
-    ZIO
-      .fromCompletionStage(bucket(key).setIfExistsAsync(RedisEncoder[T].encode(value), duration))
-      .map(_.booleanValue())
+  override def setXxEx[T: RedisEncoder](key: String, duration: Duration, value: T)(implicit
+    codec: RCodec
+  ): Task[Boolean] = ZIO
+    .fromCompletionStage(bucket(key).setIfExistsAsync(RedisEncoder[T].encode(value), duration))
+    .map(Boolean.unbox)
 
   override def setRange[T: RedisEncoder](key: String, offset: Long, value: T): Task[Long] = for {
     data <- ZIO.attempt(RedisEncoder[T].encode(value).getBytes)
@@ -198,9 +600,9 @@ trait RedisStringOperationsImpl extends RedisStringOperations {
     result <- ZIO.attempt(channel.size())
   } yield result
 
-  override def strLen(key: String): Task[Long] = ZIO
-    .fromCompletionStage(bucket(key).sizeAsync())
-    .map(_.longValue())
+  override def strLen(key: String)(implicit
+    codec: RCodec
+  ): Task[Long] = ZIO.fromCompletionStage(bucket(key).sizeAsync()).map(_.toLong)
 
 }
 

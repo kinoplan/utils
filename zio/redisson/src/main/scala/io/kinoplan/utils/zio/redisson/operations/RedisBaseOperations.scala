@@ -7,7 +7,6 @@ import zio.{Duration, Task, URLayer, ZIO, ZLayer}
 import java.util.concurrent.TimeUnit
 
 trait RedisBaseOperations {
-
   def pingCluster(): Task[Boolean]
 
   def pingCluster(timeout: Duration): Task[Boolean]
@@ -23,7 +22,6 @@ trait RedisBaseOperations {
   def pingSingle(): Task[Boolean]
 
   def pingSingle(timeout: Duration): Task[Boolean]
-
 }
 
 trait RedisBaseOperationsImpl extends RedisBaseOperations {

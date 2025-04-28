@@ -28,7 +28,6 @@ trait RedisTopicOperations {
   def unsubscribe(channel: String): Task[Unit]
 
   def unsubscribe(channel: String, listenerId: Int): Task[Unit]
-
 }
 
 trait RedisTopicOperationsImpl extends RedisTopicOperations {
@@ -58,11 +57,11 @@ trait RedisTopicOperationsImpl extends RedisTopicOperations {
 
   override def publish[T: RedisEncoder](channel: String, message: T): Task[Long] = ZIO
     .fromCompletionStage(topic(channel).publishAsync(RedisEncoder[T].encode(message)))
-    .map(_.longValue())
+    .map(_.toLong)
 
   override def pubSubNumSub(channel: String): Task[Long] = ZIO
     .fromCompletionStage(topic(channel).countSubscribersAsync())
-    .map(_.longValue())
+    .map(_.toLong)
 
   override def pUnsubscribe(pattern: String): Task[Unit] = ZIO
     .fromCompletionStage(patternTopic(pattern).removeAllListenersAsync())

@@ -1,8 +1,9 @@
 package io.kinoplan.utils.zio.redisson
 
 import com.redis.testcontainers.RedisContainer
+import io.kinoplan.utils.zio.redisson.helpers.TestSpec
 import io.kinoplan.utils.zio.redisson.module.RedissonSingle
-import io.kinoplan.utils.zio.redisson.operations.RedisStringOperationsSpec
+import io.kinoplan.utils.zio.redisson.operations._
 import org.testcontainers.utility.DockerImageName
 import zio._
 import zio.test._
@@ -37,10 +38,17 @@ object RedisClientSpec extends ZIOSpecDefault {
 
   def redisClient: URIO[RedisClient, RedisClient] = ZIO.service[RedisClient]
 
+  def toSpec(spec: TestSpec[RedisClient, Throwable, TestResult]): Spec[RedisClient, Throwable] =
+    test(spec.label)(spec.result)
+
   override def spec: Spec[TestEnvironment with Scope, Throwable] = suite("RedisClient")(
-    suite("RedisStringOperations")(
-      RedisStringOperationsSpec.specs.map(spec => test(spec.label)(spec.result))
-    )
+    suite("RedisBitmapOperations")(RedisBitmapOperationsSpec.specs.map(toSpec)),
+    suite("RedisGeoOperations")(RedisGeoOperationsSpec.specs.map(toSpec)),
+    suite("RedisHyperLogLogOperations")(RedisHyperLogLogOperationsSpec.specs.map(toSpec)),
+    suite("RedisListOperations")(RedisListOperationsSpec.specs.map(toSpec)),
+    suite("RedisSortedSetOperations")(RedisSortedSetOperationsSpec.specs.map(toSpec)),
+    suite("RedisSetOperations")(RedisSetOperationsSpec.specs.map(toSpec)),
+    suite("RedisStringOperations")(RedisStringOperationsSpec.specs.map(toSpec))
   ).provideLayerShared(redisLayer)
 
 }

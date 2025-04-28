@@ -69,7 +69,6 @@ object ModulesZio {
     .settings(
       libraryDependencies ++=
         Seq(
-          Libraries.jacksonModule,
           Libraries.logbackClassic % Test,
           Libraries.redisson,
           Libraries.testContainersRedis,

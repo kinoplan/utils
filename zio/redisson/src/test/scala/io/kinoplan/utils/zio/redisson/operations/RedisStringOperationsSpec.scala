@@ -3,6 +3,7 @@ package io.kinoplan.utils.zio.redisson.operations
 import io.kinoplan.utils.redisson.codec.DefaultRedisCodecs
 import io.kinoplan.utils.zio.redisson.RedisClient
 import io.kinoplan.utils.zio.redisson.RedisClientSpec.redisClient
+import io.kinoplan.utils.zio.redisson.codec.RCodec
 import io.kinoplan.utils.zio.redisson.helpers.TestSpec
 import zio._
 import zio.test._
@@ -11,32 +12,41 @@ object RedisStringOperationsSpec extends DefaultRedisCodecs {
 
   def specs: Chunk[TestSpec[RedisClient, Throwable, TestResult]] = Chunk(
     TestSpec(
-      "append",
-      for {
-        redis <- redisClient
-        key = generateKey
-        _ <- redis.append(key, "Hello")
-        _ <- redis.append(key, " World")
-        case1 <- redis.get[String](key)
-      } yield assertTrue(case1.contains("Hello World"))
+      "append", {
+        implicit val codec: RCodec = stringCodec
+
+        for {
+          redis <- redisClient
+          key = generateKey
+          _ <- redis.append(key, "Hello")
+          _ <- redis.append(key, " World")
+          case1 <- redis.get[String](key)
+        } yield assertTrue(case1.contains("Hello World"))
+      }
     ),
     TestSpec(
-      "decr",
-      for {
-        redis <- redisClient
-        key = generateKey
-        _ <- redis.set(key, "10")
-        case1 <- redis.decr(key)
-      } yield assertTrue(case1 == 9)
+      "decr", {
+        implicit val codec: RCodec = stringCodec
+
+        for {
+          redis <- redisClient
+          key = generateKey
+          _ <- redis.set(key, "10")
+          case1 <- redis.decr(key)
+        } yield assertTrue(case1 == 9)
+      }
     ),
     TestSpec(
-      "decrBy",
-      for {
-        redis <- redisClient
-        key = generateKey
-        _ <- redis.set(key, "10")
-        case1 <- redis.decrBy(key, 3)
-      } yield assertTrue(case1 == 7)
+      "decrBy", {
+        implicit val codec: RCodec = stringCodec
+
+        for {
+          redis <- redisClient
+          key = generateKey
+          _ <- redis.set(key, "10")
+          case1 <- redis.decrBy(key, 3)
+        } yield assertTrue(case1 == 7)
+      }
     ),
     TestSpec(
       "get",
@@ -87,27 +97,30 @@ object RedisStringOperationsSpec extends DefaultRedisCodecs {
       )
     ),
     TestSpec(
-      "getRange",
-      for {
-        redis <- redisClient
-        key = generateKey
-        _ <- redis.set(key, "This is a string")
-        case1 <- redis.getRange[String](key, 0, 3)
-        case2 <- redis.getRange[String](key, -3, -1)
-        case3 <- redis.getRange[String](key, 0, -1)
-        case4 <- redis.getRange[String](key, 10, 100)
-        case5 <- redis.getRange[String](key, -10, 100)
-        case6 <- redis.getRange[String](key, 10, -100)
-        case7 <- redis.getRange[String](key, -10, -100)
-      } yield assertTrue(
-        case1.contains("This"),
-        case2.contains("ing"),
-        case3.contains("This is a string"),
-        case4.contains("string"),
-        case5.contains("s a string"),
-        case6.contains(""),
-        case7.contains("")
-      )
+      "getRange", {
+        implicit val codec: RCodec = stringCodec
+
+        for {
+          redis <- redisClient
+          key = generateKey
+          _ <- redis.set(key, "This is a string")
+          case1 <- redis.getRange[String](key, 0, 3)
+          case2 <- redis.getRange[String](key, -3, -1)
+          case3 <- redis.getRange[String](key, 0, -1)
+          case4 <- redis.getRange[String](key, 10, 100)
+          case5 <- redis.getRange[String](key, -10, 100)
+          case6 <- redis.getRange[String](key, 10, -100)
+          case7 <- redis.getRange[String](key, -10, -100)
+        } yield assertTrue(
+          case1.contains("This"),
+          case2.contains("ing"),
+          case3.contains("This is a string"),
+          case4.contains("string"),
+          case5.contains("s a string"),
+          case6.contains(""),
+          case7.contains("")
+        )
+      }
     ),
     TestSpec(
       "getSet",
@@ -120,35 +133,44 @@ object RedisStringOperationsSpec extends DefaultRedisCodecs {
       } yield assertTrue(case1.contains("Hello"), case2.contains("World"))
     ),
     TestSpec(
-      "incr",
-      for {
-        redis <- redisClient
-        key = generateKey
-        _ <- redis.set(key, 10)
-        case1 <- redis.incr(key)
-        case2 <- redis.get[Long](key)
-      } yield assertTrue(case1 == 11, case2.contains(11))
+      "incr", {
+        implicit val codec: RCodec = stringCodec
+
+        for {
+          redis <- redisClient
+          key = generateKey
+          _ <- redis.set(key, 10)
+          case1 <- redis.incr(key)
+          case2 <- redis.get[Long](key)
+        } yield assertTrue(case1 == 11, case2.contains(11))
+      }
     ),
     TestSpec(
-      "incrBy",
-      for {
-        redis <- redisClient
-        key = generateKey
-        _ <- redis.set(key, 10)
-        case1 <- redis.incrBy(key, 5)
-      } yield assertTrue(case1 == 15)
+      "incrBy", {
+        implicit val codec: RCodec = stringCodec
+
+        for {
+          redis <- redisClient
+          key = generateKey
+          _ <- redis.set(key, 10)
+          case1 <- redis.incrBy(key, 5)
+        } yield assertTrue(case1 == 15)
+      }
     ),
     TestSpec(
-      "incrByFloat",
-      for {
-        redis <- redisClient
-        key = generateKey
-        _ <- redis.set(key, 10.50)
-        case1 <- redis.incrByFloat(key, 0.1)
-        case2 <- redis.incrByFloat(key, -5)
-        _ <- redis.set(key, 5.0e3)
-        case3 <- redis.incrByFloat(key, 2.0e2)
-      } yield assertTrue(case1 == 10.6, case2 == 5.6, case3 == 5200)
+      "incrByFloat", {
+        implicit val codec: RCodec = stringCodec
+
+        for {
+          redis <- redisClient
+          key = generateKey
+          _ <- redis.set(key, 10.50)
+          case1 <- redis.incrByFloat(key, 0.1)
+          case2 <- redis.incrByFloat(key, -5)
+          _ <- redis.set(key, 5.0e3)
+          case3 <- redis.incrByFloat(key, 2.0e2)
+        } yield assertTrue(case1 == 10.6, case2 == 5.6, case3 == 5200)
+      }
     ),
     TestSpec(
       "mGet",
@@ -290,32 +312,38 @@ object RedisStringOperationsSpec extends DefaultRedisCodecs {
       )
     ),
     TestSpec(
-      "setRange",
-      for {
-        redis <- redisClient
-        (key1, key2) = (generateKey, generateKey)
-        replaced = "Redis"
-        _ <- redis.set(key1, "Hello World")
-        case1 <- redis.setRange(key1, 6, replaced)
-        case2 <- redis.get[String](key1)
-        case3 <- redis.setRange(key2, 6, replaced)
-        case4 <- redis.get[String](key2)
-      } yield assertTrue(
-        case1 == 11,
-        case2.contains("Hello Redis"),
-        case3 == 11,
-        case4.contains(replaced.reverse.padTo(replaced.length + 6, '\u0000').reverse)
-      )
+      "setRange", {
+        implicit val codec: RCodec = stringCodec
+
+        for {
+          redis <- redisClient
+          (key1, key2) = (generateKey, generateKey)
+          replaced = "Redis"
+          _ <- redis.set(key1, "Hello World")
+          case1 <- redis.setRange(key1, 6, replaced)
+          case2 <- redis.get[String](key1)
+          case3 <- redis.setRange(key2, 6, replaced)
+          case4 <- redis.get[String](key2)
+        } yield assertTrue(
+          case1 == 11,
+          case2.contains("Hello Redis"),
+          case3 == 11,
+          case4.contains(replaced.reverse.padTo(replaced.length + 6, '\u0000').reverse)
+        )
+      }
     ),
     TestSpec(
-      "strLen",
-      for {
-        redis <- redisClient
-        key = generateKey
-        _ <- redis.set(key, "Hello world")
-        case1 <- redis.strLen(key)
-        case2 <- redis.strLen("nonexisting")
-      } yield assertTrue(case1 == 11, case2 == 0)
+      "strLen", {
+        implicit val codec: RCodec = stringCodec
+
+        for {
+          redis <- redisClient
+          key = generateKey
+          _ <- redis.set(key, "Hello world")
+          case1 <- redis.strLen(key)
+          case2 <- redis.strLen("nonexisting")
+        } yield assertTrue(case1 == 11, case2 == 0)
+      }
     )
   )
 

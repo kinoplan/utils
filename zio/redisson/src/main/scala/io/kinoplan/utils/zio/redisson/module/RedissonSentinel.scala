@@ -5,11 +5,12 @@ import io.kinoplan.utils.zio.ZIntegration
 import io.kinoplan.utils.zio.redisson.RedisClient
 import io.kinoplan.utils.zio.redisson.config.RedisSentinelConfig
 import org.redisson.Redisson
+import org.redisson.api.RedissonClient
 import zio.{Task, ZIO, ZLayer, durationInt}
 
 object RedissonSentinel {
 
-  private val redissonLive = RedisSentinelConfig.live >>>
+  val redissonLive: ZLayer[Any, Throwable, RedissonClient] = RedisSentinelConfig.live >>>
     ZLayer.fromZIO(
       for {
         config <- ZIO.service[RedisSentinelConfig]
