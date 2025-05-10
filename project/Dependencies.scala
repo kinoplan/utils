@@ -68,7 +68,7 @@ object Dependencies {
     val prometheusExporterHttpServer     = "io.prometheus"                  % "prometheus-metrics-exporter-httpserver" % "1.3.6"
     val reactiveMongo                    = "org.reactivemongo"             %% "reactivemongo"                          % "1.1.0-pekko.RC13"
     val reactiveMongoBsonApi             = "org.reactivemongo"             %% "reactivemongo-bson-api"                 % reactivemongoV
-    val redisson                         = "org.redisson"                   % "redisson"                               % "3.24.2"
+    val redisson                         = "org.redisson"                   % "redisson"                               % "3.45.0"
     val refined                          = "eu.timepit"                    %% "refined"                                % "0.11.3"
     val scalaCollectionCompat            = "org.scala-lang.modules"        %% "scala-collection-compat"                % "2.13.0"
     val scalaJavaCompat                  = "org.scala-lang.modules"        %% "scala-java8-compat"                     % "1.0.2"
