@@ -22,7 +22,7 @@ object Dependencies {
   object Libraries {
     val scalaReflect = "org.scala-lang" % "scala-reflect"
     // Cross-platform dependencies
-    val chimney                 = Def.setting("io.scalaland" %%% "chimney" % "1.7.3")
+    val chimney                 = Def.setting("io.scalaland" %%% "chimney" % "1.8.0")
     val circeCore               = Def.setting("io.circe" %%% "circe-core" % circeV)
     val circeGeneric            = Def.setting("io.circe" %%% "circe-generic" % circeV)
     val circeParser             = Def.setting("io.circe" %%% "circe-parser" % circeV)
