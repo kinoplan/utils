@@ -44,7 +44,7 @@ abstract private[implicits] class CollectionSeqLike[A, Repr](private val value: 
     builder ++=
       (operation match {
         case CollectionOperation.Intersection => i.filter(o => container.exists(f(_) == f(o)))
-        case CollectionOperation.Difference => i ++
+        case CollectionOperation.Difference   => i ++
             container.filterNot(o => value.exists(f(_) == f(o)))
       })
 

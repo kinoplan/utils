@@ -35,7 +35,7 @@ object MongoConnectionSendExpectingResponseAdvice {
       buf.readBytes(bytes)
       (sz, readFromBuffer(ReadableBuffer(bytes)))
     } match {
-      case Failure(_) => Span.Empty
+      case Failure(_)                => Span.Empty
       case Success((size, document)) =>
         buf.resetReaderIndex()
 
@@ -84,7 +84,7 @@ object MongoConnectionSendExpectingResponseAdvice {
   def exit(@Advice.Enter span: Span, @Advice.Return future: Future[Response]): Unit = future
     .onComplete {
       case Failure(exception) => span.fail(exception).finish()
-      case Success(response) => response
+      case Success(response)  => response
           .error
           .fold(
             span.tag(DB_RESPONSE_RETURNED_ROWS.getKey, response.reply.numberReturned.toLong).finish()
