@@ -22,7 +22,6 @@ private[redisson] case class RedisSingleConfig(
   connectTimeout: Option[Int],
   timeout: Option[Int],
   retryAttempts: Option[Int],
-  retryInterval: Option[Int],
   database: Option[Int],
   password: Option[String],
   username: Option[String],
@@ -64,7 +63,6 @@ private[redisson] case class RedisSingleConfig(
       .applyOption(connectTimeout)((self, value) => self.setConnectTimeout(value))
       .applyOption(timeout)((self, value) => self.setTimeout(value))
       .applyOption(retryAttempts)((self, value) => self.setRetryAttempts(value))
-      .applyOption(retryInterval)((self, value) => self.setRetryInterval(value))
       .applyOption(database)((self, value) => self.setDatabase(value))
       .applyOption(password)((self, value) => self.setPassword(value))
       .applyOption(username)((self, value) => self.setUsername(value))

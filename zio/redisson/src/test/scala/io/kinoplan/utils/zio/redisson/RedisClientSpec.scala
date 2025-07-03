@@ -34,7 +34,7 @@ object RedisClientSpec extends ZIOSpecDefault {
     .flatMap(c => Runtime.setConfigProvider(configProvider(c.get)))
 
   def redisLayer: ZLayer[Any with Scope, Throwable, RedisClient] = redisContainerLayer >>>
-    configLayer >>> RedissonSingle.live.map(_.get.module)
+    configLayer >>> RedissonSingle.live().map(_.get.module)
 
   def redisClient: URIO[RedisClient, RedisClient] = ZIO.service[RedisClient]
 
@@ -53,6 +53,6 @@ object RedisClientSpec extends ZIOSpecDefault {
     suite("RedisStringOperations")(RedisStringOperationsSpec.specs.map(toSpec)),
     suite("RedisTopicOperations")(RedisTopicOperationsSpec.specs.map(toSpec)) @@
       TestAspect.withLiveClock
-  ).provideLayerShared(redisLayer) @@ TestAspect.timeout(60.seconds)
+  ).provideLayerShared(redisLayer) @@ TestAspect.timeout(30.seconds)
 
 }

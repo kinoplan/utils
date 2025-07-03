@@ -15,7 +15,8 @@ trait RedisClient
       with RedisSetOperations
       with RedisSortedSetOperations
       with RedisStringOperations
-      with RedisTopicOperations {
+      with RedisTopicOperations
+      with RedisStreamOperations {
 
   val redissonClient: RedissonClient
 }
@@ -33,6 +34,7 @@ case class RedisClientLive(redissonClient: RedissonClient)
       with RedisSortedSetOperationsImpl
       with RedisStringOperationsImpl
       with RedisTopicOperationsImpl
+      with RedisStreamOperationsImpl
 
 object RedisClient {
 
