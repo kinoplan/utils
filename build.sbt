@@ -454,7 +454,6 @@ lazy val zioTapirOpenTelemetry = projectMatrix
 // format: off
 inThisBuild(
   List(
-    sonatypeCredentialHost := Sonatype.sonatype01,
     versionScheme := Some(VersionScheme.EarlySemVer),
     organization := "io.kinoplan",
     homepage := Some(url("https://github.com/kinoplan/utils")),
