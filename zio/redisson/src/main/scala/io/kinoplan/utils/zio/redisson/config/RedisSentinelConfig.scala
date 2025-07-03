@@ -32,7 +32,6 @@ private[redisson] case class RedisSentinelConfig(
   connectTimeout: Option[Int],
   timeout: Option[Int],
   retryAttempts: Option[Int],
-  retryInterval: Option[Int],
   failedSlaveReconnectionInterval: Option[Int],
   failedSlaveNodeDetector: Option[Long],
   database: Option[Int],
@@ -96,7 +95,6 @@ private[redisson] case class RedisSentinelConfig(
       .applyOption(connectTimeout)((self, value) => self.setConnectTimeout(value))
       .applyOption(timeout)((self, value) => self.setTimeout(value))
       .applyOption(retryAttempts)((self, value) => self.setRetryAttempts(value))
-      .applyOption(retryInterval)((self, value) => self.setRetryInterval(value))
       .applyOption(failedSlaveReconnectionInterval)((self, value) =>
         self.setFailedSlaveReconnectionInterval(value)
       )

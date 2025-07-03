@@ -10,7 +10,7 @@ import java.time.Instant
 import java.util.concurrent.TimeUnit
 import scala.jdk.CollectionConverters.IterableHasAsScala
 
-/** Interface representing operations that can be performed on Redis Generic.
+/** Interface representing operations that can be performed on Redis Generic data.
   */
 trait RedisGenericOperations {
 

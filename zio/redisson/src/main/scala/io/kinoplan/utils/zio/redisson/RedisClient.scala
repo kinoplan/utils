@@ -14,6 +14,7 @@ trait RedisClient
       with RedisListOperations
       with RedisSetOperations
       with RedisSortedSetOperations
+      with RedisStreamOperations
       with RedisStringOperations
       with RedisTopicOperations {
 
@@ -31,6 +32,7 @@ case class RedisClientLive(redissonClient: RedissonClient)
       with RedisListOperationsImpl
       with RedisSetOperationsImpl
       with RedisSortedSetOperationsImpl
+      with RedisStreamOperationsImpl
       with RedisStringOperationsImpl
       with RedisTopicOperationsImpl
 

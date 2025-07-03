@@ -1,10 +1,6 @@
 package io.kinoplan.utils.redisson.codec
 
-import scala.util.Try
-
-trait RedisDecoder[T] {
-  def decode(value: String): Try[T]
-}
+trait RedisDecoder[T] extends BaseRedisDecoder[T, String]
 
 object RedisDecoder {
 

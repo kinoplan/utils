@@ -1,12 +1,17 @@
 package io.kinoplan.utils.zio.redisson.utils
 
 import io.kinoplan.utils.redisson.codec.RedisDecoder
+import org.redisson.api.StreamMessageId
 import org.redisson.client.protocol.ScoredEntry
 import zio.{Duration, Task, ZIO}
 
 import scala.jdk.CollectionConverters.{CollectionHasAsScala, MapHasAsScala}
 
 private[redisson] object JavaDecoders {
+
+  def fromCollectionUnderlying[T](jCollection: java.util.Collection[T]): Iterable[T] =
+    if (jCollection == null) Iterable.empty[T]
+    else jCollection.asScala
 
   def fromCollection[T: RedisDecoder](
     jCollection: java.util.Collection[String]
@@ -29,6 +34,10 @@ private[redisson] object JavaDecoders {
   ): Task[Iterable[Option[T]]] =
     if (jCollection == null) ZIO.succeed(Iterable.empty[Option[T]])
     else ZIO.foreach(jCollection.asScala)(fromNullableValue(_))
+
+  def fromListUnderlying[T](jList: java.util.List[T]): List[T] =
+    if (jList == null) List.empty[T]
+    else jList.asScala.toList
 
   def fromList[T: RedisDecoder](jList: java.util.List[String]): Task[List[T]] =
     if (jList == null) ZIO.succeed(List.empty[T])
@@ -117,5 +126,21 @@ private[redisson] object JavaDecoders {
   def fromMillis(value: java.lang.Long): Option[Duration] =
     if (value < 0) None
     else Some(Duration.fromMillis(value.toLong))
+
+  def fromStreamMessages[T: RedisDecoder](
+    jMap: java.util.Map[StreamMessageId, java.util.Map[String, String]]
+  ): Task[Map[StreamMessageId, Map[String, T]]] =
+    if (jMap == null) ZIO.succeed(Map.empty[StreamMessageId, Map[String, T]])
+    else ZIO.foreach(jMap.asScala.toMap) { case (key, jValue) =>
+      fromMap(jValue).map(value => (key, value))
+    }
+
+  def fromStreamMultiMessages[T: RedisDecoder](
+    jMap: java.util.Map[String, java.util.Map[StreamMessageId, java.util.Map[String, String]]]
+  ): Task[Map[String, Map[StreamMessageId, Map[String, T]]]] =
+    if (jMap == null) ZIO.succeed(Map.empty[String, Map[StreamMessageId, Map[String, T]]])
+    else ZIO.foreach(jMap.asScala.toMap) { case (key, jValue) =>
+      fromStreamMessages(jValue).map(value => (key, value))
+    }
 
 }
