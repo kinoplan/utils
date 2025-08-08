@@ -1,7 +1,7 @@
 package io.kinoplan.utils.zio.monitoring
 
-import zio.{ExitCode, URIO, ZIOAppDefault}
+import zio.{Task, ZIOAppDefault}
 
 object PrometheusServerApp extends ZIOAppDefault {
-  def run: URIO[Any, ExitCode] = PrometheusServer.start().exitCode
+  def run: Task[Nothing] = PrometheusServer.start()
 }
