@@ -1,11 +1,11 @@
 package io.kinoplan.utils.redisson.core.operation
 
-import scala.concurrent.{ExecutionContext, Future, blocking}
-
-import org.redisson.api.RedissonClient
-
 import io.kinoplan.utils.cross.collection.converters._
 import io.kinoplan.utils.redisson.core.compat.crossFutureConverters.CompletionStageOps
+import org.redisson.api.RedissonClient
+import org.redisson.api.options.KeysScanOptions
+
+import scala.concurrent.{ExecutionContext, Future, blocking}
 
 trait RedisKeysOperations {
   implicit protected val executionContext: ExecutionContext
@@ -15,7 +15,7 @@ trait RedisKeysOperations {
 
   def scan(pattern: String): Future[Iterable[String]] = Future {
     blocking {
-      keys.getKeysByPattern(pattern).asScala
+      keys.getKeys(KeysScanOptions.defaults().pattern(pattern)).asScala
     }
   }
 
