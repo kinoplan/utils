@@ -75,7 +75,7 @@ object Dependencies {
     val scalaLogging                     = "com.typesafe.scala-logging"    %% "scala-logging"                          % "3.9.5"
     val scalatestPlay                    = "org.scalatestplus.play"        %% "scalatestplus-play"                     % "7.0.2"    % Test
     val scalatestPlay2                   = "org.scalatestplus.play"        %% "scalatestplus-play"                     % "5.1.0"    % Test
-    val sourcecode                       = "com.lihaoyi"                   %% "sourcecode"                             % "0.4.2"
+    val sourcecode                       = "com.lihaoyi"                   %% "sourcecode"                             % "0.4.4"
     val sttpCore                         = "com.softwaremill.sttp.client3" %% "core"                                   % sttpV
     val sttpSlf4jBackend                 = "com.softwaremill.sttp.client3" %% "slf4j-backend"                          % sttpV
     val sttpZio                          = "com.softwaremill.sttp.client3" %% "zio"                                    % sttpV
