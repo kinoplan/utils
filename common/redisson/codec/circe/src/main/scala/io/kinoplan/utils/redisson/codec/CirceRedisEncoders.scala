@@ -6,3 +6,5 @@ import io.circe.syntax.EncoderOps
 trait CirceRedisEncoders {
   implicit def circeToRedisEncoder[T: Encoder]: RedisEncoder[T] = _.asJson.noSpaces
 }
+
+object CirceRedisEncoders extends CirceRedisEncoders
