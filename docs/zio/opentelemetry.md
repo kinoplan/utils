@@ -1,18 +1,19 @@
 # Utils ZIO OpenTelemetry
 
-This module is a wrapper over `zio-opentelemetry` that facilitates the integration 
+This module is a wrapper over `zio-opentelemetry` that facilitates the integration
 of OpenTelemetry with ZIO applications, simplifying the tracing process.
 
 The module provides:
 
-- **OpenTelemetrySdk** - pre-configured `api.OpenTelemetry` ZIO layer based on configuration data
-- **TracerSampler** - an internal customizable `Sampler` that allows you to define templates for operation 
-names that you prefer to not trace using regex patterns. Optimizes tracing by avoiding unnecessary traces 
-and reducing noise, potentially improving application performance.
+* **OpenTelemetrySdk** - pre-configured `api.OpenTelemetry` ZIO layer based on configuration data
+* **TracerSampler** - an internal customizable `Sampler` that allows you to define templates for operation
+  names that you prefer to not trace using regex patterns. Optimizes tracing by avoiding unnecessary traces
+  and reducing noise, potentially improving application performance.
 
 Note: At the moment the module is only implemented to work with `Tracing`
 
 ## Installation
+
 Add the following line to the `libraryDependencies` in your `build.sbt`:
 
 ```scala
@@ -22,6 +23,7 @@ Add the following line to the `libraryDependencies` in your `build.sbt`:
 the dependency already comes with all necessary dependencies including `io.opentelemetry` and `zio-opentelemetry`
 
 ## Configuration
+
 You can configure the OpenTelemetry tracing in your configuration data as follows:
 
 ```hocon
@@ -38,6 +40,7 @@ opentelemetry {
 ```
 
 ## Usage
+
 Add the necessary layers to your ZIO application, for example:
 
 ```scala
@@ -61,6 +64,7 @@ object MainApp extends ZIOAppDefault {
 
 }
 ```
+
 `Tracing` is now enabled and can be used, for example:
 
 ```scala
