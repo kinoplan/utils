@@ -81,7 +81,7 @@ object Dependencies {
     val sttpZio                          = "com.softwaremill.sttp.client3" %% "zio"                                    % sttpV
     val tapirServer                      = "com.softwaremill.sttp.tapir"   %% "tapir-server"                           % tapirV
     val testContainersMongodb            = "org.testcontainers"             % "mongodb"                                % "1.21.3"   % Test
-    val typesafeConfig                   = "com.typesafe"                   % "config"                                 % "1.4.4"
+    val typesafeConfig                   = "com.typesafe"                   % "config"                                 % "1.4.5"
     val zioConfig                        = "dev.zio"                       %% "zio-config"                             % zioConfigV
     val zioConfigMagnolia                = "dev.zio"                       %% "zio-config-magnolia"                    % zioConfigV
     val zioConfigEnumeratum              = "dev.zio"                       %% "zio-config-enumeratum"                  % zioConfigV
