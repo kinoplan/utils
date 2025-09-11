@@ -59,7 +59,7 @@ object Dependencies {
     val openTelemetrySdk                 = "io.opentelemetry"               % "opentelemetry-sdk"                      % openTelemetryV
     val openTelemetrySemconv             = "io.opentelemetry.semconv"       % "opentelemetry-semconv"                  % "1.37.0"
     val openTelemetrySemconvIncubating   = "io.opentelemetry.semconv"       % "opentelemetry-semconv-incubating"       % "1.30.0-alpha"
-    val play                             = "org.playframework"             %% "play"                                   % "3.0.8"
+    val play                             = "org.playframework"             %% "play"                                   % "3.0.9"
     val play2                            = "com.typesafe.play"             %% "play"                                   % "2.8.22"
     val playJson                         = "org.playframework"             %% "play-json"                              % "3.0.5"
     val play2Json                        = "com.typesafe.play"             %% "play-json"                              % "2.10.7"
