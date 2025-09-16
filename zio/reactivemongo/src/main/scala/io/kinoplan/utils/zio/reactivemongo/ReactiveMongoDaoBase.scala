@@ -60,6 +60,8 @@ abstract class ReactiveMongoDaoBase[T](
       skip: Int = 0,
       readConcern: Option[ReadConcern] = None,
       readPreference: Option[ReadPreference] = None
+    )(implicit
+      enclosing: sourcecode.Enclosing
     ): Task[Long] = for {
       coll <- collection
       result <- ZIO.fromFuture(implicit ec =>
@@ -72,6 +74,8 @@ abstract class ReactiveMongoDaoBase[T](
       matchQuery: BSONDocument = document,
       readConcern: Option[ReadConcern] = None,
       readPreference: Option[ReadPreference] = None
+    )(implicit
+      enclosing: sourcecode.Enclosing
     ): Task[Map[String, Int]] = for {
       coll <- collection
       result <- ZIO.fromFuture(implicit ec =>
@@ -85,7 +89,8 @@ abstract class ReactiveMongoDaoBase[T](
       readConcern: Option[ReadConcern] = None,
       collation: Option[Collation] = None
     )(implicit
-      reader: NarrowValueReader[R]
+      reader: NarrowValueReader[R],
+      enclosing: sourcecode.Enclosing
     ): ZIO[Any, Throwable, Set[R]] = for {
       coll <- collection
       result <- ZIO.fromFuture(implicit ec =>

@@ -15,7 +15,7 @@ import reactivemongo.api.bson.collection.BSONCollection
 import reactivemongo.api.bson.collection.BSONSerializationPack.NarrowValueReader
 import reactivemongo.api.commands.WriteResult
 
-private[utils] object Queries extends QueryBuilderSyntax with BsonDocumentSyntax{
+private[utils] object Queries extends QueryBuilderSyntax{
 
   def countQ(collection: BSONCollection)(
     selector: Option[BSONDocument] = None,
@@ -29,7 +29,7 @@ private[utils] object Queries extends QueryBuilderSyntax with BsonDocumentSyntax
   ): Future[Long] = {
 
     val selectorWithComment = comment match {
-      case Some(_) => selector.map(_.commentQuery).orElse(Some(BSONDocument().commentQuery))
+      case Some(c) => selector.map(_ ++ BSONDocument(f"$$comment" -> c)).orElse(Some(BSONDocument(f"$$comment" -> c)))
       case None    => selector
     }
 
@@ -59,8 +59,8 @@ private[utils] object Queries extends QueryBuilderSyntax with BsonDocumentSyntax
     ec: ExecutionContext
   ): Future[Map[String, Int]] = {
     val matchQueryWithComment = comment match {
-      case Some(_) => Some(matchQuery.commentQuery)
-      case None    => Some(matchQuery)
+      case Some(c) => matchQuery ++ BSONDocument(f"$$comment" -> c)
+      case None    => matchQuery
     }
 
     implicit val resultTupleReader: BSONDocumentReader[(String, Int)] =
@@ -79,24 +79,24 @@ private[utils] object Queries extends QueryBuilderSyntax with BsonDocumentSyntax
           ) { framework =>
             import framework.{GroupField, Match, SumAll}
 
-            List(Match(matchQueryWithComment.getOrElse(document)), GroupField(groupBy)("count" -> SumAll))
+            List(Match(matchQueryWithComment), GroupField(groupBy)("count" -> SumAll))
           }
         case (Some(readConcern), None) =>
           collection.aggregateWith[(String, Int)](readConcern = readConcern) { framework =>
             import framework.{GroupField, Match, SumAll}
 
-            List(Match(matchQueryWithComment.getOrElse(document)), GroupField(groupBy)("count" -> SumAll))
+            List(Match(matchQueryWithComment), GroupField(groupBy)("count" -> SumAll))
           }
         case (None, Some(readPreference)) =>
           collection.aggregateWith[(String, Int)](readPreference = readPreference) { framework =>
             import framework.{GroupField, Match, SumAll}
 
-            List(Match(matchQueryWithComment.getOrElse(document)), GroupField(groupBy)("count" -> SumAll))
+            List(Match(matchQueryWithComment), GroupField(groupBy)("count" -> SumAll))
           }
         case _ => collection.aggregateWith[(String, Int)]() { framework =>
             import framework.{GroupField, Match, SumAll}
 
-            List(Match(matchQueryWithComment.getOrElse(document)), GroupField(groupBy)("count" -> SumAll))
+            List(Match(matchQueryWithComment), GroupField(groupBy)("count" -> SumAll))
           }
       }
     ).collect[Seq](-1, Cursor.FailOnError[Seq[(String, Int)]]()).map(_.toMap)
@@ -113,7 +113,7 @@ private[utils] object Queries extends QueryBuilderSyntax with BsonDocumentSyntax
     ec: ExecutionContext
   ): Future[Set[R]] = {
     val selectorWithComment = comment match {
-      case Some(_) => selector.map(_.commentQuery).orElse(Some(BSONDocument().commentQuery))
+      case Some(c) => selector.map(_ ++ BSONDocument(f"$$comment" -> c)).orElse(Some(BSONDocument(f"$$comment" -> c)))
       case None    => selector
     }
 
