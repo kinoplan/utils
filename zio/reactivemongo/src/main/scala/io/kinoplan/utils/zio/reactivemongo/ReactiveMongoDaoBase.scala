@@ -63,7 +63,7 @@ abstract class ReactiveMongoDaoBase[T](
     ): Task[Long] = for {
       coll <- collection
       result <- ZIO.fromFuture(implicit ec =>
-        Queries.countQ(coll)(selector, limit, skip, readConcern, readPreference)
+        Queries.countQ(coll)(selector, limit, skip, readConcern, readPreference, withQueryComment)
       )
     } yield result
 
@@ -75,7 +75,7 @@ abstract class ReactiveMongoDaoBase[T](
     ): Task[Map[String, Int]] = for {
       coll <- collection
       result <- ZIO.fromFuture(implicit ec =>
-        Queries.countGroupedQ(coll)(groupBy, matchQuery, readConcern, readPreference)
+        Queries.countGroupedQ(coll)(groupBy, matchQuery, readConcern, readPreference, withQueryComment)
       )
     } yield result
 
@@ -89,7 +89,7 @@ abstract class ReactiveMongoDaoBase[T](
     ): ZIO[Any, Throwable, Set[R]] = for {
       coll <- collection
       result <- ZIO.fromFuture(implicit ec =>
-        Queries.distinctQ[R](coll)(key, selector, readConcern, collation)
+        Queries.distinctQ[R](coll)(key, selector, readConcern, collation, withQueryComment)
       )
     } yield result
 
