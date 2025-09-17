@@ -72,7 +72,7 @@ object Dependencies {
     val refined                          = "eu.timepit"                    %% "refined"                                % "0.11.3"
     val scalaCollectionCompat            = "org.scala-lang.modules"        %% "scala-collection-compat"                % "2.13.0"
     val scalaJavaCompat                  = "org.scala-lang.modules"        %% "scala-java8-compat"                     % "1.0.2"
-    val scalaLogging                     = "com.typesafe.scala-logging"    %% "scala-logging"                          % "3.9.5"
+    val scalaLogging                     = "com.typesafe.scala-logging"    %% "scala-logging"                          % "3.9.6"
     val scalatestPlay                    = "org.scalatestplus.play"        %% "scalatestplus-play"                     % "7.0.2"    % Test
     val scalatestPlay2                   = "org.scalatestplus.play"        %% "scalatestplus-play"                     % "5.1.0"    % Test
     val sourcecode                       = "com.lihaoyi"                   %% "sourcecode"                             % "0.4.4"
