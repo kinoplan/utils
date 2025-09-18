@@ -15,7 +15,7 @@ import reactivemongo.api.bson.collection.BSONCollection
 import reactivemongo.api.bson.collection.BSONSerializationPack.NarrowValueReader
 import reactivemongo.api.commands.WriteResult
 
-private[utils] object Queries extends QueryBuilderSyntax{
+private[utils] object Queries extends QueryBuilderSyntax {
 
   def countQ(collection: BSONCollection)(
     selector: Option[BSONDocument] = None,
@@ -29,8 +29,10 @@ private[utils] object Queries extends QueryBuilderSyntax{
   ): Future[Long] = {
 
     val selectorWithComment = comment match {
-      case Some(c) => selector.map(_ ++ BSONDocument(f"$$comment" -> c)).orElse(Some(BSONDocument(f"$$comment" -> c)))
-      case None    => selector
+      case Some(c) => selector
+          .map(_ ++ BSONDocument(f"$$comment" -> c))
+          .orElse(Some(BSONDocument(f"$$comment" -> c)))
+      case None => selector
     }
 
     (readConcern, readPreference) match {
@@ -113,8 +115,10 @@ private[utils] object Queries extends QueryBuilderSyntax{
     ec: ExecutionContext
   ): Future[Set[R]] = {
     val selectorWithComment = comment match {
-      case Some(c) => selector.map(_ ++ BSONDocument(f"$$comment" -> c)).orElse(Some(BSONDocument(f"$$comment" -> c)))
-      case None    => selector
+      case Some(c) => selector
+          .map(_ ++ BSONDocument(f"$$comment" -> c))
+          .orElse(Some(BSONDocument(f"$$comment" -> c)))
+      case None => selector
     }
 
     readConcern.fold(

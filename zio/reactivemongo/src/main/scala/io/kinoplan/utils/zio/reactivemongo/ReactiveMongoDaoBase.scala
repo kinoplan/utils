@@ -79,7 +79,13 @@ abstract class ReactiveMongoDaoBase[T](
     ): Task[Map[String, Int]] = for {
       coll <- collection
       result <- ZIO.fromFuture(implicit ec =>
-        Queries.countGroupedQ(coll)(groupBy, matchQuery, readConcern, readPreference, withQueryComment)
+        Queries.countGroupedQ(coll)(
+          groupBy,
+          matchQuery,
+          readConcern,
+          readPreference,
+          withQueryComment
+        )
       )
     } yield result
 

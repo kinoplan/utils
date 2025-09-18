@@ -73,7 +73,13 @@ abstract class ReactiveMongoDaoBase[T](
       enclosing: sourcecode.Enclosing
     ): Future[Map[String, Int]] = collection
       .flatMap { coll =>
-        Queries.countGroupedQ(coll)(groupBy, matchQuery, readConcern, readPreference, withQueryComment)
+        Queries.countGroupedQ(coll)(
+          groupBy,
+          matchQuery,
+          readConcern,
+          readPreference,
+          withQueryComment
+        )
       }
       .withDiagnostic
 
