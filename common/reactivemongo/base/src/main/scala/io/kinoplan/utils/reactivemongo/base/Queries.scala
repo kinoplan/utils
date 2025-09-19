@@ -22,32 +22,49 @@ private[utils] object Queries extends QueryBuilderSyntax {
     limit: Option[Int] = None,
     skip: Int = 0,
     readConcern: Option[ReadConcern] = None,
-    readPreference: Option[ReadPreference] = None
+    readPreference: Option[ReadPreference] = None,
+    comment: Option[String] = None
   )(implicit
     ec: ExecutionContext
-  ): Future[Long] = (readConcern, readPreference) match {
-    case (Some(readConcern), Some(readPreference)) => collection.count(
-        selector,
-        limit,
-        skip,
-        readConcern = readConcern,
-        readPreference = readPreference
-      )
-    case (Some(readConcern), None) =>
-      collection.count(selector, limit, skip, readConcern = readConcern)
-    case (None, Some(readPreference)) =>
-      collection.count(selector, limit, skip, readPreference = readPreference)
-    case _ => collection.count(selector, limit, skip)
+  ): Future[Long] = {
+
+    val selectorWithComment = comment match {
+      case Some(c) => selector
+          .map(_ ++ BSONDocument(f"$$comment" -> c))
+          .orElse(Some(BSONDocument(f"$$comment" -> c)))
+      case None => selector
+    }
+
+    (readConcern, readPreference) match {
+      case (Some(readConcern), Some(readPreference)) => collection.count(
+          selectorWithComment,
+          limit,
+          skip,
+          readConcern = readConcern,
+          readPreference = readPreference
+        )
+      case (Some(readConcern), None) =>
+        collection.count(selectorWithComment, limit, skip, readConcern = readConcern)
+      case (None, Some(readPreference)) =>
+        collection.count(selectorWithComment, limit, skip, readPreference = readPreference)
+      case _ => collection.count(selectorWithComment, limit, skip)
+    }
   }
 
   def countGroupedQ(collection: BSONCollection)(
     groupBy: String,
     matchQuery: BSONDocument,
     readConcern: Option[ReadConcern] = None,
-    readPreference: Option[ReadPreference] = None
+    readPreference: Option[ReadPreference] = None,
+    comment: Option[String] = None
   )(implicit
     ec: ExecutionContext
   ): Future[Map[String, Int]] = {
+    val matchQueryWithComment = comment match {
+      case Some(c) => matchQuery ++ BSONDocument(f"$$comment" -> c)
+      case None    => matchQuery
+    }
+
     implicit val resultTupleReader: BSONDocumentReader[(String, Int)] =
       BSONDocumentReader.from[(String, Int)](doc =>
         for {
@@ -64,24 +81,24 @@ private[utils] object Queries extends QueryBuilderSyntax {
           ) { framework =>
             import framework.{GroupField, Match, SumAll}
 
-            List(Match(matchQuery), GroupField(groupBy)("count" -> SumAll))
+            List(Match(matchQueryWithComment), GroupField(groupBy)("count" -> SumAll))
           }
         case (Some(readConcern), None) =>
           collection.aggregateWith[(String, Int)](readConcern = readConcern) { framework =>
             import framework.{GroupField, Match, SumAll}
 
-            List(Match(matchQuery), GroupField(groupBy)("count" -> SumAll))
+            List(Match(matchQueryWithComment), GroupField(groupBy)("count" -> SumAll))
           }
         case (None, Some(readPreference)) =>
           collection.aggregateWith[(String, Int)](readPreference = readPreference) { framework =>
             import framework.{GroupField, Match, SumAll}
 
-            List(Match(matchQuery), GroupField(groupBy)("count" -> SumAll))
+            List(Match(matchQueryWithComment), GroupField(groupBy)("count" -> SumAll))
           }
         case _ => collection.aggregateWith[(String, Int)]() { framework =>
             import framework.{GroupField, Match, SumAll}
 
-            List(Match(matchQuery), GroupField(groupBy)("count" -> SumAll))
+            List(Match(matchQueryWithComment), GroupField(groupBy)("count" -> SumAll))
           }
       }
     ).collect[Seq](-1, Cursor.FailOnError[Seq[(String, Int)]]()).map(_.toMap)
@@ -91,13 +108,23 @@ private[utils] object Queries extends QueryBuilderSyntax {
     key: String,
     selector: Option[BSONDocument] = None,
     readConcern: Option[ReadConcern] = None,
-    collation: Option[Collation] = None
+    collation: Option[Collation] = None,
+    comment: Option[String] = None
   )(implicit
     reader: NarrowValueReader[R],
     ec: ExecutionContext
-  ): Future[Set[R]] = readConcern.fold(
-    collection.distinct[R, Set](key = key, selector = selector, collation = collation)
-  )(rc => collection.distinct[R, Set](key, selector, rc, collation))
+  ): Future[Set[R]] = {
+    val selectorWithComment = comment match {
+      case Some(c) => selector
+          .map(_ ++ BSONDocument(f"$$comment" -> c))
+          .orElse(Some(BSONDocument(f"$$comment" -> c)))
+      case None => selector
+    }
+
+    readConcern.fold(
+      collection.distinct[R, Set](key = key, selector = selectorWithComment, collation = collation)
+    )(rc => collection.distinct[R, Set](key, selectorWithComment, rc, collation))
+  }
 
   def findManyQ[T: BSONDocumentReader](collection: BSONCollection)(
     selector: BSONDocument = document,
