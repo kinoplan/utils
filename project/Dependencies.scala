@@ -62,7 +62,7 @@ object Dependencies {
     val play                             = "org.playframework"             %% "play"                                   % "3.0.9"
     val play2                            = "com.typesafe.play"             %% "play"                                   % "2.8.22"
     val playJson                         = "org.playframework"             %% "play-json"                              % "3.0.6"
-    val play2Json                        = "com.typesafe.play"             %% "play-json"                              % "2.10.7"
+    val play2Json                        = "com.typesafe.play"             %% "play-json"                              % "2.10.8"
     val playReactiveMongo                = "org.reactivemongo"             %% "play2-reactivemongo"                    % "1.1.0-play30.RC18"
     val play2ReactiveMongo               = "org.reactivemongo"             %% "play2-reactivemongo"                    % "1.1.0-play28.RC13"
     val prometheusExporterHttpServer     = "io.prometheus"                  % "prometheus-metrics-exporter-httpserver" % "1.4.1"
