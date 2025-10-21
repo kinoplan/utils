@@ -70,7 +70,7 @@ object Dependencies {
     val reactiveMongoBsonApi             = "org.reactivemongo"             %% "reactivemongo-bson-api"                 % reactivemongoV
     val redisson                         = "org.redisson"                   % "redisson"                               % "3.24.2"
     val refined                          = "eu.timepit"                    %% "refined"                                % "0.11.3"
-    val scalaCollectionCompat            = "org.scala-lang.modules"        %% "scala-collection-compat"                % "2.13.0"
+    val scalaCollectionCompat            = "org.scala-lang.modules"        %% "scala-collection-compat"                % "2.14.0"
     val scalaJavaCompat                  = "org.scala-lang.modules"        %% "scala-java8-compat"                     % "1.0.2"
     val scalaLogging                     = "com.typesafe.scala-logging"    %% "scala-logging"                          % "3.9.6"
     val scalatestPlay                    = "org.scalatestplus.play"        %% "scalatestplus-play"                     % "7.0.2"    % Test
