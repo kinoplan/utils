@@ -51,7 +51,7 @@ class ReactiveMongoClientInstrumentationSpec
   private def checkSpan(
     dbOperationName: String,
     dbNamespace: String,
-    extraChecks: Span.Finished => Assertion*
+    extraChecks: Seq[Span.Finished => Assertion]
   ): Span.Finished = eventually(timeout(2.seconds)) {
     val span = testSpanReporter().nextSpan().value
     span.metricTags.get(plain("db.namespace")) shouldBe dbNamespace
@@ -64,27 +64,28 @@ class ReactiveMongoClientInstrumentationSpec
 
   private def checkCollectionSpan(
     dbOperationName: String,
-    extraChecks: Span.Finished => Assertion*
+    extraChecks: Seq[Span.Finished => Assertion] = Seq.empty
   ): Span.Finished = checkSpan(
     dbOperationName,
     "test",
     Seq[Span.Finished => Assertion](
       _.operationName shouldBe s"$dbOperationName tools",
       _.metricTags.get(plain("db.collection.name")) shouldBe "tools"
-    ) ++ extraChecks: _*
+    ) ++ extraChecks
   )
 
-  private def testOp(dbOperationName: String, extraChecks: Span.Finished => Assertion*)(
-    op: => Future[Unit]
-  ): Unit = {
+  private def testOp(
+    dbOperationName: String,
+    extraChecks: Seq[Span.Finished => Assertion] = Seq.empty
+  )(op: => Future[Unit]): Unit = {
     op
-    checkCollectionSpan(dbOperationName, extraChecks: _*)
+    checkCollectionSpan(dbOperationName, extraChecks)
     testSpanReporter().clear()
   }
 
   "ReactiveMongo Instrumentation" should {
     "create spans for drop" in
-      testOp("drop", _.hasError shouldBe true) {
+      testOp("drop", Seq(_.hasError shouldBe true)) {
         for {
           t <- tools
           _ <- t.drop()
@@ -233,9 +234,12 @@ class ReactiveMongoClientInstrumentationSpec
 
       checkCollectionSpan(
         "aggregate",
-        _.tags.get(plainLong("db.response.returned_rows")) shouldBe 2L
+        Seq(_.tags.get(plainLong("db.response.returned_rows")) shouldBe 2L)
       )
-      checkCollectionSpan("getMore", _.tags.get(plainLong("db.response.returned_rows")) shouldBe 1L)
+      checkCollectionSpan(
+        "getMore",
+        Seq(_.tags.get(plainLong("db.response.returned_rows")) shouldBe 1L)
+      )
       testSpanReporter().clear()
     }
 
@@ -254,8 +258,11 @@ class ReactiveMongoClientInstrumentationSpec
         _ <- t.find(document("find" -> true)).batchSize(2).cursor().collect[List]()
       } yield ()
 
-      checkCollectionSpan("find", _.tags.get(plainLong("db.response.returned_rows")) shouldBe 2L)
-      checkCollectionSpan("getMore", _.tags.get(plainLong("db.response.returned_rows")) shouldBe 1L)
+      checkCollectionSpan("find", Seq(_.tags.get(plainLong("db.response.returned_rows")) shouldBe 2L))
+      checkCollectionSpan(
+        "getMore",
+        Seq(_.tags.get(plainLong("db.response.returned_rows")) shouldBe 1L)
+      )
       testSpanReporter().clear()
     }
 
@@ -290,10 +297,10 @@ class ReactiveMongoClientInstrumentationSpec
           }
       } yield ()
 
-      checkSpan("startSession", "test", _.operationName shouldBe "startSession test")
+      checkSpan("startSession", "test", Seq(_.operationName shouldBe "startSession test"))
       checkCollectionSpan("insert")
-      checkSpan("commitTransaction", "admin", _.operationName shouldBe "commitTransaction admin")
-      checkSpan("endSessions", "test", _.operationName shouldBe "endSessions test")
+      checkSpan("commitTransaction", "admin", Seq(_.operationName shouldBe "commitTransaction admin"))
+      checkSpan("endSessions", "test", Seq(_.operationName shouldBe "endSessions test"))
 
       testSpanReporter().clear()
     }
