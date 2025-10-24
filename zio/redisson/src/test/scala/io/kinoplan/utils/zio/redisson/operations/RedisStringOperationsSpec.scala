@@ -87,7 +87,7 @@ object RedisStringOperationsSpec extends DefaultRedisCodecs {
         _ <- redis.set(key, "Hello")
         case1 <- redis.getEx(key, duration).as[String]
         case2 <- redis.ttl(key)
-        case3 <- redis.getExPersist(key, duration).as[String]
+        case3 <- redis.getExPersist(key).as[String]
         case4 <- redis.ttl(key)
       } yield assertTrue(
         case1.contains("Hello"),

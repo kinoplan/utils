@@ -4,12 +4,12 @@ import java.util.concurrent.TimeUnit
 
 import org.redisson.api._
 import org.redisson.api.stream._
-import zio.{Duration, NonEmptyChunk, Task, URLayer, ZIO, ZLayer}
+import zio._
 
-import io.kinoplan.utils.redisson.codec.base.{BaseRedisDecoder, BaseRedisEncoder}
+import io.kinoplan.utils.redisson.codec.base.BaseRedisDecoder
 import io.kinoplan.utils.zio.redisson.codec.RCodec
 import io.kinoplan.utils.zio.redisson.operations.base.ResultBuilder._
-import io.kinoplan.utils.zio.redisson.utils.{JavaDecoders, JavaEncoders}
+import io.kinoplan.utils.zio.redisson.utils.JavaDecoders
 
 /** Interface representing operations that can be performed on Redis stream data.
   */
@@ -40,26 +40,22 @@ trait RedisStreamOperations {
     *
     * @param key
     *   The key of the stream.
-    * @param field
-    *   The field of the entry to add.
-    * @param value
-    *   The value to associate with the field.
+    * @param args
+    *   Add-arguments of type `org.redisson.api.stream.StreamAddArgs`. IMPORTANT: construct it via
+    *   [[io.kinoplan.utils.zio.redisson.models.StreamAdd]] factory to ensure proper codec encoding.
     * @param codec
     *   Wrapper around Redisson codec. Default: taken from config.
-    * @param encoder
-    *   The encoder instance that converts `T` to `V`.
-    * @tparam T
-    *   Type of the encoded/decoded value.
     * @tparam K
     *   Type of the keys stored in Redisson.
     * @tparam V
     *   Type of the values stored in Redisson.
     * @return
     *   The ID of the added entry.
+    * @see
+    *   [[io.kinoplan.utils.zio.redisson.models.StreamAdd]]
     */
-  def xAdd[T, K, V](key: String, field: K, value: T)(implicit
-    codec: RCodec[K, V],
-    encoder: BaseRedisEncoder[T, V]
+  def xAdd[K, V](key: String, args: StreamAddArgs[K, V])(implicit
+    codec: RCodec[K, V]
   ): Task[StreamMessageId]
 
   /** Add an entry to a stream with a specified ID, field, and value.
@@ -70,108 +66,55 @@ trait RedisStreamOperations {
     *   The key of the stream.
     * @param id
     *   The specific ID for the new entry.
-    * @param field
-    *   The field of the entry to add.
-    * @param value
-    *   The value to associate with the field.
+    * @param args
+    *   Add-arguments of type `org.redisson.api.stream.StreamAddArgs`. IMPORTANT: construct it via
+    *   [[io.kinoplan.utils.zio.redisson.models.StreamAdd]] factory to ensure proper codec encoding.
     * @param codec
     *   Wrapper around Redisson codec. Default: taken from config.
-    * @param encoder
-    *   The encoder instance that converts `T` to `V`.
-    * @tparam T
-    *   Type of the encoded/decoded value.
     * @tparam K
     *   Type of the keys stored in Redisson.
     * @tparam V
     *   Type of the values stored in Redisson.
+    * @see
+    *   [[io.kinoplan.utils.zio.redisson.models.StreamAdd]]
     */
-  def xAdd[T, K, V](key: String, id: StreamMessageId, field: K, value: T)(implicit
-    codec: RCodec[K, V],
-    encoder: BaseRedisEncoder[T, V]
-  ): Task[Unit]
-
-  /** Add multiple fields and values to a stream as a single entry.
-    *
-    * Similar to the XADD command with multiple fields.
-    *
-    * @param key
-    *   The key of the stream.
-    * @param fieldsValue
-    *   A map of fields and their associated values.
-    * @param codec
-    *   Wrapper around Redisson codec. Default: taken from config.
-    * @param encoder
-    *   The encoder instance that converts `T` to `V`.
-    * @tparam T
-    *   Type of the encoded/decoded value.
-    * @tparam K
-    *   Type of the keys stored in Redisson.
-    * @tparam V
-    *   Type of the values stored in Redisson.
-    * @return
-    *   The ID of the added entry.
-    */
-  def xAdd[T, K, V](key: String, fieldsValue: Map[K, T])(implicit
-    codec: RCodec[K, V],
-    encoder: BaseRedisEncoder[T, V]
-  ): Task[StreamMessageId]
-
-  /** Add multiple fields and values to a stream with a specified ID.
-    *
-    * Similar to the XADD command with multiple fields and a specified ID.
-    *
-    * @param key
-    *   The key of the stream.
-    * @param id
-    *   The specific ID for the new entry.
-    * @param fieldsValue
-    *   A map of fields and their associated values.
-    * @param codec
-    *   Wrapper around Redisson codec. Default: taken from config.
-    * @param encoder
-    *   The encoder instance that converts `T` to `V`.
-    * @tparam T
-    *   Type of the encoded/decoded value.
-    * @tparam K
-    *   Type of the keys stored in Redisson.
-    * @tparam V
-    *   Type of the values stored in Redisson.
-    */
-  def xAdd[T, K, V](key: String, id: StreamMessageId, fieldsValue: Map[K, T])(implicit
-    codec: RCodec[K, V],
-    encoder: BaseRedisEncoder[T, V]
+  def xAdd[K, V](key: String, id: StreamMessageId, args: StreamAddArgs[K, V])(implicit
+    codec: RCodec[K, V]
   ): Task[Unit]
 
   /** Add multiple entries to a stream in a batch mode.
     *
-    * Similar to the XADD command for batch processing.
+    * Similar to the XADD command for batch processing. Consumes the entire input stream into a
+    * single batch operation, executes it, and emits the resulting IDs.
     *
     * @param key
     *   The key of the stream.
-    * @param fieldsValues
-    *   A sequence of maps, each containing fields and their associated values.
+    * @param chunks
+    *   ZIO chunks of add-arguments of type `org.redisson.api.stream.StreamAddArgs`. IMPORTANT: each
+    *   element should be constructed via [[io.kinoplan.utils.zio.redisson.models.StreamAdd]]
+    *   factory to ensure proper codec encoding.
     * @param options
     *   Options for batch execution, with defaults provided.
     * @param codec
     *   Wrapper around Redisson codec. Default: taken from config.
-    * @param encoder
-    *   The encoder instance that converts `T` to `V`.
-    * @tparam T
-    *   Type of the encoded/decoded value.
     * @tparam K
     *   Type of the keys stored in Redisson.
     * @tparam V
     *   Type of the values stored in Redisson.
     * @return
-    *   A list of IDs of the added entries.
+    *   IDs of the added entries.
+    * @note
+    *   All input elements are accumulated in memory before batch execution. For large streams,
+    *   consider memory implications.
+    * @see
+    *   [[io.kinoplan.utils.zio.redisson.models.StreamAdd]]
     */
-  def xAdd[T, K, V](
+  def xAdd[K, V](
     key: String,
-    fieldsValues: Seq[Map[K, T]],
+    chunks: Chunk[StreamAddArgs[K, V]],
     options: BatchOptions = BatchOptions.defaults()
   )(implicit
-    codec: RCodec[K, V],
-    encoder: BaseRedisEncoder[T, V]
+    codec: RCodec[K, V]
   ): Task[List[StreamMessageId]]
 
   /** Auto claims messages that have been idle for a minimum amount of time.
@@ -707,50 +650,24 @@ trait RedisStreamOperationsImpl extends RedisStreamOperations {
     codec: RCodec[_, _]
   ): Task[Long] = ZIO.fromCompletionStage(stream(key).ackAsync(group, ids: _*)).map(_.toLong)
 
-  override def xAdd[T, K, V](key: String, field: K, value: T)(implicit
-    codec: RCodec[K, V],
-    encoder: BaseRedisEncoder[T, V]
-  ): Task[StreamMessageId] =
-    ZIO.fromCompletionStage(stream(key).addAsync(StreamAddArgs.entry(field, codec.encode(value))))
+  override def xAdd[K, V](key: String, args: StreamAddArgs[K, V])(implicit
+    codec: RCodec[K, V]
+  ): Task[StreamMessageId] = ZIO.fromCompletionStage(stream(key).addAsync(args))
 
-  override def xAdd[T, K, V](key: String, id: StreamMessageId, field: K, value: T)(implicit
-    codec: RCodec[K, V],
-    encoder: BaseRedisEncoder[T, V]
-  ): Task[Unit] = ZIO
-    .fromCompletionStage(stream(key).addAsync(id, StreamAddArgs.entry(field, codec.encode(value))))
-    .unit
+  override def xAdd[K, V](key: String, id: StreamMessageId, args: StreamAddArgs[K, V])(implicit
+    codec: RCodec[K, V]
+  ): Task[Unit] = ZIO.fromCompletionStage(stream(key).addAsync(id, args)).unit
 
-  override def xAdd[T, K, V](key: String, fieldsValue: Map[K, T])(implicit
-    codec: RCodec[K, V],
-    encoder: BaseRedisEncoder[T, V]
-  ): Task[StreamMessageId] = ZIO.fromCompletionStage(
-    stream(key).addAsync(StreamAddArgs.entries(JavaEncoders.fromMap(fieldsValue)))
-  )
-
-  override def xAdd[T, K, V](key: String, id: StreamMessageId, fieldsValue: Map[K, T])(implicit
-    codec: RCodec[K, V],
-    encoder: BaseRedisEncoder[T, V]
-  ): Task[Unit] = ZIO
-    .fromCompletionStage(
-      stream(key).addAsync(id, StreamAddArgs.entries(JavaEncoders.fromMap(fieldsValue)))
-    )
-    .unit
-
-  override def xAdd[T, K, V](key: String, fieldsValues: Seq[Map[K, T]], options: BatchOptions)(
+  override def xAdd[K, V](key: String, chunks: Chunk[StreamAddArgs[K, V]], options: BatchOptions)(
     implicit
-    codec: RCodec[K, V],
-    encoder: BaseRedisEncoder[T, V]
+    codec: RCodec[K, V]
   ): Task[List[StreamMessageId]] = {
     val batch = redissonClient.createBatch(options)
     val currentBatchStream = batchStream(key, batch)
 
-    fieldsValues.foreach { fieldsValue =>
-      currentBatchStream.addAsync(StreamAddArgs.entries(JavaEncoders.fromMap(fieldsValue)))
-    }
-
     ZIO
-      .fromCompletionStage(batch.executeAsync())
-      .map(_.getResponses)
+      .foreachDiscard(chunks)(args => ZIO.attempt(currentBatchStream.addAsync(args)))
+      .zipRight(ZIO.fromCompletionStage(batch.executeAsync()).map(_.getResponses))
       .map(JavaDecoders.fromListUnderlying(_))
       .flatMap(responses =>
         ZIO.foreach(responses)(response => ZIO.attempt(response.asInstanceOf[StreamMessageId]))

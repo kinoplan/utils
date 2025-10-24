@@ -117,8 +117,6 @@ trait RedisStringOperations {
     *
     * @param key
     *   The key to retrieve.
-    * @param duration
-    *   Currently used in your description but typically should persist the key.
     * @param codec
     *   Wrapper around Redisson codec. Default: taken from config.
     * @tparam V
@@ -126,7 +124,7 @@ trait RedisStringOperations {
     * @return
     *   An Option containing the value, or None if the key does not exist.
     */
-  def getExPersist[V](key: String, duration: Duration)(implicit
+  def getExPersist[V](key: String)(implicit
     codec: RCodec[_, V]
   ): ResultBuilder1[V]
 
@@ -564,7 +562,7 @@ trait RedisStringOperationsImpl extends RedisStringOperations {
       .flatMap(JavaDecoders.fromNullableValue(_))
   }
 
-  override def getExPersist[V](key: String, duration: Duration)(implicit
+  override def getExPersist[V](key: String)(implicit
     codec: RCodec[_, V]
   ): ResultBuilder1[V] = new ResultBuilder1[V] {
     override def as[T](implicit
@@ -692,13 +690,15 @@ trait RedisStringOperationsImpl extends RedisStringOperations {
 
   override def setRange[T](key: String, offset: Long, value: T)(implicit
     encoder: BaseRedisEncoder[T, String]
-  ): Task[Long] = for {
-    data <- ZIO.attempt(encoder.encode(value).getBytes)
-    byteBuffer <- ZIO.attempt(ByteBuffer.wrap(data))
-    channel = binaryStream(key).getChannel
-    _ <- ZIO.attempt(channel.position(offset).write(byteBuffer))
-    result <- ZIO.attempt(channel.size())
-  } yield result
+  ): Task[Long] = ZIO.scoped(
+    for {
+      data <- ZIO.attempt(encoder.encode(value).getBytes)
+      byteBuffer <- ZIO.attempt(ByteBuffer.wrap(data))
+      channel <- ZIO.fromAutoCloseable(ZIO.attempt(binaryStream(key).getChannel))
+      _ <- ZIO.attempt(channel.position(offset).write(byteBuffer))
+      result <- ZIO.attempt(channel.size())
+    } yield result
+  )
 
   override def strLen(key: String)(implicit
     codec: RCodec[_, _]
