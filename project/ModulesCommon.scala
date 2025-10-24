@@ -159,7 +159,7 @@ object ModulesCommon {
     .settings(
       libraryDependencies ++=
         Seq(
-          Libraries.redisson,
+          Libraries.redissonLegacy,
           Libraries.jacksonModule,
           Libraries.scalaCollectionCompat,
           Libraries.scalaJavaCompat
