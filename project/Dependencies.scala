@@ -12,7 +12,7 @@ object Dependencies {
     val reactivemongoV = "1.1.0-RC13"
     val scalaJavaTimeV = "2.6.0"
     val sttpV          = "3.11.0"
-    val tapirV         = "1.12.0"
+    val tapirV         = "1.12.1"
     val zioV           = "2.1.22"
     val zioConfigV     = "4.0.5"
   }
@@ -40,9 +40,9 @@ object Dependencies {
 
     // A -> Z
     val http4sBlazeServer                = "org.http4s"                    %% "http4s-blaze-server"                    % "0.23.17"
-    val http4sDsl                        = "org.http4s"                    %% "http4s-dsl"                             % "0.23.32"
-    val http4sServer                     = "org.http4s"                    %% "http4s-server"                          % "0.23.32"
-    val jacksonModule                    = "com.fasterxml.jackson.module"  %% "jackson-module-scala"                   % "2.20.0"
+    val http4sDsl                        = "org.http4s"                    %% "http4s-dsl"                             % "0.23.33"
+    val http4sServer                     = "org.http4s"                    %% "http4s-server"                          % "0.23.33"
+    val jacksonModule                    = "com.fasterxml.jackson.module"  %% "jackson-module-scala"                   % "2.20.1"
     val jodaTime                         = "joda-time"                      % "joda-time"                              % "2.14.0"
     val kamonCore                        = "io.kamon"                      %% "kamon-core"                             % kamonV
     val kamonInstrumentationCommon       = "io.kamon"                      %% "kamon-instrumentation-common"           % kamonV
@@ -87,7 +87,7 @@ object Dependencies {
     val zioConfigEnumeratum              = "dev.zio"                       %% "zio-config-enumeratum"                  % zioConfigV
     val zioInteropCats                   = "dev.zio"                       %% "zio-interop-cats"                       % "23.1.0.5"
     val zioMetricsConnectorsMicrometer   = "dev.zio"                       %% "zio-metrics-connectors-micrometer"      % "2.5.2"
-    val zioOpenTelemetry                 = "dev.zio"                       %% "zio-opentelemetry"                      % "3.1.10"
+    val zioOpenTelemetry                 = "dev.zio"                       %% "zio-opentelemetry"                      % "3.1.11"
   }
 
   object Batches {
