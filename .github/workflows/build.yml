@@ -20,7 +20,7 @@ jobs:
       uses: actions/checkout@v5
 
     - name: Cache build
-      uses: coursier/cache-action@v6
+      uses: coursier/cache-action@v7
 
     - name: Install coursier
       uses: coursier/setup-action@v1
