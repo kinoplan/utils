@@ -33,6 +33,8 @@ object ProjectSettings {
           ScalacOptions.warnUnusedExplicits,
           ScalacOptions.warnNonUnitStatement
         ),
+      scalacOptions ++=
+        Seq("-Wconf:msg=parameter value monad in class ZIoSlf4jLogger is never used.*:s"),
       Test / tpolecatExcludeOptions ++=
         Set(ScalacOptions.privateWarnDeadCode, ScalacOptions.warnNonUnitStatement),
       Test / fork := true,
