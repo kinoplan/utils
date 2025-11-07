@@ -6,7 +6,6 @@ singleServerConfig:
   subscriptionTimeout: 10000
   retryAttempts: 5
   retryInterval: 1500
-  credentialsReapplyInterval: 0
   subscriptionsPerConnection: 10
   clientName: "native-single-test"
   address: "redis://127.0.0.1:6379"

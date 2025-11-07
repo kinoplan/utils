@@ -1,7 +1,5 @@
 package io.kinoplan.utils.zio.redisson.operations
 
-import java.util.concurrent.TimeUnit
-
 import org.redisson.api._
 import zio.{Duration, Task, URLayer, ZIO, ZLayer}
 import zio.stream.ZStream
@@ -1693,9 +1691,7 @@ trait RedisSortedSetOperationsImpl extends RedisSortedSetOperations with Default
     override def as[T](implicit
       decoder: BaseRedisDecoder[V, T]
     ): Task[Option[T]] = ZIO
-      .fromCompletionStage(
-        scoredSortedSet(key).pollLastAsync(timeout.toMillis, TimeUnit.MILLISECONDS)
-      )
+      .fromCompletionStage(scoredSortedSet(key).pollLastAsync(timeout))
       .flatMap(JavaDecoders.fromNullableValue(_))
   }
 
@@ -1705,9 +1701,7 @@ trait RedisSortedSetOperationsImpl extends RedisSortedSetOperations with Default
     override def as[T](implicit
       decoder: BaseRedisDecoder[V, T]
     ): Task[Option[T]] = ZIO
-      .fromCompletionStage(
-        scoredSortedSet(key).pollFirstAsync(timeout.toMillis, TimeUnit.MILLISECONDS)
-      )
+      .fromCompletionStage(scoredSortedSet(key).pollFirstAsync(timeout))
       .flatMap(JavaDecoders.fromNullableValue(_))
   }
 
