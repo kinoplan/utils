@@ -11,7 +11,7 @@ object Dependencies {
     val openTelemetryV = "1.56.0"
     val reactivemongoV = "1.1.0-RC13"
     val scalaJavaTimeV = "2.6.0"
-    val sttpV          = "3.11.0"
+    val sttpV          = "4.0.13"
     val tapirV         = "1.12.3"
     val zioV           = "2.1.22"
     val zioConfigV     = "4.0.5"
@@ -78,7 +78,7 @@ object Dependencies {
     val scalatestPlay                    = "org.scalatestplus.play"        %% "scalatestplus-play"                     % "7.0.2"    % Test
     val scalatestPlay2                   = "org.scalatestplus.play"        %% "scalatestplus-play"                     % "5.1.0"    % Test
     val sourcecode                       = "com.lihaoyi"                   %% "sourcecode"                             % "0.4.4"
-    val sttpSlf4jBackend                 = "com.softwaremill.sttp.client3" %% "slf4j-backend"                          % sttpV
+    val sttpSlf4jBackend                 = "com.softwaremill.sttp.client4" %% "slf4j-backend"                          % sttpV
     val tapirServer                      = "com.softwaremill.sttp.tapir"   %% "tapir-server"                           % tapirV
     val testContainersMongodb            = "org.testcontainers"             % "mongodb"                                % "1.21.3"   % Test
     val testContainersRedis              = "com.redis"                      % "testcontainers-redis"                   % "2.2.4"    % Test
