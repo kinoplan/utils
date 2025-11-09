@@ -83,14 +83,6 @@ object ModulesZio {
     .settings(name := "utils-zio-sttp-slf4j-backend")
     .settings(libraryDependencies ++= Seq(Libraries.sttpSlf4jBackend, Libraries.zio.value % Provided))
 
-  lazy val sttpOpenTelemetryProfile: Project => Project = _
-    .configure(ProjectSettings.commonProfile)
-    .settings(name := "utils-zio-sttp-opentelemetry-backend")
-    .settings(
-      libraryDependencies ++=
-        Seq(Libraries.sttpCore, Libraries.sttpZio, Libraries.zio.value, Libraries.zioOpenTelemetry)
-    )
-
   lazy val tapirServerProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile, ProjectSettings.kindProjectorProfile)
     .settings(name := "utils-zio-tapir-server")

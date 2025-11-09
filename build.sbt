@@ -24,8 +24,7 @@ lazy val rawAllAggregates = chimneyZioPrelude.projectRefs ++ circeReactivemongoB
   playRequestMapContext.projectRefs ++ zioHttp4sHealthCheck.projectRefs ++
   zioIntegrationCheck.projectRefs ++ zioMonitoringPrometheus.projectRefs ++
   zioOpenTelemetry.projectRefs ++ zioReactivemongo.projectRefs ++ zioRedisson.projectRefs ++
-  zioSttpLoggingSlf4j.projectRefs ++ zioSttpOpenTelemetry.projectRefs ++
-  zioTapirServer.projectRefs ++ zioTapirOpenTelemetry.projectRefs
+  zioSttpLoggingSlf4j.projectRefs ++ zioTapirServer.projectRefs ++ zioTapirOpenTelemetry.projectRefs
 
 lazy val allAggregates = rawAllAggregates
 
@@ -440,11 +439,6 @@ lazy val zioSttpLoggingSlf4j = projectMatrix
   .in(file("zio/sttp/logging/slf4j"))
   .jvmPlatform(ProjectSettings.scala2Versions)
   .configure(ModulesZio.sttpLoggingSlf4jProfile)
-
-lazy val zioSttpOpenTelemetry = projectMatrix
-  .in(file("zio/sttp/opentelemetry"))
-  .jvmPlatform(ProjectSettings.scala2Versions)
-  .configure(ModulesZio.sttpOpenTelemetryProfile)
 
 lazy val zioTapirServer = projectMatrix
   .in(file("zio/tapir/server"))
