@@ -78,9 +78,7 @@ object Dependencies {
     val scalatestPlay                    = "org.scalatestplus.play"        %% "scalatestplus-play"                     % "7.0.2"    % Test
     val scalatestPlay2                   = "org.scalatestplus.play"        %% "scalatestplus-play"                     % "5.1.0"    % Test
     val sourcecode                       = "com.lihaoyi"                   %% "sourcecode"                             % "0.4.4"
-    val sttpCore                         = "com.softwaremill.sttp.client3" %% "core"                                   % sttpV
     val sttpSlf4jBackend                 = "com.softwaremill.sttp.client3" %% "slf4j-backend"                          % sttpV
-    val sttpZio                          = "com.softwaremill.sttp.client3" %% "zio"                                    % sttpV
     val tapirServer                      = "com.softwaremill.sttp.tapir"   %% "tapir-server"                           % tapirV
     val testContainersMongodb            = "org.testcontainers"             % "mongodb"                                % "1.21.3"   % Test
     val testContainersRedis              = "com.redis"                      % "testcontainers-redis"                   % "2.2.4"    % Test
