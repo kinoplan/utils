@@ -113,7 +113,8 @@ abstract class ReactiveMongoDaoBase[T](
       skip: Int = 0,
       limit: Int = -1,
       readConcern: Option[ReadConcern] = None,
-      readPreference: ReadPreference = readPreferenceO.getOrElse(ReadPreference.secondaryPreferred)
+      readPreference: ReadPreference = readPreferenceO.getOrElse(ReadPreference.secondaryPreferred),
+      collation: Option[Collation] = None
     )(implicit
       r: BSONDocumentReader[M],
       enclosing: sourcecode.Enclosing
@@ -128,6 +129,7 @@ abstract class ReactiveMongoDaoBase[T](
           limit,
           readConcern,
           readPreference,
+          collation,
           withQueryComment
         )
 
@@ -153,7 +155,8 @@ abstract class ReactiveMongoDaoBase[T](
       sort: BSONDocument = document,
       batchSize: Int = 0,
       readConcern: Option[ReadConcern] = None,
-      readPreference: ReadPreference = readPreferenceO.getOrElse(ReadPreference.secondaryPreferred)
+      readPreference: ReadPreference = readPreferenceO.getOrElse(ReadPreference.secondaryPreferred),
+      collation: Option[Collation] = None
     )(implicit
       r: BSONDocumentReader[M],
       enclosing: sourcecode.Enclosing,
@@ -167,6 +170,7 @@ abstract class ReactiveMongoDaoBase[T](
           batchSize,
           readConcern,
           readPreference,
+          collation,
           withQueryComment
         )(r, cursorProducer)
 
@@ -177,13 +181,21 @@ abstract class ReactiveMongoDaoBase[T](
       selector: BSONDocument = BSONDocument(),
       projection: Option[BSONDocument] = None,
       readConcern: Option[ReadConcern] = None,
-      readPreference: Option[ReadPreference] = readPreferenceO
+      readPreference: Option[ReadPreference] = readPreferenceO,
+      collation: Option[Collation] = None
     )(implicit
       r: BSONDocumentReader[T],
       enclosing: sourcecode.Enclosing
     ): Future[Option[T]] = collection
       .flatMap { coll =>
-        Queries.findOneQ(coll)(selector, projection, readConcern, readPreference, withQueryComment)
+        Queries.findOneQ(coll)(
+          selector,
+          projection,
+          readConcern,
+          readPreference,
+          collation,
+          withQueryComment
+        )
 
       }
       .withDiagnostic

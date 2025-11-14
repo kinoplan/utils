@@ -1,5 +1,6 @@
 package io.kinoplan.utils.reactivemongo.base
 
+import reactivemongo.api.Collation
 import reactivemongo.api.bson.BSONDocument
 import reactivemongo.api.indexes.{Index, IndexType}
 
@@ -9,7 +10,8 @@ case class SmartIndex(
   unique: Boolean = false,
   background: Boolean = true,
   partialFilter: Option[BSONDocument] = None,
-  expireAfterSeconds: Option[Int] = None
+  expireAfterSeconds: Option[Int] = None,
+  collation: Option[Collation] = None
 ) {
 
   def toIndex = Index(
@@ -18,7 +20,8 @@ case class SmartIndex(
     unique = unique,
     background = background,
     partialFilter = partialFilter,
-    expireAfterSeconds = expireAfterSeconds
+    expireAfterSeconds = expireAfterSeconds,
+    collation = collation
   )
 
 }

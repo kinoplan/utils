@@ -135,14 +135,18 @@ private[utils] object Queries extends QueryBuilderSyntax {
     limit: Int = -1,
     readConcern: Option[ReadConcern] = None,
     readPreference: ReadPreference = ReadPreference.secondaryPreferred,
+    collation: Option[Collation] = None,
     comment: Option[String] = None
   )(implicit
     ec: ExecutionContext
   ): Future[List[T]] = {
     val queryBuilder = collection.find(selector, projection).sort(sort).skip(skip)
     val queryBuilderWithHint =
-      hint.fold(queryBuilder)(specification => queryBuilder.hint(collection.hint(specification)))
-    val queryBuilderWithComment = comment.fold(queryBuilderWithHint)(queryBuilderWithHint.comment(_))
+      hint.fold(queryBuilder)(hint => queryBuilder.hint(collection.hint(hint)))
+    val queryBuilderWithCollation =
+      collation.fold(queryBuilderWithHint)(collation => queryBuilderWithHint.collation(collation))
+    val queryBuilderWithComment =
+      comment.fold(queryBuilderWithCollation)(queryBuilderWithCollation.comment(_))
 
     queryBuilderWithComment.all[T](limit, readConcern = readConcern, readPreference = readPreference)
   }
@@ -154,13 +158,17 @@ private[utils] object Queries extends QueryBuilderSyntax {
     batchSize: Int = 0,
     readConcern: Option[ReadConcern] = None,
     readPreference: ReadPreference = ReadPreference.secondaryPreferred,
+    collation: Option[Collation] = None,
     comment: Option[String] = None
   )(implicit
     r: BSONDocumentReader[T],
     cursorProducer: CursorProducer[T]
   ): cursorProducer.ProducedCursor = {
     val queryBuilder = collection.find(selector, projection).sort(sort).batchSize(batchSize)
-    val queryBuilderWithComment = comment.fold(queryBuilder)(queryBuilder.comment(_))
+    val queryBuilderWithCollation =
+      collation.fold(queryBuilder)(collation => queryBuilder.collation(collation))
+    val queryBuilderWithComment =
+      comment.fold(queryBuilderWithCollation)(queryBuilderWithCollation.comment(_))
 
     queryBuilderWithComment.allCursor[T](readConcern, readPreference)(r, cursorProducer)
   }
@@ -170,14 +178,18 @@ private[utils] object Queries extends QueryBuilderSyntax {
     projection: Option[BSONDocument] = None,
     readConcern: Option[ReadConcern] = None,
     readPreference: Option[ReadPreference] = None,
+    collation: Option[Collation] = None,
     comment: Option[String] = None
   )(implicit
     ec: ExecutionContext
   ): Future[Option[T]] = {
     val queryBuilder = collection.find(selector, projection)
     val queryBuilderWithReadConcern = readConcern.fold(queryBuilder)(queryBuilder.readConcern(_))
+    val queryBuilderWithCollation = collation.fold(queryBuilderWithReadConcern)(collation =>
+      queryBuilderWithReadConcern.collation(collation)
+    )
     val queryBuilderWithComment =
-      comment.fold(queryBuilderWithReadConcern)(queryBuilderWithReadConcern.comment(_))
+      comment.fold(queryBuilderWithCollation)(queryBuilderWithCollation.comment(_))
 
     readPreference.fold(queryBuilderWithComment.one[T])(rp =>
       queryBuilderWithComment.one[T](readPreference = rp)
@@ -220,7 +232,7 @@ private[utils] object Queries extends QueryBuilderSyntax {
     elements.flatMap(element => update.many(element))
   }
 
-  def upsertQ[T: BSONDocumentWriter](collection: BSONCollection)(q: BSONDocument, u: T)(implicit
+  def upsertQ[T](collection: BSONCollection)(q: BSONDocument, u: T)(implicit
     ec: ExecutionContext,
     w: BSONDocumentWriter[T]
   ) = w.writeTry(u) match {
