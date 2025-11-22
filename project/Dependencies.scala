@@ -48,7 +48,7 @@ object Dependencies {
     val kamonCore                        = "io.kamon"                      %% "kamon-core"                             % kamonV
     val kamonInstrumentationCommon       = "io.kamon"                      %% "kamon-instrumentation-common"           % kamonV
     val kamonTestkit                     = "io.kamon"                      %% "kamon-testkit"                          % kamonV     % Test
-    val kanelaAgent                      = "io.kamon"                       % "kanela-agent"                           % "1.0.18"
+    val kanelaAgent                      = "io.kamon"                       % "kanela-agent"                           % "2.0.0"
     val kindProjector                    = "org.typelevel"                 %% "kind-projector"                         % "0.13.4"
     val logbackClassic                   = "ch.qos.logback"                 % "logback-classic"                        % logbackV
     val logbackCore                      = "ch.qos.logback"                 % "logback-core"                           % logbackV
