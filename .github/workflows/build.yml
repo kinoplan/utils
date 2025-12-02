@@ -23,7 +23,7 @@ jobs:
       uses: coursier/cache-action@v7
 
     - name: Install coursier
-      uses: coursier/setup-action@v1
+      uses: coursier/setup-action@v2
       with:
         jvm: ${{ matrix.java }}
     - uses: sbt/setup-sbt@v1
