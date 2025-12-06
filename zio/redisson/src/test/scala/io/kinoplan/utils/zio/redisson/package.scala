@@ -2,8 +2,8 @@ package io.kinoplan.utils.zio
 
 import com.redis.testcontainers.RedisContainer
 import org.testcontainers.utility.DockerImageName
-import zio.{Duration, Scope, Task, URIO, ZIO, ZLayer}
-import zio.test.{Spec, TestResult}
+import zio._
+import zio.test.{Spec, TestAspect, TestResult}
 
 import io.kinoplan.utils.IntegrationCheck
 import io.kinoplan.utils.zio.redisson.RedissonSentinelSpec.test
@@ -16,6 +16,11 @@ package object redisson {
   val testCodec: RCodec[String, String] = RCodec.stringCodec
   val testConfigurator: Int = 128
   val testPingTimeout: Duration = Duration.Zero
+
+  val retrySchedule = Schedule.spaced(5.seconds) && Schedule.recurs(3)
+
+  def testAspect(timeout: Duration) = TestAspect.parallel @@ TestAspect.timeout(timeout) @@
+    TestAspect.retry(retrySchedule)
 
   val commonConfig: Map[String, String] = Map(
     "lazyInitialization" -> "true",

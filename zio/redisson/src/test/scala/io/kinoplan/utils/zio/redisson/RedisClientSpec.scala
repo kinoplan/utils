@@ -37,7 +37,6 @@ object RedisClientSpec extends ZIOSpecDefault {
     suite("RedisStringOperations")(RedisStringOperationsSpec.specs.map(toSpec)),
     suite("RedisTopicOperations")(RedisTopicOperationsSpec.specs.map(toSpec)) @@
       TestAspect.withLiveClock
-  ).provideLayerShared(redisLive) @@ TestAspect.parallel @@
-    TestAspect.timeout(30.seconds) // @@ TestAspect.ignore
+  ).provideLayerShared(redisLive) @@ testAspect(30.seconds) // @@ TestAspect.ignore
 
 }

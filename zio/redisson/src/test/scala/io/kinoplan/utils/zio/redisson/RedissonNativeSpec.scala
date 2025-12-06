@@ -90,7 +90,6 @@ object RedissonNativeSpec extends ZIOSpecDefault with DefaultRedisCodecs {
         case1 <- ZIO.fromOption(redisCheckO).forEachZIO(_.checkAvailability).map(_.getOrElse(false))
       } yield assertTrue(!case1)
     ).provideLayer(live(pingTimeout = testPingTimeout))
-  ).provideLayerShared(redisSingleContainerLive) @@ TestAspect.parallel @@
-    TestAspect.timeout(10.seconds) // @@ TestAspect.ignore
+  ).provideLayerShared(redisSingleContainerLive) @@ testAspect(10.seconds) // @@ TestAspect.ignore
 
 }
