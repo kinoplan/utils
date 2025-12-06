@@ -17,13 +17,13 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout current branch
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
 
     - name: Cache build
       uses: coursier/cache-action@v7
 
     - name: Install coursier
-      uses: coursier/setup-action@v1
+      uses: coursier/setup-action@v2
       with:
         jvm: ${{ matrix.java }}
     - uses: sbt/setup-sbt@v1

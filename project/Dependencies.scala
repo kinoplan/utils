@@ -12,7 +12,7 @@ object Dependencies {
     val reactivemongoV = "1.1.0-RC13"
     val scalaJavaTimeV = "2.6.0"
     val sttpV          = "4.0.13"
-    val tapirV         = "1.12.5"
+    val tapirV         = "1.12.6"
     val zioV           = "2.1.23"
     val zioConfigV     = "4.0.6"
   }
@@ -34,7 +34,7 @@ object Dependencies {
     val scalatestPlusScalacheck = Def.setting("org.scalatestplus" %%% "scalacheck-1-18" % "3.2.19.0" % Test)
     val tapirCore               = Def.setting("com.softwaremill.sttp.tapir" %%% "tapir-core" % tapirV)
     val zio                     = Def.setting("dev.zio" %%% "zio" % zioV)
-    val zioPrelude              = Def.setting("dev.zio" %%% "zio-prelude" % "1.0.0-RC42")
+    val zioPrelude              = Def.setting("dev.zio" %%% "zio-prelude" % "1.0.0-RC44")
     val zioTest                 = Def.setting("dev.zio" %%% "zio-test" % zioV)
     val zioTestSbt              = Def.setting("dev.zio" %%% "zio-test-sbt" % zioV)
     val zioStreams              = Def.setting("dev.zio" %%% "zio-streams" % zioV)
@@ -86,7 +86,7 @@ object Dependencies {
     val zioConfig                        = "dev.zio"                       %% "zio-config"                             % zioConfigV
     val zioConfigMagnolia                = "dev.zio"                       %% "zio-config-magnolia"                    % zioConfigV
     val zioConfigEnumeratum              = "dev.zio"                       %% "zio-config-enumeratum"                  % zioConfigV
-    val zioInteropCats                   = "dev.zio"                       %% "zio-interop-cats"                       % "23.1.0.5"
+    val zioInteropCats                   = "dev.zio"                       %% "zio-interop-cats"                       % "23.1.0.11"
     val zioMetricsConnectorsMicrometer   = "dev.zio"                       %% "zio-metrics-connectors-micrometer"      % "2.5.4"
     val zioOpenTelemetry                 = "dev.zio"                       %% "zio-opentelemetry"                      % "3.1.12"
   }
