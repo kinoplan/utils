@@ -8,6 +8,7 @@ import org.redisson.api.{PendingEntry, RStream, RedissonClient, StreamConsumer, 
 import org.redisson.api.stream.{
   StreamAddArgs,
   StreamCreateGroupArgs,
+  StreamPendingRangeArgs,
   StreamReadGroupArgs,
   StreamTrimArgs
 }
@@ -54,7 +55,9 @@ trait RedisStreamOperations {
     endId: StreamMessageId,
     count: Int
   ): Future[List[PendingEntry]] = stream(key)
-    .listPendingAsync(group, startId, endId, count)
+    .listPendingAsync(
+      StreamPendingRangeArgs.groupName(group).startId(startId).endId(endId).count(count)
+    )
     .asScala
     .map(_.asScala.toList)
 
