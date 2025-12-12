@@ -12,7 +12,7 @@ object ProjectSettings {
 
   private val namespace = "io.kinoplan.utils"
 
-  val scala2_12 = "2.12.20"
+  val scala2_12 = "2.12.21"
   val scala2_13 = "2.13.18"
 
   val scala2Versions: Seq[String] = Seq(scala2_12, scala2_13)
