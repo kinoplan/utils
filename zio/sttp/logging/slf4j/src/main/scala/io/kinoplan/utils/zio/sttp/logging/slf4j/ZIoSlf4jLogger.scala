@@ -14,6 +14,8 @@ class ZIoSlf4jLogger[F[_]](name: String, monad: MonadError[F]) extends Logger[F]
     exception: Option[Throwable],
     context: Map[String, Any]
   ): F[Unit] = {
+    val _ = monad
+
     val annotations = context
       .map { case (key, value) =>
         LogAnnotation(key, value.toString)

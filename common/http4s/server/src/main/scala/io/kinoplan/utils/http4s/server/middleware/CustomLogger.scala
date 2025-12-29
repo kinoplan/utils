@@ -22,7 +22,7 @@ object CustomLogger {
   )(http: Http[G, F])(implicit
     G: MonadCancelThrow[G],
     F: Async[F]
-  ): Http[G, F] = Kleisli { req: Request[F] =>
+  ): Http[G, F] = Kleisli { (req: Request[F]) =>
     val requestId = req
       .headers
       .get(requestIdHeaderName)

@@ -64,7 +64,7 @@ object Dependencies {
     val play2                            = "com.typesafe.play"             %% "play"                                   % "2.8.22"
     val playJson                         = "org.playframework"             %% "play-json"                              % "3.0.6"
     val play2Json                        = "com.typesafe.play"             %% "play-json"                              % "2.10.8"
-    val playReactiveMongo                = "org.reactivemongo"             %% "play2-reactivemongo"                    % "1.1.0-play30.RC19"
+    val playReactiveMongo                = "org.reactivemongo"             %% "play2-reactivemongo"                    % "1.1.0-play30.RC18"
     val play2ReactiveMongo               = "org.reactivemongo"             %% "play2-reactivemongo"                    % "1.1.0-play28.RC13"
     val prometheusExporterHttpServer     = "io.prometheus"                  % "prometheus-metrics-exporter-httpserver" % "1.4.3"
     val reactiveMongo                    = "org.reactivemongo"             %% "reactivemongo"                          % "1.1.0-pekko.RC13"
@@ -104,7 +104,8 @@ object Dependencies {
   ) {
 
     def libraryDependencies(scalaVersion: String): Seq[ModuleID] = dependencies ++ notShadedDependencies ++
-      notShadedScalaVersionDependencies.map(_ % scalaVersion)
+      (if (scalaVersion.startsWith("3")) Seq.empty
+       else notShadedScalaVersionDependencies.map(_ % scalaVersion % Provided))
 
   }
 

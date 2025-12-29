@@ -1,7 +1,7 @@
 import Dependencies.{Libraries, ShadingEntity}
 import coursier.ShadingPlugin
 import coursier.ShadingPlugin.autoImport.*
-import org.typelevel.sbt.tpolecat.TpolecatPlugin.autoImport.tpolecatExcludeOptions
+import org.typelevel.sbt.tpolecat.TpolecatPlugin.autoImport.{tpolecatExcludeOptions, tpolecatScalacOptions}
 import org.typelevel.scalacoptions.ScalacOptions
 import sbt.*
 import sbt.Keys.*
@@ -14,13 +14,17 @@ object ProjectSettings {
 
   val scala2_12 = "2.12.21"
   val scala2_13 = "2.13.18"
+  val scala3 = "3.3.7"
 
   val scala2Versions: Seq[String] = Seq(scala2_12, scala2_13)
   val scala2_13Versions: Seq[String] = Seq(scala2_13)
+  val scala2And3Versions: Seq[String] = scala2Versions ++ List(scala3)
+  val scala2_13And3Versions: Seq[String] = Seq(scala2_13, scala3)
 
   lazy val commonProfile: Project => Project = _
     .enablePlugins(ScalafixPlugin)
     .settings(
+      tpolecatScalacOptions ++= Set(ScalacOptions.explain),
       tpolecatExcludeOptions :=
         Set(
 //          ScalacOptions.fatalWarnings,
@@ -34,7 +38,7 @@ object ProjectSettings {
           ScalacOptions.warnNonUnitStatement
         ),
       scalacOptions ++=
-        Seq("-Wconf:msg=parameter value monad in class ZIoSlf4jLogger is never used.*:s"),
+        Seq("-Wconf:msg=parameter value monad in class ZioSlf4jLogger is never used.*:s"),
       Test / tpolecatExcludeOptions ++=
         Set(ScalacOptions.privateWarnDeadCode, ScalacOptions.warnNonUnitStatement),
       Test / fork := true,
@@ -51,8 +55,12 @@ object ProjectSettings {
     libraryDependencies ++= Seq(Libraries.zioTest.value, Libraries.zioTestSbt.value)
   )
 
-  lazy val kindProjectorProfile: Project => Project =
-    _.settings(addCompilerPlugin(Libraries.kindProjector.cross(CrossVersion.full)))
+  lazy val kindProjectorProfile: Project => Project = _.settings(
+    libraryDependencies ++= {
+      if (ScalaArtifacts.isScala3(scalaVersion.value)) Nil
+      else Seq(compilerPlugin(Libraries.kindProjector.cross(CrossVersion.full)))
+    }
+  )
 
   lazy val publishSkipProfile: Project => Project = _.settings(publish / skip := true)
 

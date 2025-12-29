@@ -1,5 +1,5 @@
--J-Xms2G
--J-Xmx5G
+-J-Xmx8G
 -J-Xss4M
 -J-XX:ReservedCodeCacheSize=512m
 -J-XX:+UseG1GC
+-Dsbt.task.timings=false
