@@ -1,10 +1,12 @@
-import Dependencies.{Libraries, ShadingEntity}
-import coursier.ShadingPlugin
-import coursier.ShadingPlugin.autoImport.*
-import org.typelevel.sbt.tpolecat.TpolecatPlugin.autoImport.tpolecatExcludeOptions
+import Dependencies.Libraries
+import org.typelevel.sbt.tpolecat.TpolecatPlugin.autoImport.{
+  tpolecatExcludeOptions,
+  tpolecatScalacOptions
+}
 import org.typelevel.scalacoptions.ScalacOptions
 import sbt.*
 import sbt.Keys.*
+import sbtide.Keys.ideSkipProject
 import scalafix.sbt.ScalafixPlugin
 import scoverage.ScoverageKeys.*
 
@@ -14,13 +16,34 @@ object ProjectSettings {
 
   val scala2_12 = "2.12.21"
   val scala2_13 = "2.13.18"
+  val scala3 = "3.3.7"
+
+  val ideScalaVersion: String = scala2_13
 
   val scala2Versions: Seq[String] = Seq(scala2_12, scala2_13)
   val scala2_13Versions: Seq[String] = Seq(scala2_13)
+  val scala2And3Versions: Seq[String] = scala2Versions ++ Seq(scala3)
+  val scala2_13And3Versions: Seq[String] = Seq(scala2_13, scala3)
+  val scala3Versions: Seq[String] = Seq(scala3)
+
+  private def unmanaged(version: String, base: File): Seq[File] =
+    CrossVersion.partialVersion(version) match {
+      case Some((2, n)) if n < 13 => Seq(base / "scala-2.13-")
+      case _                      => Seq(base / "scala-2.13+")
+    }
 
   lazy val commonProfile: Project => Project = _
     .enablePlugins(ScalafixPlugin)
     .settings(
+      Compile / unmanagedSourceDirectories ++=
+        unmanaged(scalaVersion.value, (Compile / sourceDirectory).value),
+      Test / unmanagedSourceDirectories ++=
+        unmanaged(scalaVersion.value, (Test / sourceDirectory).value),
+      ideSkipProject :=
+        (scalaVersion.value != ideScalaVersion) ||
+        thisProjectRef.value.project.contains("Native") ||
+        thisProjectRef.value.project.contains("JS"),
+      tpolecatScalacOptions ++= Set(ScalacOptions.explain),
       tpolecatExcludeOptions :=
         Set(
 //          ScalacOptions.fatalWarnings,
@@ -33,8 +56,10 @@ object ProjectSettings {
           ScalacOptions.warnUnusedExplicits,
           ScalacOptions.warnNonUnitStatement
         ),
-      scalacOptions ++=
-        Seq("-Wconf:msg=parameter value monad in class ZIoSlf4jLogger is never used.*:s"),
+      scalacOptions ++= {
+        if (ScalaArtifacts.isScala3(scalaVersion.value)) Seq("-Xmax-inlines", "64")
+        else Nil
+      },
       Test / tpolecatExcludeOptions ++=
         Set(ScalacOptions.privateWarnDeadCode, ScalacOptions.warnNonUnitStatement),
       Test / fork := true,
@@ -51,28 +76,23 @@ object ProjectSettings {
     libraryDependencies ++= Seq(Libraries.zioTest.value, Libraries.zioTestSbt.value)
   )
 
-  lazy val kindProjectorProfile: Project => Project =
-    _.settings(addCompilerPlugin(Libraries.kindProjector.cross(CrossVersion.full)))
+  lazy val kindProjectorProfile: Project => Project = _.settings(
+    scalacOptions ++= {
+      if (ScalaArtifacts.isScala3(scalaVersion.value)) Seq("-Ykind-projector")
+      else Nil
+    },
+    libraryDependencies ++= {
+      if (ScalaArtifacts.isScala3(scalaVersion.value)) Nil
+      else Seq(compilerPlugin(Libraries.kindProjector.cross(CrossVersion.full)))
+    }
+  )
 
   lazy val publishSkipProfile: Project => Project = _.settings(publish / skip := true)
 
   lazy val rootProfile: Project => Project = _
     .configure(commonProfile, publishSkipProfile)
-    .settings(publish / skip := true)
     .settings(name := "utils")
-
-  def shadingProfile(shadingEntities: ShadingEntity*): Project => Project = _
-    .enablePlugins(ShadingPlugin)
-    .settings(
-      libraryDependencies ++= shadingEntities.flatMap(_.libraryDependencies(scalaVersion.value)),
-      shadedModules ++= shadingEntities.flatMap(_.dependencies).map(_.module).toSet,
-      shadingRules ++=
-        shadingEntities
-          .flatMap(_.modulePackages)
-          .map(modulePackage => ShadingRule.moveUnder(modulePackage, s"$namespace.shaded")),
-      validNamespaces ++= Set(namespace, "io"),
-      validEntries ++= Set("LICENSE", "NOTICE", "README")
-    )
+    .settings(ideSkipProject := false)
 
   def unmanagedSourceProfile(path: String): Project => Project = _.settings(
     Compile / unmanagedSourceDirectories += (Compile / sourceDirectory).value / path,

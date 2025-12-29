@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        scala: ["2.12", "2.13"]
+        scala: ["2.12", "2.13", "3"]
         platform: ["JVM", "JS"]
         java: ["temurin:1.17.0.9"]
     runs-on: ${{ matrix.os }}
@@ -34,10 +34,13 @@ jobs:
     - name: Compile
       run: sbt $SBT_JAVA_OPTS -v "compileScoped ${{ matrix.scala }} ${{ matrix.platform }}"
 
+    - name: Coverage
+      if: matrix.platform != 'JS' || matrix.scala != '3'
+      run: sbt coverage
     - name: Test
       run: |
         export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS --add-opens=java.base/java.lang=ALL-UNNAMED";
-        sbt $SBT_JAVA_OPTS -v "coverage;testScoped ${{ matrix.scala }} ${{ matrix.platform }}"
+        sbt $SBT_JAVA_OPTS -v "testScoped ${{ matrix.scala }} ${{ matrix.platform }}"
 
     - name: Scalafmt check sbt
       if: matrix.scala == '2.12' && matrix.platform == 'JS'
@@ -49,10 +52,12 @@ jobs:
     - name: Scalafix check sources
       run: sbt $SBT_JAVA_OPTS -v "scalafixCheckScoped ${{ matrix.scala }} ${{ matrix.platform }}"
 
-    - name: Coverage
+    - name: Coverage report
+      if: matrix.platform != 'JS' || matrix.scala != '3'
       run: sbt $SBT_JAVA_OPTS -v "coverageReportScoped ${{ matrix.scala }} ${{ matrix.platform }}"
 
     - name: Send coverage report to codecov
+      if: matrix.platform != 'JS' || matrix.scala != '3'
       uses: codecov/codecov-action@v5.5.2
       with:
         token: ${{ secrets.CODECOV_TOKEN }}

@@ -36,7 +36,6 @@ object TestCase4 extends TestCase4Bson {
       handler,
       bson,
       bsonIncorrect,
-      exceptionField = targetField,
       exceptionMessage = s"expected BSONString, but found ${BSONArray.empty}"
     )
   }

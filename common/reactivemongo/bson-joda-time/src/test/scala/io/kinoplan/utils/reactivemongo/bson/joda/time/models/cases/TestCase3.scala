@@ -28,7 +28,6 @@ object TestCase3 extends TestCase3Bson {
       handler,
       bson,
       bsonIncorrect,
-      exceptionField = targetField,
       exceptionMessage = s"expected BSONDateTime, but found ${BSONArray.empty}"
     )
   }

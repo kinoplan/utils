@@ -20,7 +20,7 @@ trait ScenarioBehaviors {
           .failed
           .toOption
           .map(_.getMessage)
-          .contains(testScenario.exceptionMessage)
+          .exists(_.contains(testScenario.exceptionMessage))
       )
   }
 
