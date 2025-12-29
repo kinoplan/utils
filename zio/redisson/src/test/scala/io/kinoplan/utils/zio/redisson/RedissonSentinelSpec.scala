@@ -164,7 +164,6 @@ object RedissonSentinelSpec extends ZIOSpecDefault with DefaultRedisCodecs {
         case1 <- ZIO.fromOption(redisCheckO).forEachZIO(_.checkAvailability).map(_.getOrElse(false))
       } yield assertTrue(!case1)
     ).provideLayer(live(pingTimeout = testPingTimeout))
-  ).provideLayerShared(RedisSentinelContainers.live) @@ TestAspect.parallel @@
-    TestAspect.timeout(10.seconds) // @@ TestAspect.ignore
+  ).provideLayerShared(RedisSentinelContainers.live) @@ redissonTestAspect() // @@ TestAspect.ignore
 
 }
