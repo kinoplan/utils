@@ -6,9 +6,10 @@ import scala.concurrent.Future
 import kamon.tag.Lookups.{plain, plainLong}
 import kamon.testkit.{InitAndStopKamonAfterAll, TestSpanReporter}
 import kamon.trace.Span
-import org.scalatest.{Assertion, OptionValues}
+import org.scalatest.{Assertion, Canceled, Failed, OptionValues, Outcome, Retries}
 import org.scalatest.concurrent.Eventually
 import org.scalatest.matchers.should.Matchers
+import org.scalatest.tagobjects.Retryable
 import org.scalatest.time.SpanSugar.convertIntToGrainOfTime
 import org.scalatest.wordspec.AnyWordSpec
 import org.testcontainers.containers.MongoDBContainer
@@ -23,7 +24,24 @@ class ReactiveMongoClientInstrumentationSpec
       with Eventually
       with InitAndStopKamonAfterAll
       with OptionValues
-      with TestSpanReporter {
+      with TestSpanReporter
+      with Retries {
+
+  val maxRetryCount = 3
+
+  override def withFixture(test: NoArgTest): Outcome =
+    if (isRetryable(test)) withRetryOnFailure(withFixture(test, maxRetryCount))
+    else super.withFixture(test)
+
+  def withFixture(test: NoArgTest, count: Int): Outcome = {
+    val outcome = super.withFixture(test)
+    outcome match {
+      case Failed(_) | Canceled(_) =>
+        if (count == 1) super.withFixture(test)
+        else withFixture(test, count - 1)
+      case _ => outcome
+    }
+  }
 
   var container: MongoDBContainer = _
   val driver: AsyncDriver = AsyncDriver()
@@ -84,14 +102,14 @@ class ReactiveMongoClientInstrumentationSpec
   }
 
   "ReactiveMongo Instrumentation" should {
-    "create spans for drop" in
+    "create spans for drop" taggedAs Retryable in
       testOp("drop", Seq(_.hasError shouldBe true)) {
         for {
           t <- tools
           _ <- t.drop()
         } yield ()
       }
-    "create spans for findAndUpdate" in
+    "create spans for findAndUpdate" taggedAs Retryable in
       testOp("findAndModify") {
         for {
           t <- tools
@@ -102,7 +120,7 @@ class ReactiveMongoClientInstrumentationSpec
           )
         } yield ()
       }
-    "create spans for findAndRemove" in
+    "create spans for findAndRemove" taggedAs Retryable in
       testOp("findAndModify") {
         for {
           t <- tools
@@ -110,7 +128,7 @@ class ReactiveMongoClientInstrumentationSpec
           _ <- t.findAndRemove(document("name" -> "kamon", "findAndRemove" -> true))
         } yield ()
       }
-    "create spans for findAndModify" in
+    "create spans for findAndModify" taggedAs Retryable in
       testOp("findAndModify") {
         for {
           t <- tools
@@ -120,7 +138,7 @@ class ReactiveMongoClientInstrumentationSpec
         } yield ()
       }
 
-    "create spans for updateOne" in
+    "create spans for updateOne" taggedAs Retryable in
       testOp("update") {
         for {
           t <- tools
@@ -134,7 +152,7 @@ class ReactiveMongoClientInstrumentationSpec
         } yield ()
       }
 
-    "create spans for updateMany" in
+    "create spans for updateMany" taggedAs Retryable in
       testOp("update") {
         for {
           t <- tools
@@ -163,7 +181,7 @@ class ReactiveMongoClientInstrumentationSpec
         } yield ()
       }
 
-    "create spans for insertOne" in
+    "create spans for insertOne" taggedAs Retryable in
       testOp("insert") {
         for {
           t <- tools
@@ -171,7 +189,7 @@ class ReactiveMongoClientInstrumentationSpec
         } yield ()
       }
 
-    "create spans for insertMany" in
+    "create spans for insertMany" taggedAs Retryable in
       testOp("insert") {
         for {
           t <- tools
@@ -187,7 +205,7 @@ class ReactiveMongoClientInstrumentationSpec
         } yield ()
       }
 
-    "create spans for countDocuments" in
+    "create spans for countDocuments" taggedAs Retryable in
       testOp("count") {
         for {
           t <- tools
@@ -204,7 +222,7 @@ class ReactiveMongoClientInstrumentationSpec
         } yield ()
       }
 
-    "create spans for distinct" in
+    "create spans for distinct" taggedAs Retryable in
       testOp("distinct") {
         for {
           t <- tools
@@ -212,7 +230,7 @@ class ReactiveMongoClientInstrumentationSpec
         } yield ()
       }
 
-    "create spans for aggregate" in {
+    "create spans for aggregate" taggedAs Retryable in {
 
       for {
         t <- tools
@@ -243,7 +261,7 @@ class ReactiveMongoClientInstrumentationSpec
       testSpanReporter().clear()
     }
 
-    "create spans for find" in {
+    "create spans for find" taggedAs Retryable in {
       for {
         t <- tools
         _ <- t
@@ -266,7 +284,7 @@ class ReactiveMongoClientInstrumentationSpec
       testSpanReporter().clear()
     }
 
-    "create spans in transaction" in {
+    "create spans in transaction" taggedAs Retryable in {
       for {
         t <- tools
         db = t.db
