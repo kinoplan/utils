@@ -21,3 +21,7 @@ addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.5.6")
 addSbtPlugin("com.github.sbt" % "sbt-ci-release" % "1.11.2")
 
 addSbtPlugin("com.github.sbt" % "sbt-javaagent" % "0.2.0")
+
+addSbtPlugin("org.jetbrains.scala" % "sbt-ide-settings" % "1.1.4")
+
+//addSbtPlugin("ch.epfl.scala" % "sbt-scala3-migrate" % "0.7.4")

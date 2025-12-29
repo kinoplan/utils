@@ -4,13 +4,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
 import reactivemongo.api.{Collation, Cursor, CursorProducer, ReadConcern, ReadPreference}
-import reactivemongo.api.bson.{
-  BSONDocument,
-  BSONDocumentReader,
-  BSONDocumentWriter,
-  BSONObjectID,
-  document
-}
+import reactivemongo.api.bson._
 import reactivemongo.api.bson.collection.BSONCollection
 import reactivemongo.api.bson.collection.BSONSerializationPack.NarrowValueReader
 import reactivemongo.api.commands.WriteResult
@@ -140,7 +134,10 @@ private[utils] object Queries extends QueryBuilderSyntax {
   )(implicit
     ec: ExecutionContext
   ): Future[List[T]] = {
-    val queryBuilder = collection.find(selector, projection).sort(sort).skip(skip)
+    val queryBuilder = collection
+      .find[BSONDocument, BSONDocument](selector = selector, projection = projection)
+      .sort(sort)
+      .skip(skip)
     val queryBuilderWithHint =
       hint.fold(queryBuilder)(hint => queryBuilder.hint(collection.hint(hint)))
     val queryBuilderWithCollation =

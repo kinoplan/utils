@@ -1,6 +1,6 @@
 package io.kinoplan.utils.zio.redisson.helpers
 
-import scala.jdk.CollectionConverters._
+import io.kinoplan.utils.cross.collection.converters._
 
 import org.redisson.api.NatMapper
 import org.testcontainers.containers.{GenericContainer, Network}

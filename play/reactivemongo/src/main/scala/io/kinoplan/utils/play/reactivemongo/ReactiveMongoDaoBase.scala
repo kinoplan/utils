@@ -9,7 +9,9 @@ import reactivemongo.api.bson.{
   BSONDocumentReader,
   BSONDocumentWriter,
   BSONObjectID,
-  document
+  document,
+  bsonObjectIDWriter,
+  collectionWriter
 }
 import reactivemongo.api.bson.collection.BSONCollection
 import reactivemongo.api.bson.collection.BSONSerializationPack.NarrowValueReader

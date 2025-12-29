@@ -10,7 +10,8 @@ import io.opentelemetry.semconv.ServiceAttributes
 import zio.{Scope, URIO, ZIO}
 
 import io.kinoplan.utils.zio.opentelemetry.config.TracingConfig
-import io.kinoplan.utils.zio.opentelemetry.crossCollectionConverters._
+
+import io.kinoplan.utils.cross.collection.converters._
 
 private[opentelemetry] object TracerProvider {
 

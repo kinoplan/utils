@@ -1,7 +1,7 @@
 package io.kinoplan.utils.zio.reactivemongo
 
 import reactivemongo.api.{Collation, CursorProducer, FailoverStrategy, ReadConcern, ReadPreference}
-import reactivemongo.api.bson._
+import reactivemongo.api.bson.{bsonObjectIDWriter, collectionWriter, _}
 import reactivemongo.api.bson.collection.BSONCollection
 import reactivemongo.api.bson.collection.BSONSerializationPack.NarrowValueReader
 import reactivemongo.api.commands.WriteResult

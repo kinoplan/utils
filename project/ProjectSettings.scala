@@ -1,10 +1,14 @@
 import Dependencies.{Libraries, ShadingEntity}
 import coursier.ShadingPlugin
 import coursier.ShadingPlugin.autoImport.*
-import org.typelevel.sbt.tpolecat.TpolecatPlugin.autoImport.tpolecatExcludeOptions
+import org.typelevel.sbt.tpolecat.TpolecatPlugin.autoImport.{
+  tpolecatExcludeOptions,
+  tpolecatScalacOptions
+}
 import org.typelevel.scalacoptions.ScalacOptions
 import sbt.*
 import sbt.Keys.*
+import sbtide.Keys.ideSkipProject
 import scalafix.sbt.ScalafixPlugin
 import scoverage.ScoverageKeys.*
 
@@ -14,13 +18,24 @@ object ProjectSettings {
 
   val scala2_12 = "2.12.21"
   val scala2_13 = "2.13.18"
+  val scala3 = "3.3.7"
+
+  val ideScalaVersion: String = scala2_13
 
   val scala2Versions: Seq[String] = Seq(scala2_12, scala2_13)
   val scala2_13Versions: Seq[String] = Seq(scala2_13)
+  val scala2And3Versions: Seq[String] = scala2Versions ++ Seq(scala3)
+  val scala2_13And3Versions: Seq[String] = Seq(scala2_13, scala3)
+  val scala3Versions: Seq[String] = Seq(scala3)
 
   lazy val commonProfile: Project => Project = _
     .enablePlugins(ScalafixPlugin)
     .settings(
+      ideSkipProject :=
+        (scalaVersion.value != ideScalaVersion) ||
+        thisProjectRef.value.project.contains("Native") ||
+        thisProjectRef.value.project.contains("JS"),
+      tpolecatScalacOptions ++= Set(ScalacOptions.explain),
       tpolecatExcludeOptions :=
         Set(
 //          ScalacOptions.fatalWarnings,
@@ -33,8 +48,10 @@ object ProjectSettings {
           ScalacOptions.warnUnusedExplicits,
           ScalacOptions.warnNonUnitStatement
         ),
-      scalacOptions ++=
-        Seq("-Wconf:msg=parameter value monad in class ZIoSlf4jLogger is never used.*:s"),
+      scalacOptions ++= {
+        if (scalaVersion.value.startsWith("3")) Seq("-Xmax-inlines", "64")
+        else Seq.empty
+      },
       Test / tpolecatExcludeOptions ++=
         Set(ScalacOptions.privateWarnDeadCode, ScalacOptions.warnNonUnitStatement),
       Test / fork := true,
@@ -51,15 +68,19 @@ object ProjectSettings {
     libraryDependencies ++= Seq(Libraries.zioTest.value, Libraries.zioTestSbt.value)
   )
 
-  lazy val kindProjectorProfile: Project => Project =
-    _.settings(addCompilerPlugin(Libraries.kindProjector.cross(CrossVersion.full)))
+  lazy val kindProjectorProfile: Project => Project = _.settings(
+    libraryDependencies ++= {
+      if (ScalaArtifacts.isScala3(scalaVersion.value)) Nil
+      else Seq(compilerPlugin(Libraries.kindProjector.cross(CrossVersion.full)))
+    }
+  )
 
   lazy val publishSkipProfile: Project => Project = _.settings(publish / skip := true)
 
   lazy val rootProfile: Project => Project = _
     .configure(commonProfile, publishSkipProfile)
-    .settings(publish / skip := true)
     .settings(name := "utils")
+    .settings(ideSkipProject := false)
 
   def shadingProfile(shadingEntities: ShadingEntity*): Project => Project = _
     .enablePlugins(ShadingPlugin)
