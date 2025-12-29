@@ -1,5 +1,4 @@
 import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport.*
-import sbt.librarymanagement.DependencyBuilders
 import sbt.{Def, *}
 
 object Dependencies {
@@ -9,7 +8,7 @@ object Dependencies {
     val kamonV         = "2.7.7"
     val logbackV       = "1.5.32"
     val openTelemetryV = "1.60.1"
-    val reactivemongoV = "1.1.0-RC13"
+    val reactivemongoV = "1.1.0-RC19"
     val scalaJavaTimeV = "2.6.0"
     val sttpV          = "4.0.20"
     val tapirV         = "1.13.13"
@@ -68,7 +67,7 @@ object Dependencies {
     val playReactiveMongo                = "org.reactivemongo"             %% "play2-reactivemongo"                    % "1.1.0-play30.RC20"
     val play2ReactiveMongo               = "org.reactivemongo"             %% "play2-reactivemongo"                    % "1.1.0-play28.RC13"
     val prometheusExporterHttpServer     = "io.prometheus"                  % "prometheus-metrics-exporter-httpserver" % "1.5.1"
-    val reactiveMongo                    = "org.reactivemongo"             %% "reactivemongo"                          % "1.1.0-pekko.RC13"
+    val reactiveMongo                    = "org.reactivemongo"             %% "reactivemongo"                          % "1.1.0-pekko.RC19"
     val reactiveMongoBsonApi             = "org.reactivemongo"             %% "reactivemongo-bson-api"                 % reactivemongoV
     val redisson                         = "org.redisson"                   % "redisson"                               % "3.52.0"
     val refined                          = "eu.timepit"                    %% "refined"                                % "0.11.3"
@@ -86,7 +85,6 @@ object Dependencies {
     val typesafeConfig                   = "com.typesafe"                   % "config"                                 % "1.4.6"
     val zioConfig                        = "dev.zio"                       %% "zio-config"                             % zioConfigV
     val zioConfigMagnolia                = "dev.zio"                       %% "zio-config-magnolia"                    % zioConfigV
-    val zioConfigEnumeratum              = "dev.zio"                       %% "zio-config-enumeratum"                  % zioConfigV
     val zioInteropCats                   = "dev.zio"                       %% "zio-interop-cats"                       % "23.1.0.13"
     val zioMetricsConnectorsMicrometer   = "dev.zio"                       %% "zio-metrics-connectors-micrometer"      % "2.5.5"
     val zioOpenTelemetry                 = "dev.zio"                       %% "zio-opentelemetry"                      % "3.1.15"
@@ -94,30 +92,7 @@ object Dependencies {
 
   object Batches {
 
-    val zioConfig: Seq[ModuleID] = Seq(Libraries.zioConfig, Libraries.zioConfigMagnolia, Libraries.zioConfigEnumeratum)
-
-  }
-
-  case class ShadingEntity(
-    dependencies: Seq[sbt.ModuleID],
-    modulePackages: Seq[String],
-    notShadedDependencies: Seq[sbt.ModuleID] = Seq.empty,
-    notShadedScalaVersionDependencies: Seq[DependencyBuilders.OrganizationArtifactName] = Seq.empty
-  ) {
-
-    def libraryDependencies(scalaVersion: String): Seq[ModuleID] = dependencies ++ notShadedDependencies ++
-      notShadedScalaVersionDependencies.map(_ % scalaVersion)
-
-  }
-
-  object Shades {
-
-    val zioConfig: ShadingEntity = ShadingEntity(
-      Batches.zioConfig,
-      Seq("zio.config", "mercator", "magnolia", "enumeratum"),
-      Seq(Libraries.scalaCollectionCompat),
-      Seq(Libraries.scalaReflect)
-    )
+    val zioConfig: Seq[ModuleID] = Seq(Libraries.zioConfig, Libraries.zioConfigMagnolia)
 
   }
 

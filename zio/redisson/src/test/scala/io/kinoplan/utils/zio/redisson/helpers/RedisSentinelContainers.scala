@@ -1,11 +1,11 @@
 package io.kinoplan.utils.zio.redisson.helpers
 
-import scala.jdk.CollectionConverters._
-
 import org.redisson.api.NatMapper
 import org.testcontainers.containers.{GenericContainer, Network}
 import org.testcontainers.utility.DockerImageName
 import zio.{Scope, UIO, ZIO, ZLayer}
+
+import io.kinoplan.utils.cross.collection.converters._
 
 case class RedisSentinelContainers(
   masterName: String,

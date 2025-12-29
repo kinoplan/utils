@@ -11,7 +11,7 @@ import io.kinoplan.utils.redisson.core.compat.crossFutureConverters.CompletionSt
 
 trait RedisHashmapOperations {
   implicit protected val executionContext: ExecutionContext
-  protected val redissonClient: RedissonClient
+  protected def redissonClient: RedissonClient
 
   protected lazy val map: String => RMap[String, String] =
     redissonClient.getMap[String, String](_, StringCodec.INSTANCE)

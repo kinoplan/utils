@@ -11,7 +11,7 @@ import io.kinoplan.utils.redisson.core.compat.crossFutureConverters.CompletionSt
 
 trait RedisTopicOperations {
   implicit protected val executionContext: ExecutionContext
-  protected val redissonClient: RedissonClient
+  protected def redissonClient: RedissonClient
 
   protected lazy val topic: String => RTopic = redissonClient.getTopic(_, StringCodec.INSTANCE)
 
