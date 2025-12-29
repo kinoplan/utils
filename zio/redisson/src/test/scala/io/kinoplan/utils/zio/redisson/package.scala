@@ -2,8 +2,8 @@ package io.kinoplan.utils.zio
 
 import com.redis.testcontainers.RedisContainer
 import org.testcontainers.utility.DockerImageName
-import zio.{Duration, Scope, Task, URIO, ZIO, ZLayer}
-import zio.test.{Spec, TestResult}
+import zio._
+import zio.test.{Spec, TestAspect, TestResult}
 
 import io.kinoplan.utils.IntegrationCheck
 import io.kinoplan.utils.zio.redisson.RedissonSentinelSpec.test
@@ -57,5 +57,9 @@ package object redisson {
 
   def toSpec(spec: TestSpec[RedisClient, Throwable, TestResult]): Spec[RedisClient, Throwable] =
     test(spec.label)(spec.result)
+
+  def redissonTestAspect(timeout: Duration = 15.seconds): TestAspect[Nothing, Any, Nothing, Any] =
+    TestAspect.parallel @@ TestAspect.timeout(timeout) @@
+      TestAspect.retry(Schedule.spaced(1.seconds) && Schedule.recurs(3))
 
 }

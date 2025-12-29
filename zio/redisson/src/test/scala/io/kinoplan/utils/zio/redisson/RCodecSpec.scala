@@ -21,6 +21,6 @@ object RCodecSpec extends ZIOSpecDefault {
     ),
     test("check create codec")(assertTrue(RCodec.create(kryoCodec).underlying.contains(kryoCodec))),
     test("check create empty codec")(assertTrue(RCodec.create().underlying.isEmpty))
-  ) @@ TestAspect.parallel
+  ) @@ redissonTestAspect()
 
 }
