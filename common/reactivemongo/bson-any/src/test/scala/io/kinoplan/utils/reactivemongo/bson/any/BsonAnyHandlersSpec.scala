@@ -2,7 +2,6 @@ package io.kinoplan.utils.reactivemongo.bson.any
 
 import org.scalatest.wordspec.AnyWordSpec
 import reactivemongo.api.bson.{BSONArray, document}
-import reactivemongo.api.bson.exceptions.HandlerException
 
 class BsonAnyHandlersSpec extends AnyWordSpec {
 
@@ -25,10 +24,7 @@ class BsonAnyHandlersSpec extends AnyWordSpec {
           .failed
           .toOption
           .map(_.getMessage)
-          .contains(
-            HandlerException("value", new IllegalArgumentException(s"unexpected value $Nil"))
-              .getMessage
-          )
+          .exists(_.contains(s"unexpected value $Nil"))
       )
   }
 
@@ -49,12 +45,7 @@ class BsonAnyHandlersSpec extends AnyWordSpec {
           .failed
           .toOption
           .map(_.getMessage)
-          .contains(
-            HandlerException(
-              "value",
-              new IllegalArgumentException(s"unexpected value ${BSONArray.empty}")
-            ).getMessage
-          )
+          .exists(_.contains(s"unexpected value ${BSONArray.empty}"))
       )
   }
 

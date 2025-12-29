@@ -1,18 +1,14 @@
-import Dependencies.{Libraries, Shades}
+import Dependencies.{Batches, Libraries}
 import sbt.Keys.*
 import sbt.*
 
 object ModulesZio {
 
   lazy val http4sHealthcheckProfile: Project => Project = _
-    .configure(
-      ProjectSettings.commonProfile,
-      ProjectSettings.kindProjectorProfile,
-      ProjectSettings.shadingProfile(Shades.zioConfig)
-    )
+    .configure(ProjectSettings.commonProfile, ProjectSettings.kindProjectorProfile)
     .settings(name := "utils-zio-http4s-healthcheck")
     .settings(
-      libraryDependencies ++=
+      libraryDependencies ++= Batches.zioConfig ++
         Seq(
           Libraries.http4sBlazeServer,
           Libraries.http4sDsl,
@@ -27,10 +23,10 @@ object ModulesZio {
     .settings(libraryDependencies ++= Seq(Libraries.zio.value))
 
   lazy val monitoringPrometheusProfile: Project => Project = _
-    .configure(ProjectSettings.commonProfile, ProjectSettings.shadingProfile(Shades.zioConfig))
+    .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-zio-monitoring-prometheus")
     .settings(
-      libraryDependencies ++=
+      libraryDependencies ++= Batches.zioConfig ++
         Seq(
           Libraries.micrometerRegistryPrometheus,
           Libraries.prometheusExporterHttpServer,
@@ -40,10 +36,10 @@ object ModulesZio {
     )
 
   lazy val openTelemetryProfile: Project => Project = _
-    .configure(ProjectSettings.commonProfile, ProjectSettings.shadingProfile(Shades.zioConfig))
+    .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-zio-opentelemetry")
     .settings(
-      libraryDependencies ++=
+      libraryDependencies ++= Batches.zioConfig ++
         Seq(
           Libraries.openTelemetrySdk,
           Libraries.openTelemetryExporterOtlp,
@@ -55,20 +51,19 @@ object ModulesZio {
     )
 
   lazy val reactivemongoProfile: Project => Project = _
-    .configure(ProjectSettings.commonProfile, ProjectSettings.shadingProfile(Shades.zioConfig))
+    .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-zio-reactivemongo")
-    .settings(libraryDependencies ++= Seq(Libraries.reactiveMongo % Provided, Libraries.zio.value))
+    .settings(
+      libraryDependencies ++=
+        Batches.zioConfig ++ Seq(Libraries.reactiveMongo % Provided, Libraries.zio.value)
+    )
 
   lazy val redissonProfile: Project => Project = _
-    .configure(
-      ProjectSettings.commonProfile,
-      ProjectSettings.zioTestProfile,
-      ProjectSettings.shadingProfile(Shades.zioConfig)
-    )
+    .configure(ProjectSettings.commonProfile, ProjectSettings.zioTestProfile)
     .settings(name := "utils-zio-redisson")
     .settings(Test / testOptions += Tests.Filter(_.endsWith("MainSpec")))
     .settings(
-      libraryDependencies ++=
+      libraryDependencies ++= Batches.zioConfig ++
         Seq(
           Libraries.logbackClassic % Test,
           Libraries.redisson,

@@ -11,7 +11,7 @@ import io.kinoplan.utils.redisson.core.compat.crossFutureConverters.CompletionSt
 
 trait RedisScoredSetOperations {
   implicit protected val executionContext: ExecutionContext
-  protected val redissonClient: RedissonClient
+  protected def redissonClient: RedissonClient
 
   protected lazy val scoredSet: String => RScoredSortedSet[String] =
     redissonClient.getScoredSortedSet[String](_, StringCodec.INSTANCE)

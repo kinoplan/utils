@@ -35,10 +35,11 @@ trait RedisTopicOperations {
     * @return
     *   A stream of processed results from the handler function.
     */
-  def pSubscribe[T, V: ClassTag, A](pattern: String)(
+  def pSubscribe[T, V, A](pattern: String)(
     handler: (String, String, T) => ZIO[Any, Throwable, Chunk[A]]
   )(implicit
     codec: RCodec[_, V],
+    ct: ClassTag[V],
     decoder: BaseRedisDecoder[V, T]
   ): Stream[Throwable, A]
 
@@ -117,10 +118,11 @@ trait RedisTopicOperations {
     * @return
     *   A stream of processed results from the handler function.
     */
-  def subscribe[T, V: ClassTag, A](channel: String)(
+  def subscribe[T, V, A](channel: String)(
     handler: (String, T) => ZIO[Any, Throwable, Chunk[A]]
   )(implicit
     codec: RCodec[_, V],
+    ct: ClassTag[V],
     decoder: BaseRedisDecoder[V, T]
   ): Stream[Throwable, A]
 
@@ -156,10 +158,11 @@ trait RedisTopicOperationsImpl extends RedisTopicOperations {
     .map(redissonClient.getPatternTopic(key, _))
     .getOrElse(redissonClient.getPatternTopic(key))
 
-  override def pSubscribe[T, V: ClassTag, A](pattern: String)(
+  override def pSubscribe[T, V, A](pattern: String)(
     handler: (String, String, T) => ZIO[Any, Throwable, Chunk[A]]
   )(implicit
     codec: RCodec[_, V],
+    ct: ClassTag[V],
     decoder: BaseRedisDecoder[V, T]
   ): Stream[Throwable, A] = ZStream.asyncScoped[Any, Throwable, A] { register =>
     ZIO.acquireRelease(
@@ -195,10 +198,11 @@ trait RedisTopicOperationsImpl extends RedisTopicOperations {
     codec: RCodec[_, _]
   ): Task[Unit] = ZIO.fromCompletionStage(patternTopic(pattern).removeAllListenersAsync()).unit
 
-  override def subscribe[T, V: ClassTag, A](channel: String)(
+  override def subscribe[T, V, A](channel: String)(
     handler: (String, T) => ZIO[Any, Throwable, Chunk[A]]
   )(implicit
     codec: RCodec[_, V],
+    ct: ClassTag[V],
     decoder: BaseRedisDecoder[V, T]
   ): Stream[Throwable, A] = ZStream.asyncScoped[Any, Throwable, A](register =>
     ZIO.acquireRelease(

@@ -21,7 +21,7 @@ import io.kinoplan.utils.redisson.core.compat.crossFutureConverters.CompletionSt
 
 trait RedisStreamOperations {
   implicit protected val executionContext: ExecutionContext
-  protected val redissonClient: RedissonClient
+  protected def redissonClient: RedissonClient
 
   protected lazy val stream: String => RStream[String, String] =
     redissonClient.getStream[String, String](_, StringCodec.INSTANCE)

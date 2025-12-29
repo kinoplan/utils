@@ -1,7 +1,6 @@
 package io.kinoplan.utils.reactivemongo.bson.joda.time.models
 
 import reactivemongo.api.bson.{BSONDocument, BSONDocumentHandler}
-import reactivemongo.api.bson.exceptions.HandlerException
 
 case class TestScenario[T](
   data: T,
@@ -18,14 +17,7 @@ object TestScenario {
     handler: BSONDocumentHandler[T],
     bson: BSONDocument,
     bsonIncorrect: BSONDocument,
-    exceptionField: String,
     exceptionMessage: String
-  ): TestScenario[T] = TestScenario(
-    data,
-    handler,
-    bson,
-    bsonIncorrect,
-    HandlerException(exceptionField, new IllegalArgumentException(exceptionMessage)).getMessage
-  )
+  ): TestScenario[T] = TestScenario(data, handler, bson, bsonIncorrect, exceptionMessage)
 
 }

@@ -1,6 +1,6 @@
 package io.kinoplan.utils.chimney.zio.prelude
 
-import io.scalaland.chimney.dsl.{PartialTransformerOps, TransformerOps}
+import io.scalaland.chimney.dsl._
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import zio.NonEmptyChunk

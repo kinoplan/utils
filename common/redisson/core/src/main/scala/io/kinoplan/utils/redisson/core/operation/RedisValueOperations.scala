@@ -15,7 +15,7 @@ import io.kinoplan.utils.redisson.core.compat.crossFutureConverters.CompletionSt
 
 trait RedisValueOperations {
   implicit protected val executionContext: ExecutionContext
-  protected val redissonClient: RedissonClient
+  protected def redissonClient: RedissonClient
 
   protected lazy val bucket: String => RBucket[String] =
     redissonClient.getBucket(_, StringCodec.INSTANCE)
