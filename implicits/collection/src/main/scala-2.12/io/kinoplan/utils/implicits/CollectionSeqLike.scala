@@ -22,11 +22,12 @@ abstract private[implicits] class CollectionSeqLike[A, Repr](private val value: 
     val builder = cbf(value.repr)
     val i = value.iterator
 
-    builder ++=
-      (operation match {
+    builder ++= (
+      operation match {
         case CollectionOperation.Intersection => i.filter(o => container.exists(_ == f(o)))
         case CollectionOperation.Difference   => i.filterNot(o => container.exists(_ == f(o)))
-      })
+      }
+    )
 
     builder.result()
   }
@@ -41,12 +42,13 @@ abstract private[implicits] class CollectionSeqLike[A, Repr](private val value: 
     val builder = cbf(value.repr)
     val i = value.iterator
 
-    builder ++=
-      (operation match {
+    builder ++= (
+      operation match {
         case CollectionOperation.Intersection => i.filter(o => container.exists(f(_) == f(o)))
         case CollectionOperation.Difference   => i ++
             container.filterNot(o => value.exists(f(_) == f(o)))
-      })
+      }
+    )
 
     builder.result()
   }

@@ -75,10 +75,8 @@ object ProjectSettings {
     )
 
   def unmanagedSourceProfile(path: String): Project => Project = _.settings(
-    Compile / unmanagedSourceDirectories +=
-      (Compile / sourceDirectory).value / path,
-    Test / unmanagedSourceDirectories +=
-      (Test / sourceDirectory).value / path
+    Compile / unmanagedSourceDirectories += (Compile / sourceDirectory).value / path,
+    Test / unmanagedSourceDirectories += (Test / sourceDirectory).value / path
   )
 
 }

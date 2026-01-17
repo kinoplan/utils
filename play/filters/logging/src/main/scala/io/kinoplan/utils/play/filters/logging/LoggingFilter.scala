@@ -93,12 +93,12 @@ class LoggingFilter @Inject() (configuration: Configuration)(implicit
           .map { body =>
             val responseBody = body.decodeString("UTF-8")
 
-            val message = s"$logMessagePart\nResponse: ${responseBody.take(maxLength)}" +
-              (if (responseBody.length > maxLength)
-                 "...\nNote: The log message is limited by the " +
-                   s"io.kinoplan.play.filters.logging.response.body.maxLength=$maxLength configuration parameter. " +
-                   "Set a higher value for the maxLength parameter if you want to see more."
-               else "")
+            val message = s"$logMessagePart\nResponse: ${responseBody.take(maxLength)}" + (
+              if (responseBody.length > maxLength) "...\nNote: The log message is limited by the " +
+                s"io.kinoplan.play.filters.logging.response.body.maxLength=$maxLength configuration parameter. " +
+                "Set a higher value for the maxLength parameter if you want to see more."
+              else ""
+            )
 
             logResponse(result, message)
 
