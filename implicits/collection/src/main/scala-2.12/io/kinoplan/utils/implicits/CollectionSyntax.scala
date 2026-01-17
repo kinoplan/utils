@@ -45,9 +45,10 @@ final private[implicits] class CollectionOps[A, Repr](private val value: Iterabl
     val builder = cbf(value.repr)
     val i = value.iterator
 
-    builder ++=
-      (if (cond) i.filter(f)
-       else i)
+    builder ++= (
+      if (cond) i.filter(f)
+      else i
+    )
 
     builder.result()
   }
