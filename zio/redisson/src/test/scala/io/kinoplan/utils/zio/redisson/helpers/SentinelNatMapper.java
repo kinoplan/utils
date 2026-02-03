@@ -25,16 +25,39 @@ public class SentinelNatMapper {
                 Map<String, ContainerNetwork> ss = node.getContainerInfo().getNetworkSettings().getNetworks();
                 ContainerNetwork s = ss.values().iterator().next();
 
+                String hostPort = null;
+                if (mappedPort != null && mappedPort.length > 0) {
+                    hostPort = mappedPort[0].getHostPortSpec();
+                }
+
                 if (uri.getPort() == port
                         && !uri.getHost().equals("redis")
                         && node.getNetworkAliases().contains("slave")) {
-                    return new RedisURI(uri.getScheme(), "127.0.0.1", Integer.parseInt(mappedPort[0].getHostPortSpec()));
+                    if (hostPort == null || hostPort.isEmpty()) {
+                        continue;
+                    }
+                    try {
+                        int parsedPort = Integer.parseInt(hostPort);
+                        return new RedisURI(uri.getScheme(), "127.0.0.1", parsedPort);
+                    } catch (NumberFormatException e) {
+                        // Skip this node if host port is not a valid integer
+                        continue;
+                    }
                 }
 
                 if (mappedPort != null
                         && s.getIpAddress() != null
                         && s.getIpAddress().equals(uri.getHost())) {
-                    return new RedisURI(uri.getScheme(), "127.0.0.1", Integer.parseInt(mappedPort[0].getHostPortSpec()));
+                    if (hostPort == null || hostPort.isEmpty()) {
+                        continue;
+                    }
+                    try {
+                        int parsedPort = Integer.parseInt(hostPort);
+                        return new RedisURI(uri.getScheme(), "127.0.0.1", parsedPort);
+                    } catch (NumberFormatException e) {
+                        // Skip this node if host port is not a valid integer
+                        continue;
+                    }
                 }
             }
             return uri;
