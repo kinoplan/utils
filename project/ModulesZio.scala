@@ -72,6 +72,7 @@ object ModulesZio {
         Seq(
           Libraries.logbackClassic % Test,
           Libraries.redisson,
+          Libraries.testContainers,
           Libraries.testContainersRedis,
           Libraries.zio.value,
           Libraries.zioStreams.value

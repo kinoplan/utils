@@ -149,6 +149,7 @@ object ModulesCommon {
           Libraries.openTelemetryApi,
           Libraries.openTelemetrySemconvIncubating,
           Libraries.reactiveMongo % Provided,
+          Libraries.testContainers,
           Libraries.testContainersMongodb
         )
     )
