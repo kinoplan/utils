@@ -8,7 +8,7 @@ import zio.interop.catz._
 import io.kinoplan.utils.IntegrationCheck
 import io.kinoplan.utils.zio.http4s.config.IntegrationHealthcheckConfig
 
-class IntegrationHealthcheck[R <: IntegrationHealthcheck.Env: EnvironmentTag]
+class IntegrationHealthcheck[R <: IntegrationHealthcheck.Env]
     extends Http4sDsl[RIO[R, *]] {
 
   def routes(

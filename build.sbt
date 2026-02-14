@@ -175,7 +175,7 @@ lazy val localesMinimalDb = projectMatrix
 
 lazy val logbackConfig = projectMatrix
   .in(file("common/logback/config"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala3Versions)
   .configure(ModulesCommon.logbackConfigProfile)
 
 lazy val logbackLayout = projectMatrix

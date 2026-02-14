@@ -18,8 +18,9 @@ object ProjectSettings {
 
   val scala2Versions: Seq[String] = Seq(scala2_12, scala2_13)
   val scala2_13Versions: Seq[String] = Seq(scala2_13)
-  val scala2And3Versions: Seq[String] = scala2Versions ++ List(scala3)
+  val scala2And3Versions: Seq[String] = scala2Versions ++ Seq(scala3)
   val scala2_13And3Versions: Seq[String] = Seq(scala2_13, scala3)
+  val scala3Versions: Seq[String] = Seq(scala3)
 
   lazy val commonProfile: Project => Project = _
     .enablePlugins(ScalafixPlugin)
@@ -37,8 +38,6 @@ object ProjectSettings {
           ScalacOptions.warnUnusedExplicits,
           ScalacOptions.warnNonUnitStatement
         ),
-      scalacOptions ++=
-        Seq("-Wconf:msg=parameter value monad in class ZioSlf4jLogger is never used.*:s"),
       Test / tpolecatExcludeOptions ++=
         Set(ScalacOptions.privateWarnDeadCode, ScalacOptions.warnNonUnitStatement),
       Test / fork := true,
