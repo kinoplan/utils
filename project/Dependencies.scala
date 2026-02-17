@@ -7,11 +7,11 @@ object Dependencies {
   object Versions {
     val circeV         = "0.14.15"
     val kamonV         = "2.7.7"
-    val logbackV       = "1.5.29"
+    val logbackV       = "1.5.32"
     val openTelemetryV = "1.59.0"
     val reactivemongoV = "1.1.0-RC13"
     val scalaJavaTimeV = "2.6.0"
-    val sttpV          = "4.0.15"
+    val sttpV          = "4.0.18"
     val tapirV         = "1.13.8"
     val zioV           = "2.1.24"
     val zioConfigV     = "4.0.6"
@@ -66,7 +66,7 @@ object Dependencies {
     val play2Json                        = "com.typesafe.play"             %% "play-json"                              % "2.10.8"
     val playReactiveMongo                = "org.reactivemongo"             %% "play2-reactivemongo"                    % "1.1.0-play30.RC19"
     val play2ReactiveMongo               = "org.reactivemongo"             %% "play2-reactivemongo"                    % "1.1.0-play28.RC13"
-    val prometheusExporterHttpServer     = "io.prometheus"                  % "prometheus-metrics-exporter-httpserver" % "1.4.3"
+    val prometheusExporterHttpServer     = "io.prometheus"                  % "prometheus-metrics-exporter-httpserver" % "1.5.0"
     val reactiveMongo                    = "org.reactivemongo"             %% "reactivemongo"                          % "1.1.0-pekko.RC13"
     val reactiveMongoBsonApi             = "org.reactivemongo"             %% "reactivemongo-bson-api"                 % reactivemongoV
     val redisson                         = "org.redisson"                   % "redisson"                               % "3.52.0"
