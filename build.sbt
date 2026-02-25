@@ -16,8 +16,8 @@ lazy val rawAllAggregates = chimneyZioPrelude.projectRefs ++ circeReactivemongoB
   reactivemongoKamonInstrumentation.projectRefs ++ redissonCore.projectRefs ++
   redissonCodecBase.projectRefs ++ redissonCodecCirce.projectRefs ++
   redissonCodecPlayJson.projectRefs ++ redissonCodecPlay2Json.projectRefs ++
-  scalaLogging.projectRefs ++ tapirZioPrelude.projectRefs ++ implicitsAny.projectRefs ++
-  implicitsBoolean.projectRefs ++ implicitsCollection.projectRefs ++
+  redissonCodecZioJson.projectRefs ++ scalaLogging.projectRefs ++ tapirZioPrelude.projectRefs ++
+  implicitsAny.projectRefs ++ implicitsBoolean.projectRefs ++ implicitsCollection.projectRefs ++
   implicitsJavaTime.projectRefs ++ implicitsJodaTime.projectRefs ++ implicitsIdentity.projectRefs ++
   implicitsZio.projectRefs ++ implicitsZioPrelude.projectRefs ++ playErrorHandler.projectRefs ++
   playFiltersLogging.projectRefs ++ playReactivemongo.projectRefs ++
@@ -269,6 +269,13 @@ lazy val redissonCodecPlay2Json = projectMatrix
   .in(file("common/redisson/codec/play-json"))
   .jvmPlatform(ProjectSettings.scala2Versions)
   .configure(ModulesCommon.redissonCodecPlay2JsonProfile)
+  .dependsOn(redissonCodecBase)
+
+lazy val redissonCodecZioJson = projectMatrix
+  .in(file("common/redisson/codec/zio-json"))
+  .jvmPlatform(ProjectSettings.scala2Versions)
+  .jsPlatform(ProjectSettings.scala2Versions, commonJsSettings)
+  .configure(ModulesCommon.redissonCodecZioJsonProfile)
   .dependsOn(redissonCodecBase)
 
 lazy val scalaLogging = projectMatrix

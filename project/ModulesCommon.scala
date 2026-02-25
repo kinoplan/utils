@@ -190,6 +190,11 @@ object ModulesCommon {
     .settings(target := target.value / "play2")
     .settings(libraryDependencies ++= Seq(Libraries.play2Json % Provided))
 
+  lazy val redissonCodecZioJsonProfile: Project => Project = _
+    .configure(ProjectSettings.commonProfile)
+    .settings(name := "utils-redisson-codec-zio-json")
+    .settings(libraryDependencies ++= Seq(Libraries.zioJson.value % Provided))
+
   lazy val tapirZioPreludeProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-tapir-zio-prelude")
