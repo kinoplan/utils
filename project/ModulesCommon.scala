@@ -11,7 +11,10 @@ object ModulesCommon {
   lazy val chimneyZioPreludeProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-chimney-zio-prelude")
-    .settings(libraryDependencies ++= Seq(Libraries.chimney.value, Libraries.zioPrelude.value))
+    .settings(
+      libraryDependencies ++=
+        Seq(Libraries.chimney.value % Provided, Libraries.zioPrelude.value % Provided)
+    )
 
   lazy val circeReactivemongoBsonProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
@@ -35,7 +38,7 @@ object ModulesCommon {
           Libraries.circeCore.value    % Provided,
           Libraries.circeGeneric.value % Test,
           Libraries.circeParser.value  % Test,
-          Libraries.zioPrelude.value
+          Libraries.zioPrelude.value   % Provided
         )
     )
 
@@ -210,6 +213,17 @@ object ModulesCommon {
   lazy val zioJsonPreludeProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-zio-json-prelude")
-    .settings(libraryDependencies ++= Seq(Libraries.zioJson.value, Libraries.zioPrelude.value))
+    .settings(
+      libraryDependencies ++=
+        Seq(Libraries.zioJson.value % Provided, Libraries.zioPrelude.value % Provided)
+    )
+
+  lazy val zioJsonReactivemongoBsonProfile: Project => Project = _
+    .configure(ProjectSettings.commonProfile)
+    .settings(name := "utils-zio-json-reactivemongo-bson")
+    .settings(
+      libraryDependencies ++=
+        Seq(Libraries.zioJson.value % Provided, Libraries.reactiveMongoBsonApi % Provided)
+    )
 
 }
