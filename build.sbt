@@ -10,11 +10,11 @@ lazy val rawAllAggregates = chimneyZioPrelude.projectRefs ++ circeReactivemongoB
   http4sServer.projectRefs ++ integrationCheck.projectRefs ++ localesMinimalDb.projectRefs ++
   logbackConfig.projectRefs ++ logbackLayout.projectRefs ++ nullableCore.projectRefs ++
   nullableCodecCirce.projectRefs ++ nullableCodecTapir.projectRefs ++
-  reactivemongoBase.projectRefs ++ reactivemongoBson.projectRefs ++
-  reactivemongoBsonAny.projectRefs ++ reactivemongoBsonJodaTime.projectRefs ++
-  reactivemongoBsonRefined.projectRefs ++ reactivemongoBsonZioPrelude.projectRefs ++
-  reactivemongoKamonInstrumentation.projectRefs ++ redissonCore.projectRefs ++
-  redissonCodecBase.projectRefs ++ redissonCodecCirce.projectRefs ++
+  nullableCodecZioJson.projectRefs ++ reactivemongoBase.projectRefs ++
+  reactivemongoBson.projectRefs ++ reactivemongoBsonAny.projectRefs ++
+  reactivemongoBsonJodaTime.projectRefs ++ reactivemongoBsonRefined.projectRefs ++
+  reactivemongoBsonZioPrelude.projectRefs ++ reactivemongoKamonInstrumentation.projectRefs ++
+  redissonCore.projectRefs ++ redissonCodecBase.projectRefs ++ redissonCodecCirce.projectRefs ++
   redissonCodecPlayJson.projectRefs ++ redissonCodecPlay2Json.projectRefs ++
   redissonCodecZioJson.projectRefs ++ scalaLogging.projectRefs ++ tapirZioPrelude.projectRefs ++
   zioJsonPrelude.projectRefs ++ zioJsonReactivemongoBson.projectRefs ++ implicitsAny.projectRefs ++
@@ -202,6 +202,13 @@ lazy val nullableCodecTapir = projectMatrix
   .jvmPlatform(ProjectSettings.scala2Versions)
   .jsPlatform(ProjectSettings.scala2Versions, commonJsSettings)
   .configure(ModulesCommon.nullableCodecTapirProfile)
+  .dependsOn(nullableCore)
+
+lazy val nullableCodecZioJson = projectMatrix
+  .in(file("common/nullable/codec/zio-json"))
+  .jvmPlatform(ProjectSettings.scala2Versions)
+  .jsPlatform(ProjectSettings.scala2Versions, commonJsSettings)
+  .configure(ModulesCommon.nullableCodecZioJsonProfile)
   .dependsOn(nullableCore)
 
 lazy val reactivemongoBase = projectMatrix

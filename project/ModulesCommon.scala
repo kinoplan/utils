@@ -95,6 +95,11 @@ object ModulesCommon {
     .settings(name := "utils-nullable-codec-tapir")
     .settings(libraryDependencies ++= Seq(Libraries.tapirCore.value % Provided))
 
+  lazy val nullableCodecZioJsonProfile: Project => Project = _
+    .configure(ProjectSettings.commonProfile)
+    .settings(name := "utils-nullable-codec-zio-json")
+    .settings(libraryDependencies ++= Seq(Libraries.zioJson.value % Provided))
+
   lazy val scalaLoggingProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-scala-logging")

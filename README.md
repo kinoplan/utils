@@ -43,6 +43,7 @@ libraryDependencies ++= Seq(
   "io.kinoplan" %% "utils-nullable-core" % ${version}, // JVM and Scala.js
   "io.kinoplan" %% "utils-nullable-codec-circe" % ${version}, // JVM and Scala.js
   "io.kinoplan" %% "utils-nullable-codec-tapir" % ${version}, // JVM and Scala.js
+  "io.kinoplan" %% "utils-nullable-codec-zio-json" % ${version}, // JVM and Scala.js
   "io.kinoplan" %% "utils-reactivemongo-base" % ${version}, // JVM only
   "io.kinoplan" %% "utils-reactivemongo-bson" % ${version}, // JVM only
   "io.kinoplan" %% "utils-reactivemongo-bson-any" % ${version}, // JVM only
