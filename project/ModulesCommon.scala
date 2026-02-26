@@ -207,4 +207,9 @@ object ModulesCommon {
         )
     )
 
+  lazy val zioJsonPreludeProfile: Project => Project = _
+    .configure(ProjectSettings.commonProfile)
+    .settings(name := "utils-zio-json-prelude")
+    .settings(libraryDependencies ++= Seq(Libraries.zioJson.value, Libraries.zioPrelude.value))
+
 }

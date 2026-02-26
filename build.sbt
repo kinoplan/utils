@@ -17,9 +17,10 @@ lazy val rawAllAggregates = chimneyZioPrelude.projectRefs ++ circeReactivemongoB
   redissonCodecBase.projectRefs ++ redissonCodecCirce.projectRefs ++
   redissonCodecPlayJson.projectRefs ++ redissonCodecPlay2Json.projectRefs ++
   redissonCodecZioJson.projectRefs ++ scalaLogging.projectRefs ++ tapirZioPrelude.projectRefs ++
-  implicitsAny.projectRefs ++ implicitsBoolean.projectRefs ++ implicitsCollection.projectRefs ++
-  implicitsJavaTime.projectRefs ++ implicitsJodaTime.projectRefs ++ implicitsIdentity.projectRefs ++
-  implicitsZio.projectRefs ++ implicitsZioPrelude.projectRefs ++ playErrorHandler.projectRefs ++
+  zioJsonPrelude.projectRefs ++ implicitsAny.projectRefs ++ implicitsBoolean.projectRefs ++
+  implicitsCollection.projectRefs ++ implicitsJavaTime.projectRefs ++
+  implicitsJodaTime.projectRefs ++ implicitsIdentity.projectRefs ++ implicitsZio.projectRefs ++
+  implicitsZioPrelude.projectRefs ++ playErrorHandler.projectRefs ++
   playFiltersLogging.projectRefs ++ playReactivemongo.projectRefs ++
   playRequestMapContext.projectRefs ++ zioHttp4sHealthCheck.projectRefs ++
   zioIntegrationCheck.projectRefs ++ zioMonitoringPrometheus.projectRefs ++
@@ -288,6 +289,12 @@ lazy val tapirZioPrelude = projectMatrix
   .jvmPlatform(ProjectSettings.scala2Versions)
   .jsPlatform(ProjectSettings.scala2Versions, commonJsSettings)
   .configure(ModulesCommon.tapirZioPreludeProfile)
+
+lazy val zioJsonPrelude = projectMatrix
+  .in(file("common/zio-json/prelude"))
+  .jvmPlatform(ProjectSettings.scala2Versions)
+  .jsPlatform(ProjectSettings.scala2Versions, commonJsSettings)
+  .configure(ModulesCommon.zioJsonPreludeProfile)
 
 // zzzzzzzzzzzzzzzzzzzz Implicits Modules zzzzzzzzzzzzzzzzzzzz
 
