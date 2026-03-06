@@ -106,7 +106,8 @@ object Dependencies {
   ) {
 
     def libraryDependencies(scalaVersion: String): Seq[ModuleID] = dependencies ++ notShadedDependencies ++
-      notShadedScalaVersionDependencies.map(_ % scalaVersion)
+      (if (scalaVersion.startsWith("3")) Nil
+       else notShadedScalaVersionDependencies.map(_ % scalaVersion))
 
   }
 

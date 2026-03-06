@@ -11,7 +11,7 @@ import io.kinoplan.utils.redisson.core.compat.crossFutureConverters.CompletionSt
 
 trait RedisArrayOperations {
   implicit protected val executionContext: ExecutionContext
-  protected val redissonClient: RedissonClient
+  protected def redissonClient: RedissonClient
 
   protected lazy val deque: String => RDeque[String] =
     redissonClient.getDeque[String](_, StringCodec.INSTANCE)

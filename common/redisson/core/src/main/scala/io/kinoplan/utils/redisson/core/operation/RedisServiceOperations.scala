@@ -7,7 +7,7 @@ import org.redisson.api.redisnode.RedisNodes
 
 trait RedisServiceOperations {
   implicit protected val executionContext: ExecutionContext
-  protected val redissonClient: RedissonClient
+  protected def redissonClient: RedissonClient
 
   private lazy val sentinelMasterSlaveNodes =
     redissonClient.getRedisNodes(RedisNodes.SENTINEL_MASTER_SLAVE)

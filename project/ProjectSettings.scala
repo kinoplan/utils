@@ -14,9 +14,15 @@ object ProjectSettings {
 
   val scala2_12 = "2.12.21"
   val scala2_13 = "2.13.18"
+  val scala3 = "3.6.4"
 
   val scala2Versions: Seq[String] = Seq(scala2_12, scala2_13)
   val scala2_13Versions: Seq[String] = Seq(scala2_13)
+  val scala3Versions: Seq[String] = Seq(scala3)
+  val scalaAllVersions: Seq[String] = scala2Versions :+ scala3
+  val scala2_13_and_3Versions: Seq[String] = Seq(scala2_13, scala3)
+
+  private def isScala3(version: String): Boolean = version.startsWith("3")
 
   lazy val commonProfile: Project => Project = _
     .enablePlugins(ScalafixPlugin)
@@ -33,8 +39,10 @@ object ProjectSettings {
           ScalacOptions.warnUnusedExplicits,
           ScalacOptions.warnNonUnitStatement
         ),
-      scalacOptions ++=
-        Seq("-Wconf:msg=parameter value monad in class ZIoSlf4jLogger is never used.*:s"),
+      scalacOptions ++= {
+        if (isScala3(scalaVersion.value)) Seq("-source:3.3", "-Xmax-inlines", "64")
+        else Seq("-Wconf:msg=parameter value monad in class ZIoSlf4jLogger is never used.*:s")
+      },
       Test / tpolecatExcludeOptions ++=
         Set(ScalacOptions.privateWarnDeadCode, ScalacOptions.warnNonUnitStatement),
       Test / fork := true,
@@ -51,8 +59,16 @@ object ProjectSettings {
     libraryDependencies ++= Seq(Libraries.zioTest.value, Libraries.zioTestSbt.value)
   )
 
-  lazy val kindProjectorProfile: Project => Project =
-    _.settings(addCompilerPlugin(Libraries.kindProjector.cross(CrossVersion.full)))
+  lazy val kindProjectorProfile: Project => Project = _.settings(
+    libraryDependencies ++= {
+      if (isScala3(scalaVersion.value)) Nil
+      else Seq(compilerPlugin(Libraries.kindProjector.cross(CrossVersion.full)))
+    },
+    scalacOptions ++= {
+      if (isScala3(scalaVersion.value)) Seq("-Xkind-projector")
+      else Nil
+    }
+  )
 
   lazy val publishSkipProfile: Project => Project = _.settings(publish / skip := true)
 
@@ -77,6 +93,19 @@ object ProjectSettings {
   def unmanagedSourceProfile(path: String): Project => Project = _.settings(
     Compile / unmanagedSourceDirectories += (Compile / sourceDirectory).value / path,
     Test / unmanagedSourceDirectories += (Test / sourceDirectory).value / path
+  )
+
+  lazy val scala3SourceCompat: Project => Project = _.settings(
+    Compile / unmanagedSourceDirectories ++= {
+      if (isScala3(scalaVersion.value))
+        Seq((Compile / sourceDirectory).value / "scala-2.13")
+      else Nil
+    },
+    Test / unmanagedSourceDirectories ++= {
+      if (isScala3(scalaVersion.value))
+        Seq((Test / sourceDirectory).value / "scala-2.13")
+      else Nil
+    }
   )
 
 }
