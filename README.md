@@ -20,6 +20,8 @@ to facilitate re-development and use.
 
 ## Usage
 
+Utils is available for Scala 3.3+, Scala 2.13 and Scala 2.12, on the JVM and JS platforms.
+
 You can add a module to your build by adding the following line to `libraryDependencies`:
 
 ```scala

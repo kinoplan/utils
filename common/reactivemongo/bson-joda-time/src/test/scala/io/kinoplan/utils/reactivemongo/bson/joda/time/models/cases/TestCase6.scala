@@ -40,7 +40,6 @@ object TestCase6 extends TestCase6Bson {
       handler,
       bson,
       bsonIncorrect,
-      exceptionField = targetField,
       exceptionMessage = s"expected BSONString, but found ${BSONArray.empty}"
     )
   }

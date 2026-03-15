@@ -9,8 +9,8 @@ import io.opentelemetry.sdk.trace.`export`.{BatchSpanProcessor, SimpleSpanProces
 import io.opentelemetry.semconv.ServiceAttributes
 import zio.{Scope, URIO, ZIO}
 
+import io.kinoplan.utils.cross.collection.converters._
 import io.kinoplan.utils.zio.opentelemetry.config.TracingConfig
-import io.kinoplan.utils.zio.opentelemetry.crossCollectionConverters._
 
 private[opentelemetry] object TracerProvider {
 
