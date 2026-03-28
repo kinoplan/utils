@@ -14,7 +14,7 @@ object Dependencies {
     val sttpV          = "4.0.19"
     val tapirV         = "1.13.13"
     val zioV           = "2.1.24"
-    val zioConfigV     = "4.0.6"
+    val zioConfigV     = "4.0.7"
   }
 
   import Versions.*
