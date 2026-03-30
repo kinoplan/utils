@@ -12,9 +12,9 @@ object Dependencies {
     val reactivemongoV = "1.1.0-RC13"
     val scalaJavaTimeV = "2.6.0"
     val sttpV          = "4.0.20"
-    val tapirV         = "1.13.12"
+    val tapirV         = "1.13.13"
     val zioV           = "2.1.24"
-    val zioConfigV     = "4.0.6"
+    val zioConfigV     = "4.0.7"
   }
 
   import Versions.*
@@ -30,7 +30,7 @@ object Dependencies {
     val scalaJavaLocales        = Def.setting("io.github.cquiroz" %%% "scala-java-locales" % "1.5.4")
     val scalaJavaTime           = Def.setting("io.github.cquiroz" %%% "scala-java-time" % scalaJavaTimeV)
     val scalaJavaTimeZone       = Def.setting("io.github.cquiroz" %%% "scala-java-time-tzdb" % scalaJavaTimeV)
-    val scalatest               = Def.setting("org.scalatest" %%% "scalatest" % "3.2.19" % Test)
+    val scalatest               = Def.setting("org.scalatest" %%% "scalatest" % "3.2.20" % Test)
     val scalatestPlusScalacheck = Def.setting("org.scalatestplus" %%% "scalacheck-1-18" % "3.2.19.0" % Test)
     val tapirCore               = Def.setting("com.softwaremill.sttp.tapir" %%% "tapir-core" % tapirV)
     val zio                     = Def.setting("dev.zio" %%% "zio" % zioV)
@@ -44,7 +44,7 @@ object Dependencies {
     val http4sBlazeServer                = "org.http4s"                    %% "http4s-blaze-server"                    % "0.23.17"
     val http4sDsl                        = "org.http4s"                    %% "http4s-dsl"                             % "0.23.33"
     val http4sServer                     = "org.http4s"                    %% "http4s-server"                          % "0.23.33"
-    val jacksonModule                    = "com.fasterxml.jackson.module"  %% "jackson-module-scala"                   % "2.21.1"
+    val jacksonModule                    = "com.fasterxml.jackson.module"  %% "jackson-module-scala"                   % "2.21.2"
     val jodaTime                         = "joda-time"                      % "joda-time"                              % "2.14.1"
     val kamonCore                        = "io.kamon"                      %% "kamon-core"                             % kamonV
     val kamonInstrumentationCommon       = "io.kamon"                      %% "kamon-instrumentation-common"           % kamonV
@@ -67,7 +67,7 @@ object Dependencies {
     val play2Json                        = "com.typesafe.play"             %% "play-json"                              % "2.10.8"
     val playReactiveMongo                = "org.reactivemongo"             %% "play2-reactivemongo"                    % "1.1.0-play30.RC20"
     val play2ReactiveMongo               = "org.reactivemongo"             %% "play2-reactivemongo"                    % "1.1.0-play28.RC13"
-    val prometheusExporterHttpServer     = "io.prometheus"                  % "prometheus-metrics-exporter-httpserver" % "1.5.0"
+    val prometheusExporterHttpServer     = "io.prometheus"                  % "prometheus-metrics-exporter-httpserver" % "1.5.1"
     val reactiveMongo                    = "org.reactivemongo"             %% "reactivemongo"                          % "1.1.0-pekko.RC13"
     val reactiveMongoBsonApi             = "org.reactivemongo"             %% "reactivemongo-bson-api"                 % reactivemongoV
     val redisson                         = "org.redisson"                   % "redisson"                               % "3.52.0"
@@ -80,7 +80,7 @@ object Dependencies {
     val sourcecode                       = "com.lihaoyi"                   %% "sourcecode"                             % "0.4.4"
     val sttpSlf4jBackend                 = "com.softwaremill.sttp.client4" %% "slf4j-backend"                          % sttpV
     val tapirServer                      = "com.softwaremill.sttp.tapir"   %% "tapir-server"                           % tapirV
-    val testContainers                   = "org.testcontainers"             % "testcontainers"                         % "2.0.3"    % Test
+    val testContainers                   = "org.testcontainers"             % "testcontainers"                         % "2.0.4"    % Test
     val testContainersMongodb            = "org.testcontainers"             % "mongodb"                                % "1.21.4"   % Test
     val testContainersRedis              = "com.redis"                      % "testcontainers-redis"                   % "2.2.4"    % Test
     val typesafeConfig                   = "com.typesafe"                   % "config"                                 % "1.4.6"
