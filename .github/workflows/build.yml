@@ -34,13 +34,14 @@ jobs:
     - name: Compile
       run: sbt $SBT_JAVA_OPTS -v "compileScoped ${{ matrix.scala }} ${{ matrix.platform }}"
 
-    - name: Coverage
-      if: matrix.platform != 'JS' || matrix.scala != '3'
-      run: sbt coverage
     - name: Test
       run: |
         export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS --add-opens=java.base/java.lang=ALL-UNNAMED";
-        sbt $SBT_JAVA_OPTS -v "testScoped ${{ matrix.scala }} ${{ matrix.platform }}"
+        SBT_COVERAGE=""
+        if [[ "${{ matrix.platform }}" != "JS" || "${{ matrix.scala }}" != "3" ]]; then
+          SBT_COVERAGE="coverage;"
+        fi
+        sbt $SBT_JAVA_OPTS -v "${SBT_COVERAGE}testScoped ${{ matrix.scala }} ${{ matrix.platform }}"
 
     - name: Scalafmt check sbt
       if: matrix.scala == '2.12' && matrix.platform == 'JS'
