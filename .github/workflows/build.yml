@@ -59,7 +59,7 @@ jobs:
 
     - name: Send coverage report to codecov
       if: matrix.platform != 'JS' || matrix.scala != '3'
-      uses: codecov/codecov-action@v6.0.0
+      uses: codecov/codecov-action@v6.0.1
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
 
