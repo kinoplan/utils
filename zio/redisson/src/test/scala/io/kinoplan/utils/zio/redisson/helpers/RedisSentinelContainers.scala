@@ -81,7 +81,7 @@ object RedisSentinelContainers {
         sentinelContainer.withEnv("REDIS_MASTER_HOST", REDIS_SENTINEL_MASTER_HOST)
         sentinelContainer.withEnv("REDIS_MASTER_PORT_NUMBER", REDIS_SENTINEL_MASTER_PORT)
         sentinelContainer.withEnv("REDIS_MASTER_SET", masterName)
-        sentinelContainer.withEnv("REDIS_SENTINEL_QUORUM", "2")
+        sentinelContainer.withEnv("REDIS_SENTINEL_QUORUM", "1")
 
         sentinelContainer.start()
 
