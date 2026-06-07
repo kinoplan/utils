@@ -82,6 +82,7 @@ object RedisSentinelContainers {
         sentinelContainer.withEnv("REDIS_MASTER_PORT_NUMBER", REDIS_SENTINEL_MASTER_PORT)
         sentinelContainer.withEnv("REDIS_MASTER_SET", masterName)
         sentinelContainer.withEnv("REDIS_SENTINEL_QUORUM", "1")
+        sentinelContainer.withEnv("ALLOW_EMPTY_PASSWORD", "yes")
 
         sentinelContainer.start()
 
