@@ -1,0 +1,17 @@
+name: Scala Steward
+
+on:
+  schedule:
+    - cron: '0 21 * * 4'
+  workflow_dispatch:
+
+jobs:
+  scala-steward:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Run Scala Steward
+        uses: scala-steward-org/scala-steward-action@v2
+        env:
+          JAVA_OPTS: "-Xms4G -Xmx4G"
