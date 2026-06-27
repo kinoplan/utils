@@ -1,7 +1,9 @@
 pull_request_rules:
   - name: automatic assign and label for scala-steward pull requests
     conditions:
-      - author=scala-steward
+      - or:
+        - author=scala-steward
+        - author=github-actions[bot]
     actions:
       assign:
         users: [kazievab]
@@ -9,7 +11,9 @@ pull_request_rules:
         add: [dependencies]
   - name: automatic merge for scala-steward pull requests
     conditions:
-      - author=scala-steward
+      - or:
+        - author=scala-steward
+        - author=github-actions[bot]
       - "body~=(labels:.*semver-patch.*)|(labels:.*semver-minor.*)"
       - check-success~=Build and Test \(ubuntu-latest, 2\.1[23],
     actions:
