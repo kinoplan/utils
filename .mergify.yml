@@ -15,14 +15,26 @@ pull_request_rules:
         - author=scala-steward
         - author=github-actions[bot]
       - "body~=(labels:.*semver-patch.*)|(labels:.*semver-minor.*)"
-      - check-success~=Build and Test \(ubuntu-latest, 2\.1[23],
+      - check-success~=Build and Test \(ubuntu-latest, 2\.12, JVM
+      - check-success~=Build and Test \(ubuntu-latest, 2\.12, JS
+      - check-success~=Build and Test \(ubuntu-latest, 2\.13, JVM
+      - check-success~=Build and Test \(ubuntu-latest, 2\.13, JS
+      - check-success~=Build and Test \(ubuntu-latest, 3, JVM
+      - check-success~=Build and Test \(ubuntu-latest, 3, JS
+      - check-success=publish
     actions:
       merge:
         method: squash
   - name: automatic merge for dependabot pull requests
     conditions:
       - author=dependabot[bot]
-      - check-success~=Build and Test \(ubuntu-latest, 2\.1[23],
+      - check-success~=Build and Test \(ubuntu-latest, 2\.12, JVM
+      - check-success~=Build and Test \(ubuntu-latest, 2\.12, JS
+      - check-success~=Build and Test \(ubuntu-latest, 2\.13, JVM
+      - check-success~=Build and Test \(ubuntu-latest, 2\.13, JS
+      - check-success~=Build and Test \(ubuntu-latest, 3, JVM
+      - check-success~=Build and Test \(ubuntu-latest, 3, JS
+      - check-success=publish
     actions:
       merge:
         method: squash
