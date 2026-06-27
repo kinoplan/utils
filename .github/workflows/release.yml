@@ -3,9 +3,8 @@ on:
   push:
     branches: 
       - main
-      - develop/*
     tags: ["v*.*.*"]
-  pull_request:
+  workflow_dispatch:
 
 env:
   PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
@@ -16,12 +15,6 @@ env:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    if: |
-      !(github.event_name == 'pull_request' && (
-        github.event.pull_request.user.login == 'scala-steward' ||
-        github.event.pull_request.user.login == 'dependabot[bot]' ||
-        github.event.pull_request.user.login == 'github-actions[bot]'
-      ))
     steps:
       - uses: actions/checkout@v6
       - uses: coursier/cache-action@v8
