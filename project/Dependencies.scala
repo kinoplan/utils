@@ -9,7 +9,7 @@ object Dependencies {
     val logbackV       = "1.5.32"
     val openTelemetryV = "1.60.1"
     val reactivemongoV = "1.1.0-RC19"
-    val scalaJavaTimeV = "2.6.0"
+    val scalaJavaTimeV = "2.7.0"
     val sttpV          = "4.0.20"
     val tapirV         = "1.13.13"
     val zioV           = "2.1.24"
