@@ -21,7 +21,6 @@ pull_request_rules:
       - check-success~=Build and Test \(ubuntu-latest, 2\.13, JS
       - check-success~=Build and Test \(ubuntu-latest, 3, JVM
       - check-success~=Build and Test \(ubuntu-latest, 3, JS
-      - check-success=publish
     actions:
       merge:
         method: squash
@@ -34,7 +33,6 @@ pull_request_rules:
       - check-success~=Build and Test \(ubuntu-latest, 2\.13, JS
       - check-success~=Build and Test \(ubuntu-latest, 3, JVM
       - check-success~=Build and Test \(ubuntu-latest, 3, JS
-      - check-success=publish
     actions:
       merge:
         method: squash
