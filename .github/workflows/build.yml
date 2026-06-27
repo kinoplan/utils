@@ -6,7 +6,18 @@ env:
   SBT_JAVA_OPTS: -J-Xms4G -J-Xmx4G
 
 jobs:
+  pre-check:
+    runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@v5
+        with:
+          concurrent_skipping: 'same_content'
   build:
+    needs: pre-check
+    if: needs.pre-check.outputs.should_skip != 'true' || github.event_name == 'pull_request'
     name: Build and Test
     strategy:
       matrix:
@@ -15,9 +26,6 @@ jobs:
         platform: ["JVM", "JS"]
         java: ["temurin:1.17.0.9"]
     runs-on: ${{ matrix.os }}
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.event.pull_request.head.sha || github.sha }}-${{ matrix.scala }}-${{ matrix.platform }}
-      cancel-in-progress: true
     steps:
     - name: Checkout current branch
       uses: actions/checkout@v6
@@ -65,6 +73,3 @@ jobs:
       uses: codecov/codecov-action@v6.0.1
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-
-#    - name: Send coverage report to codacy
-#      uses: codacy/codacy-coverage-reporter-action@master
