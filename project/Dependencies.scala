@@ -34,7 +34,7 @@ object Dependencies {
     val tapirCore               = Def.setting("com.softwaremill.sttp.tapir" %%% "tapir-core" % tapirV)
     val zio                     = Def.setting("dev.zio" %%% "zio" % zioV)
     val zioJson                 = Def.setting("dev.zio" %%% "zio-json" % "0.9.2")
-    val zioPrelude              = Def.setting("dev.zio" %%% "zio-prelude" % "1.0.0-RC46")
+    val zioPrelude              = Def.setting("dev.zio" %%% "zio-prelude" % "1.0.0-RC47")
     val zioTest                 = Def.setting("dev.zio" %%% "zio-test" % zioV)
     val zioTestSbt              = Def.setting("dev.zio" %%% "zio-test-sbt" % zioV)
     val zioStreams              = Def.setting("dev.zio" %%% "zio-streams" % zioV)
