@@ -3,7 +3,7 @@ pull_request_rules:
     conditions:
       - or:
         - author=scala-steward
-        - author=github-actions[bot]
+        - author=kinoplan-scala-steward[bot]
     actions:
       assign:
         users: [kazievab]
@@ -13,7 +13,7 @@ pull_request_rules:
     conditions:
       - or:
         - author=scala-steward
-        - author=github-actions[bot]
+        - author=kinoplan-scala-steward[bot]
       - "body~=(labels:.*semver-patch.*)|(labels:.*semver-minor.*)"
       - check-success~=Build and Test \(ubuntu-latest, 2\.12, JVM
       - check-success~=Build and Test \(ubuntu-latest, 2\.12, JS
