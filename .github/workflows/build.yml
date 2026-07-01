@@ -28,7 +28,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout current branch
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
 
     - name: Cache build
       uses: coursier/cache-action@v8
