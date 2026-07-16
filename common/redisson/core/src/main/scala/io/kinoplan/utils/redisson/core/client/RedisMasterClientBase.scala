@@ -20,5 +20,5 @@ abstract class RedisMasterClientBase extends RedisOperations with DefaultRedisCo
     config
   }
 
-  protected def redissonClient: RedissonClient = Redisson.create(redissonConfiguration)
+  protected lazy val redissonClient: RedissonClient = Redisson.create(redissonConfiguration)
 }

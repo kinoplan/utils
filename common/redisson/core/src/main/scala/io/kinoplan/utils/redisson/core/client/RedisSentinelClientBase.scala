@@ -29,5 +29,5 @@ abstract class RedisSentinelClientBase extends RedisOperations with DefaultRedis
     config
   }
 
-  protected def redissonClient: RedissonClient = Redisson.create(redissonConfiguration)
+  protected lazy val redissonClient: RedissonClient = Redisson.create(redissonConfiguration)
 }
