@@ -46,6 +46,9 @@ trait DateTimePatternExtension extends DatePatternExtension with TimePatternExte
   def `yyyy-MM-dd'T'HH:mm:ss`: String = toString(DateTimePattern.`yyyy-MM-dd'T'HH:mm:ss`)
 
   @inline
+  def `yyyy-MM-dd'T'HH:mm:ss'Z'`: String = toString(DateTimePattern.`yyyy-MM-dd'T'HH:mm:ss'Z'`)
+
+  @inline
   def `yyyy-MM-dd'T'HH:mm:ss.SSS`: String = toString(DateTimePattern.`yyyy-MM-dd'T'HH:mm:ss.SSS`)
 
   @inline

@@ -16,7 +16,8 @@ final private[implicits] class OffsetDateTimeOps(private val value: OffsetDateTi
 
   override def toString(pattern: String): String = {
     val normalizedValue =
-      if (value.getOffset == ZoneOffset.UTC) {
+      if (pattern.contains("'Z'")) value.withOffsetSameInstant(ZoneOffset.UTC)
+      else if (value.getOffset == ZoneOffset.UTC) {
         val zoneId = ZoneId.systemDefault()
         if (zoneId.getId == "GMT" || zoneId.getId == "UTC") value
         else value.atZoneSameInstant(zoneId).toOffsetDateTime
