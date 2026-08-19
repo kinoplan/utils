@@ -1,11 +1,9 @@
----
 singleServerConfig:
   idleConnectionTimeout: 20000
   connectTimeout: 15000
   timeout: 5000
   subscriptionTimeout: 10000
   retryAttempts: 5
-  retryInterval: 1500
   subscriptionsPerConnection: 10
   clientName: "native-single-test"
   address: "redis://127.0.0.1:6379"

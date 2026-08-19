@@ -4,14 +4,8 @@ import java.util.concurrent.TimeUnit
 
 import scala.concurrent.{ExecutionContext, Future}
 
-import org.redisson.api.{PendingEntry, RStream, RedissonClient, StreamConsumer, StreamMessageId}
-import org.redisson.api.stream.{
-  StreamAddArgs,
-  StreamCreateGroupArgs,
-  StreamPendingRangeArgs,
-  StreamReadGroupArgs,
-  StreamTrimArgs
-}
+import org.redisson.api.{RStream, RedissonClient}
+import org.redisson.api.stream._
 import org.redisson.client.codec.StringCodec
 
 import io.kinoplan.utils.cross.collection.converters._

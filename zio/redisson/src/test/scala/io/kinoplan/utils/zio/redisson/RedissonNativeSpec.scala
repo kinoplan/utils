@@ -56,8 +56,16 @@ object RedissonNativeSpec extends ZIOSpecDefault with DefaultRedisCodecs {
         configYaml = resourceYaml.getLines().toList
         redissonConfigYaml = redis.redissonClient.getConfig.toYAML.split("\n").toList
         case1 = configYaml.diff(redissonConfigYaml)
-        case2 = configYaml.diff(redissonConfigYaml).filterNot(_.startsWith("  address:"))
-      } yield assertTrue(case1.size == 1, case1.exists(_.contains("address")), case2.isEmpty)
+        case2 = configYaml
+          .diff(redissonConfigYaml)
+          .filterNot(_.startsWith("  address:"))
+          .filterNot(_.startsWith("codec:"))
+      } yield assertTrue(
+        case1.size == 2,
+        case1.exists(_.contains("address")),
+        case1.exists(_.contains("codec")),
+        case2.isEmpty
+      )
     ).provideLayer(live()),
     test("check RCodec")(
       for {

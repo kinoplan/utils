@@ -2,7 +2,7 @@ package io.kinoplan.utils.redisson.core
 
 import scala.concurrent.{ExecutionContext, Future}
 
-import org.redisson.api.StreamMessageId
+import org.redisson.api.stream.StreamMessageId
 
 import io.kinoplan.utils.cross.collection.converters._
 import io.kinoplan.utils.redisson.codec.RedisDecoder

@@ -3,7 +3,7 @@ package io.kinoplan.utils.zio.redisson.helpers;
 import com.github.dockerjava.api.model.ContainerNetwork;
 import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.Ports;
-import org.redisson.api.NatMapper;
+import org.redisson.config.NatMapper;
 import org.redisson.misc.RedisURI;
 import org.testcontainers.containers.GenericContainer;
 
