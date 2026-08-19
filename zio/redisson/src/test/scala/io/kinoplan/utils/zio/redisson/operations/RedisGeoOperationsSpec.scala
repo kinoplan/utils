@@ -1,7 +1,6 @@
 package io.kinoplan.utils.zio.redisson.operations
 
-import org.redisson.api.{GeoEntry, GeoOrder, GeoPosition, GeoUnit}
-import org.redisson.api.geo.GeoSearchArgs
+import org.redisson.api.geo.{GeoEntry, GeoOrder, GeoPosition, GeoSearchArgs, GeoUnit}
 import zio._
 import zio.test._
 

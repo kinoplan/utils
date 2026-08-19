@@ -1,6 +1,6 @@
 package io.kinoplan.utils.zio.redisson.utils
 
-import org.redisson.api.StreamMessageId
+import org.redisson.api.stream.StreamMessageId
 import org.redisson.client.protocol.ScoredEntry
 import zio.{Duration, Task, ZIO}
 

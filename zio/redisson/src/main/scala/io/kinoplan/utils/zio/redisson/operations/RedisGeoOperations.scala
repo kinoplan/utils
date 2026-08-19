@@ -1,7 +1,7 @@
 package io.kinoplan.utils.zio.redisson.operations
 
-import org.redisson.api.{GeoEntry, GeoPosition, GeoUnit, RGeo, RedissonClient}
-import org.redisson.api.geo.GeoSearchArgs
+import org.redisson.api.{RGeo, RedissonClient}
+import org.redisson.api.geo.{GeoEntry, GeoPosition, GeoSearchArgs, GeoUnit}
 import zio.{Task, URLayer, ZIO, ZLayer}
 
 import io.kinoplan.utils.redisson.codec.base.{BaseRedisDecoder, BaseRedisEncoder}

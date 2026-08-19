@@ -36,25 +36,13 @@ private[redisson] case class RedisSentinelConfig(
   failedSlaveReconnectionInterval: Option[Int],
   failedSlaveNodeDetector: Option[Long],
   database: Option[Int],
-  password: Option[String],
-  username: Option[String],
   sentinelPassword: Option[String],
   sentinelUsername: Option[String],
   sentinelsDiscovery: Option[Boolean],
   subscriptionsPerConnection: Option[Int],
   subscriptionTimeout: Option[Int],
   clientName: Option[String],
-  sslProtocols: Option[Seq[String]],
-  sslVerificationMode: Option[SslVerificationModeType],
-  sslProvider: Option[SslProviderType],
-  sslTruststore: Option[URL],
-  sslTruststorePassword: Option[String],
-  sslKeystoreType: Option[String],
-  sslKeystore: Option[URL],
-  sslKeystorePassword: Option[String],
-  pingConnectionInterval: Option[Int],
-  keepAlive: Option[Boolean],
-  tcpNoDelay: Option[Boolean]
+  pingConnectionInterval: Option[Int]
 ) {
 
   def redissonConfig(config: Config): Config = {
@@ -99,8 +87,6 @@ private[redisson] case class RedisSentinelConfig(
         self.setFailedSlaveNodeDetector(new FailedConnectionDetector(value))
       )
       .applyOption(database)((self, value) => self.setDatabase(value))
-      .applyOption(password)((self, value) => self.setPassword(value))
-      .applyOption(username)((self, value) => self.setUsername(value))
       .applyOption(sentinelPassword)((self, value) => self.setSentinelPassword(value))
       .applyOption(sentinelUsername)((self, value) => self.setSentinelUsername(value))
       .applyOption(sentinelsDiscovery)((self, value) => self.setSentinelsDiscovery(value))
@@ -109,19 +95,7 @@ private[redisson] case class RedisSentinelConfig(
       )
       .applyOption(subscriptionTimeout)((self, value) => self.setSubscriptionTimeout(value))
       .applyOption(clientName)((self, value) => self.setClientName(value))
-      .applyOption(sslProtocols)((self, value) => self.setSslProtocols(value.toArray))
-      .applyOption(sslVerificationMode)((self, value) =>
-        self.setSslVerificationMode(value.underlying)
-      )
-      .applyOption(sslProvider)((self, value) => self.setSslProvider(value.underlying))
-      .applyOption(sslTruststore)((self, value) => self.setSslTruststore(value))
-      .applyOption(sslTruststorePassword)((self, value) => self.setSslTruststorePassword(value))
-      .applyOption(sslKeystoreType)((self, value) => self.setSslKeystoreType(value))
-      .applyOption(sslKeystore)((self, value) => self.setSslKeystore(value))
-      .applyOption(sslKeystorePassword)((self, value) => self.setSslKeystorePassword(value))
       .applyOption(pingConnectionInterval)((self, value) => self.setPingConnectionInterval(value))
-      .applyOption(keepAlive)((self, value) => self.setKeepAlive(value))
-      .applyOption(tcpNoDelay)((self, value) => self.setTcpNoDelay(value))
 
     config
   }

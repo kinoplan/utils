@@ -1,6 +1,7 @@
 package io.kinoplan.utils.zio.redisson.operations.base
 
-import org.redisson.api.{GeoPosition, StreamMessageId}
+import org.redisson.api.geo.GeoPosition
+import org.redisson.api.stream.StreamMessageId
 import zio.Task
 import zio.stream.ZStream
 

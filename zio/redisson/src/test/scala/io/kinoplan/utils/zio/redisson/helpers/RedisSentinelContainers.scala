@@ -1,6 +1,6 @@
 package io.kinoplan.utils.zio.redisson.helpers
 
-import org.redisson.api.NatMapper
+import org.redisson.config.NatMapper
 import org.testcontainers.containers.{GenericContainer, Network}
 import org.testcontainers.utility.DockerImageName
 import zio.{Scope, UIO, ZIO, ZLayer}

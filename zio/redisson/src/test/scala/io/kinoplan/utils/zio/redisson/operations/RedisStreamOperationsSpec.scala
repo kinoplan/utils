@@ -1,6 +1,5 @@
 package io.kinoplan.utils.zio.redisson.operations
 
-import org.redisson.api.StreamMessageId
 import org.redisson.api.stream._
 import zio._
 import zio.test._

@@ -261,10 +261,17 @@ trait RedisSortedSetOperations {
     *
     * Similar to the ZINTER command.
     *
+    * @example
+    *   {{{
+    * zInter[String](key, SetIntersectionArgs.names("set1", "set2").weights(1.0, 2.0))
+    *   }}}
+    *
     * @param key
     *   The key of the initial sorted set.
     * @param args
-    *   Options for intersection, like additional keys, weights and aggregate.
+    *   Options for intersection, like additional keys, weights and aggregate. Built via
+    *   `SetIntersectionArgs.names(...)`, with further options (`weights`, `aggregate`) available
+    *   from the `SetReadArgs` parent trait.
     * @param codec
     *   Wrapper around Redisson codec. Default: taken from config.
     * @tparam V
@@ -276,58 +283,27 @@ trait RedisSortedSetOperations {
     codec: RCodec[_, V]
   ): ResultBuilder8[V]
 
-  /** Intersect multiple sorted sets and return the result.
-    *
-    * Similar to the ZINTER command.
-    *
-    * @param key
-    *   The key of the initial sorted set.
-    * @param args
-    *   Options for intersection, like additional keys, weights and aggregate. Note: `SetReadArgs`
-    *   is expected to extend or be derived from `SetIntersectionArgs`.
-    * @param codec
-    *   Wrapper around Redisson codec. Default: taken from config.
-    * @tparam V
-    *   Type of the values stored in Redisson.
-    * @return
-    *   The resulting iterable of the intersection.
-    */
-  def zInter[V](key: String, args: SetReadArgs)(implicit
-    codec: RCodec[_, V]
-  ): ResultBuilder8[V]
-
   /** Intersect multiple sorted sets and store the result.
     *
     * Similar to the ZINTERSTORE command.
     *
+    * @example
+    *   {{{
+    * zInterStore(key, SetIntersectionArgs.names("set1", "set2").weights(1.0, 2.0))
+    *   }}}
+    *
     * @param key
     *   The destination key where the result is stored.
     * @param args
-    *   Options for intersection, like additional keys, weights and aggregate.
+    *   Options for intersection, like additional keys, weights and aggregate. Built via
+    *   `SetIntersectionArgs.names(...)`, with further options (`weights`, `aggregate`) available
+    *   from the `SetReadArgs` parent trait.
     * @param codec
     *   Wrapper around Redisson codec. Default: taken from config.
     * @return
     *   The number of elements in the resulting set.
     */
   def zInterStore(key: String, args: SetIntersectionArgs)(implicit
-    codec: RCodec[_, _]
-  ): Task[Int]
-
-  /** Intersect multiple sorted sets and store the result.
-    *
-    * Similar to the ZINTERSTORE command.
-    *
-    * @param key
-    *   The destination key where the result is stored.
-    * @param args
-    *   Options for intersection, like additional keys, weights and aggregate. Note: `SetReadArgs`
-    *   is expected to extend or be derived from `SetIntersectionArgs`.
-    * @param codec
-    *   Wrapper around Redisson codec. Default: taken from config.
-    * @return
-    *   The number of elements in the resulting set.
-    */
-  def zInterStore(key: String, args: SetReadArgs)(implicit
     codec: RCodec[_, _]
   ): Task[Int]
 
@@ -1579,10 +1555,17 @@ trait RedisSortedSetOperations {
     *
     * Similar to the ZUNION command.
     *
+    * @example
+    *   {{{
+    * zUnion[String](key, SetUnionArgs.names("set1", "set2").weights(1.0, 2.0))
+    *   }}}
+    *
     * @param key
     *   The key of the initial sorted set.
     * @param args
-    *   Options for the union, such as additional keys and weights for each set.
+    *   Options for the union, such as additional keys and weights for each set. Built via
+    *   `SetUnionArgs.names(...)`, with further options (`weights`, `aggregate`) available from the
+    *   `SetReadArgs` parent trait.
     * @param codec
     *   Wrapper around Redisson codec. Default: taken from config.
     * @tparam V
@@ -1594,58 +1577,27 @@ trait RedisSortedSetOperations {
     codec: RCodec[_, V]
   ): ResultBuilder8[V]
 
-  /** Add multiple sorted sets and return the union.
-    *
-    * Similar to the ZUNION command.
-    *
-    * @param key
-    *   The key of the initial sorted set.
-    * @param args
-    *   Options for the union, such as additional keys and weights for each set. Note: `SetReadArgs`
-    *   is expected to extend or be derived from `SetUnionArgs`.
-    * @param codec
-    *   Wrapper around Redisson codec. Default: taken from config.
-    * @tparam V
-    *   Type of the values stored in Redisson.
-    * @return
-    *   The resulting iterable of the union.
-    */
-  def zUnion[V](key: String, args: SetReadArgs)(implicit
-    codec: RCodec[_, V]
-  ): ResultBuilder8[V]
-
   /** Add multiple sorted sets and store the union.
     *
     * Similar to the ZUNIONSTORE command.
     *
+    * @example
+    *   {{{
+    * zUnionStore(key, SetUnionArgs.names("set1", "set2").weights(1.0, 2.0))
+    *   }}}
+    *
     * @param key
     *   The destination key where the result is stored.
     * @param args
-    *   Options for the union, such as additional keys and weights for each set.
+    *   Options for the union, such as additional keys and weights for each set. Built via
+    *   `SetUnionArgs.names(...)`, with further options (`weights`, `aggregate`) available from the
+    *   `SetReadArgs` parent trait.
     * @param codec
     *   Wrapper around Redisson codec. Default: taken from config.
     * @return
     *   The number of elements in the resulting set.
     */
   def zUnionStore(key: String, args: SetUnionArgs)(implicit
-    codec: RCodec[_, _]
-  ): Task[Int]
-
-  /** Add multiple sorted sets and store the union.
-    *
-    * Similar to the ZUNIONSTORE command.
-    *
-    * @param key
-    *   The destination key where the result is stored.
-    * @param args
-    *   Options for the union, such as additional keys and weights for each set. Note: `SetReadArgs`
-    *   is expected to extend or be derived from `SetUnionArgs`.
-    * @param codec
-    *   Wrapper around Redisson codec. Default: taken from config.
-    * @return
-    *   The number of elements in the resulting set.
-    */
-  def zUnionStore(key: String, args: SetReadArgs)(implicit
     codec: RCodec[_, _]
   ): Task[Int]
 
@@ -1770,17 +1722,9 @@ trait RedisSortedSetOperationsImpl extends RedisSortedSetOperations with Default
       .flatMap(JavaDecoders.fromCollection(_))
   }
 
-  override def zInter[V](key: String, args: SetReadArgs)(implicit
-    codec: RCodec[_, V]
-  ): ResultBuilder8[V] = zInter[V](key, args.asInstanceOf[SetIntersectionArgs])
-
   override def zInterStore(key: String, args: SetIntersectionArgs)(implicit
     codec: RCodec[_, _]
   ): Task[Int] = ZIO.fromCompletionStage(scoredSortedSet(key).intersectionAsync(args)).map(_.toInt)
-
-  override def zInterStore(key: String, args: SetReadArgs)(implicit
-    codec: RCodec[_, _]
-  ): Task[Int] = zInterStore(key, args.asInstanceOf[SetIntersectionArgs])
 
   override def zLexCount(
     key: String,
@@ -2494,17 +2438,9 @@ trait RedisSortedSetOperationsImpl extends RedisSortedSetOperations with Default
       .flatMap(JavaDecoders.fromCollection(_))
   }
 
-  override def zUnion[V](key: String, args: SetReadArgs)(implicit
-    codec: RCodec[_, V]
-  ): ResultBuilder8[V] = zUnion[V](key, args.asInstanceOf[SetUnionArgs])
-
   override def zUnionStore(key: String, args: SetUnionArgs)(implicit
     codec: RCodec[_, _]
   ): Task[Int] = ZIO.fromCompletionStage(scoredSortedSet(key).unionAsync(args)).map(_.toInt)
-
-  override def zUnionStore(key: String, args: SetReadArgs)(implicit
-    codec: RCodec[_, _]
-  ): Task[Int] = zUnionStore(key, args.asInstanceOf[SetUnionArgs])
 
 }
 
