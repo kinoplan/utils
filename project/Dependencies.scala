@@ -6,12 +6,12 @@ object Dependencies {
   object Versions {
     val circeV         = "0.14.16"
     val kamonV         = "2.7.7"
-    val logbackV       = "1.5.38"
-    val openTelemetryV = "1.64.0"
+    val logbackV       = "1.6.1"
+    val openTelemetryV = "1.65.0"
     val reactivemongoV = "1.1.0-RC19"
     val scalaJavaTimeV = "2.7.0"
     val sttpV          = "4.0.26"
-    val tapirV         = "1.13.28"
+    val tapirV         = "1.13.31"
     val zioV           = "2.1.26"
     val zioConfigV     = "4.0.8"
   }
@@ -30,21 +30,21 @@ object Dependencies {
     val scalaJavaTime           = Def.setting("io.github.cquiroz" %%% "scala-java-time" % scalaJavaTimeV)
     val scalaJavaTimeZone       = Def.setting("io.github.cquiroz" %%% "scala-java-time-tzdb" % scalaJavaTimeV)
     val scalatest               = Def.setting("org.scalatest" %%% "scalatest" % "3.2.20" % Test)
-    val scalatestPlusScalacheck = Def.setting("org.scalatestplus" %%% "scalacheck-1-18" % "3.2.19.0" % Test)
+    val scalatestPlusScalacheck = Def.setting("org.scalatestplus" %%% "scalacheck-1-19" % "3.2.20.0" % Test)
     val tapirCore               = Def.setting("com.softwaremill.sttp.tapir" %%% "tapir-core" % tapirV)
     val zio                     = Def.setting("dev.zio" %%% "zio" % zioV)
-    val zioJson                 = Def.setting("dev.zio" %%% "zio-json" % "0.9.2")
-    val zioPrelude              = Def.setting("dev.zio" %%% "zio-prelude" % "1.0.0-RC47")
+    val zioJson                 = Def.setting("dev.zio" %%% "zio-json" % "0.10.0")
+    val zioPrelude              = Def.setting("dev.zio" %%% "zio-prelude" % "1.0.0-RC48")
     val zioTest                 = Def.setting("dev.zio" %%% "zio-test" % zioV)
     val zioTestSbt              = Def.setting("dev.zio" %%% "zio-test-sbt" % zioV)
     val zioStreams              = Def.setting("dev.zio" %%% "zio-streams" % zioV)
 
     // A -> Z
-    val http4sBlazeServer                = "org.http4s"                    %% "http4s-blaze-server"                    % "0.23.17"
+    val http4sBlazeServer                = "org.http4s"                    %% "http4s-blaze-server"                    % "0.23.18"
     val http4sDsl                        = "org.http4s"                    %% "http4s-dsl"                             % "0.23.36"
     val http4sServer                     = "org.http4s"                    %% "http4s-server"                          % "0.23.36"
     val jacksonModule                    = "com.fasterxml.jackson.module"  %% "jackson-module-scala"                   % "2.22.1"
-    val jodaTime                         = "joda-time"                      % "joda-time"                              % "2.14.2"
+    val jodaTime                         = "joda-time"                      % "joda-time"                              % "2.14.3"
     val kamonCore                        = "io.kamon"                      %% "kamon-core"                             % kamonV
     val kamonInstrumentationCommon       = "io.kamon"                      %% "kamon-instrumentation-common"           % kamonV
     val kamonTestkit                     = "io.kamon"                      %% "kamon-testkit"                          % kamonV     % Test
@@ -87,7 +87,7 @@ object Dependencies {
     val zioConfigMagnolia                = "dev.zio"                       %% "zio-config-magnolia"                    % zioConfigV
     val zioInteropCats                   = "dev.zio"                       %% "zio-interop-cats"                       % "23.1.0.13"
     val zioMetricsConnectorsMicrometer   = "dev.zio"                       %% "zio-metrics-connectors-micrometer"      % "2.5.7"
-    val zioOpenTelemetry                 = "dev.zio"                       %% "zio-opentelemetry"                      % "3.1.18"
+    val zioOpenTelemetry                 = "dev.zio"                       %% "zio-opentelemetry"                      % "3.1.19"
   }
 
   object Batches {

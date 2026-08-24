@@ -15,6 +15,7 @@ trait DateTimePattern {
   val `yyyy-MM-dd HH:mm:ss.SSS` = "yyyy-MM-dd HH:mm:ss.SSS"
   val `yyyy-MM-dd HH:mm` = "yyyy-MM-dd HH:mm"
   val `yyyy-MM-dd'T'HH:mm:ss` = "yyyy-MM-dd'T'HH:mm:ss"
+  val `yyyy-MM-dd'T'HH:mm:ss'Z'` = "yyyy-MM-dd'T'HH:mm:ss'Z'"
   val `yyyy-MM-dd'T'HH:mm:ss.SSS` = "yyyy-MM-dd'T'HH:mm:ss.SSS"
   val `HH:mm:ss dd.MM.yyyy` = "HH:mm:ss dd.MM.yyyy"
 }

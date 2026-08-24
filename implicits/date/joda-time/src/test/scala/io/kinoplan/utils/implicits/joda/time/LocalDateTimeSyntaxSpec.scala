@@ -160,6 +160,10 @@ class LocalDateTimeSyntaxSpec extends AnyWordSpec {
     "return correct value" in assert(date.`yyyy-MM-dd'T'HH:mm:ss` === "2022-06-07T15:06:54")
   }
 
+  "`yyyy-MM-dd'T'HH:mm:ss'Z'`" should {
+    "return correct value" in assert(date.`yyyy-MM-dd'T'HH:mm:ss'Z'` === "2022-06-07T15:06:54Z")
+  }
+
   "`yyyy-MM-dd'T'HH:mm:ss.SSS`" should {
     "return correct value" in assert(date.`yyyy-MM-dd'T'HH:mm:ss.SSS` === "2022-06-07T15:06:54.786")
   }
