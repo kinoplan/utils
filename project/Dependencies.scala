@@ -41,8 +41,8 @@ object Dependencies {
 
     // A -> Z
     val http4sBlazeServer                = "org.http4s"                    %% "http4s-blaze-server"                    % "0.23.18"
-    val http4sDsl                        = "org.http4s"                    %% "http4s-dsl"                             % "0.23.36"
-    val http4sServer                     = "org.http4s"                    %% "http4s-server"                          % "0.23.36"
+    val http4sDsl                        = "org.http4s"                    %% "http4s-dsl"                             % "0.23.37"
+    val http4sServer                     = "org.http4s"                    %% "http4s-server"                          % "0.23.37"
     val jacksonModule                    = "com.fasterxml.jackson.module"  %% "jackson-module-scala"                   % "2.22.2"
     val jodaTime                         = "joda-time"                      % "joda-time"                              % "2.14.3"
     val kamonCore                        = "io.kamon"                      %% "kamon-core"                             % kamonV
