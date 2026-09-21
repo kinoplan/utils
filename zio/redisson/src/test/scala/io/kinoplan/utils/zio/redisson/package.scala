@@ -55,7 +55,7 @@ package object redisson {
   def checkClient: URIO[Set[IntegrationCheck[Task]], Set[IntegrationCheck[Task]]] =
     ZIO.service[Set[IntegrationCheck[Task]]]
 
-  def toSpec(spec: TestSpec[RedisClient, Throwable, TestResult]): Spec[RedisClient, Throwable] =
+  def toSpec[R](spec: TestSpec[R, Throwable, TestResult]): Spec[R, Throwable] =
     test(spec.label)(spec.result)
 
   def redissonTestAspect(timeout: Duration = 15.seconds): TestAspect[Nothing, Any, Nothing, Any] =
