@@ -575,3 +575,128 @@ val program = for {
   retrieved <- redis.get("user:1").as[User]
 } yield retrieved
 ```
+
+## Cache
+
+ZIO Redisson also provides stateful cache abstractions built on top of Redisson's data structures.
+Unlike the stateless `Redis*Operations` traits, a cache instance owns resources (an in-process cache and/or a Redis
+pub/sub subscription) and is meant to be created once — typically wired into a `ZLayer` at application startup —
+and reused for the lifetime of the application, similar in spirit to `zio.cache.Cache`.
+
+### RedisLocalCache
+
+`RedisLocalCache[K, V]` is a hybrid (local + remote) cache region backed by a single Redisson `RLocalCachedMap`:
+reads are served from an in-process cache when possible, writes go to Redis, and entries are kept coherent across
+application instances via Redis pub/sub, using the strategy configured via `RedisLocalCacheOptions`.
+
+#### Basic Usage
+
+```scala
+import zio._
+import io.kinoplan.utils.zio.redisson.cache.RedisLocalCache
+import io.kinoplan.utils.zio.redisson.module.RedissonSingle
+import io.kinoplan.utils.redisson.codec.DefaultRedisCodecs._
+
+val redissonClientLive = RedissonSingle.redissonLive()
+
+// Create once per cache and keep it around for the lifetime of the application
+val usersCacheLive = redissonClientLive >>> ZLayer.fromZIO(
+  RedisLocalCache.make[String, String]("users")
+)
+
+val program = for {
+  cache <- ZIO.service[RedisLocalCache[String, String]]
+  _ <- cache.set("user:1", "Alice")
+  user <- cache.get[String]("user:1")
+
+  // Cache-aside: computes and stores the value via orElse on a miss, then serves the cached value
+  greeting <- cache.getOrSet("greeting:1")(ZIO.succeed("Hello, Alice"))
+
+  _ <- cache.del(Seq("user:1"))
+} yield (user, greeting)
+
+program.provide(usersCacheLive)
+```
+
+#### Advanced Usage
+
+Customize the local cache behavior with `RedisLocalCacheOptions`:
+
+```scala
+import org.redisson.api.options.LocalCachedMapOptions
+import zio._
+import io.kinoplan.utils.zio.redisson.cache.RedisLocalCache
+import io.kinoplan.utils.zio.redisson.models.cache.RedisLocalCacheOptions
+
+val options = RedisLocalCacheOptions.default
+  .withCacheSize(10000)
+  .withTimeToLive(5.minutes)
+  .withEvictionPolicy(LocalCachedMapOptions.EvictionPolicy.LRU)
+  .enableStoreCacheMiss
+
+val usersCacheLive = redissonClientLive >>> ZLayer.fromZIO(
+  RedisLocalCache.make[String, String]("users", options)
+)
+```
+
+For anything `RedisLocalCacheOptions` doesn't expose, apply a `configurator` right before the cache is created,
+or bypass it entirely with a native `LocalCachedMapOptions`:
+
+```scala
+// Escape hatch on top of RedisLocalCacheOptions
+val cache = RedisLocalCache.make[String, String](
+  "users",
+  options,
+  configurator = (o: LocalCachedMapOptions[String, String]) =>
+    o.syncStrategy(LocalCachedMapOptions.SyncStrategy.NONE)
+)
+
+// Or build LocalCachedMapOptions directly, e.g. to plug in a MapLoader/MapWriter
+val nativeOptions = LocalCachedMapOptions.name[String, String]("users")
+val cacheFromNative = RedisLocalCache.make(nativeOptions)
+```
+
+`RedisLocalCacheOptions` fields:
+
+* `cacheSize` - max number of entries held in the local cache. Default: `0` (unbounded).
+* `timeToLive` / `maxIdle` - local (in-process) entry TTL / idle timeout. Default: no timeout for either.
+* `evictionPolicy` - local cache eviction algorithm (`NONE`/`LRU`/`LFU`/`SOFT`/`WEAK`), relevant once `cacheSize`
+  is reached. Default: `NONE`.
+* `syncStrategy` - how local cache instances are kept coherent via Redis pub/sub (`INVALIDATE`/`UPDATE`/`NONE`).
+  Default: `INVALIDATE`.
+* `reconnectionStrategy` - how to avoid stale entries after a Redis reconnect (`NONE`/`CLEAR`/`LOAD`).
+  Default: `CLEAR`.
+* `cacheProvider` - local cache implementation (`REDISSON`/`CAFFEINE`). Default: `REDISSON`.
+* `storeCacheMiss` - whether a lookup miss (key absent in Redis) is itself cached locally, to avoid repeatedly
+  hitting Redis for a key known not to exist. Default: `false`.
+* `expirationEventPolicy` - how to listen for Redis "expired" events so a whole-cache TTL (see below) also clears
+  local caches when it fires (`DONT_SUBSCRIBE`/`SUBSCRIBE_WITH_KEYEVENT_PATTERN`/`SUBSCRIBE_WITH_KEYSPACE_CHANNEL`).
+  Default: `SUBSCRIBE_WITH_KEYEVENT_PATTERN`.
+* `useTopicPattern` - share a single pattern-based pub/sub listener across every `RedisLocalCache` created off the
+  same `RedissonClient`, instead of opening a dedicated subscription per cache. Default: `false`.
+* `storeMode` - whether data is persisted to Redis (`LOCALCACHE_REDIS`) or kept only in the local caches of
+  connected instances, with Redis used solely as a pub/sub bus (`LOCALCACHE`). Default: `LOCALCACHE_REDIS`.
+* `useObjectAsCacheKey` - store the decoded key object itself in the local cache instead of a hash of its encoded
+  bytes, at the cost of relying on the key type's own `equals`/`hashCode` (only affects the `REDISSON` cache
+  provider). Default: `false`.
+
+**Note**: switching `storeMode` to `LOCALCACHE` breaks `exists`, `ttl`, `expire`, `persist`, `clear` and `preload`,
+which all assume Redis-side data exists.
+
+`RLocalCachedMap` doesn't support a native per-entry Redis-side TTL in the open-source edition of Redisson (that
+requires Redisson PRO). `expire`/`ttl`/`persist` manage a TTL for the whole cache (the underlying Redis key) instead:
+
+```scala
+for {
+  cache <- ZIO.service[RedisLocalCache[String, String]]
+  _ <- cache.expire(1.hour)
+  remaining <- cache.ttl
+  _ <- cache.persist // removes the TTL
+} yield remaining
+```
+
+**Note**: `invalidate` clears the local (in-process) cache across all instances via pub/sub without touching Redis,
+while `clear` deletes the underlying Redis key and clears every instance's local cache too. A good place to call
+`clear` is application startup, when a deploy changes what the cache represents (e.g. a value schema/codec change)
+and old entries must not linger — avoid calling it unconditionally on every routine restart of a
+frequently-redeployed/autoscaled service, since it repeatedly empties the cache for everyone sharing it.

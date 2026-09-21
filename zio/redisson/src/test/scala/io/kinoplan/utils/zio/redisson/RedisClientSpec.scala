@@ -1,9 +1,11 @@
 package io.kinoplan.utils.zio.redisson
 
 import com.redis.testcontainers.RedisContainer
+import org.redisson.api.RedissonClient
 import zio._
 import zio.test._
 
+import io.kinoplan.utils.zio.redisson.cache.RedisLocalCacheSpec
 import io.kinoplan.utils.zio.redisson.module.RedissonSingle
 import io.kinoplan.utils.zio.redisson.operations._
 
@@ -23,6 +25,9 @@ object RedisClientSpec extends ZIOSpecDefault {
   def redisLive: ZLayer[Any with Scope, Throwable, RedisClient] = redisSingleContainerLive >>>
     configLive >>> RedissonSingle.live().map(_.get.module)
 
+  private def redissonClientLive: ZLayer[RedisClient, Nothing, RedissonClient] =
+    ZLayer.fromFunction((redisClient: RedisClient) => redisClient.redissonClient)
+
   override def spec: Spec[TestEnvironment with Scope, Throwable] = suite("RedisClient")(
     suite("RedisBitmapOperations")(RedisBitmapOperationsSpec.specs.map(toSpec)),
     suite("RedisConnectionOperations")(RedisConnectionOperationsSpec.singleSpecs.map(toSpec)),
@@ -36,7 +41,10 @@ object RedisClientSpec extends ZIOSpecDefault {
     suite("RedisStreamOperations")(RedisStreamOperationsSpec.specs.map(toSpec)),
     suite("RedisStringOperations")(RedisStringOperationsSpec.specs.map(toSpec)),
     suite("RedisTopicOperations")(RedisTopicOperationsSpec.specs.map(toSpec)) @@
-      TestAspect.withLiveClock
+      TestAspect.withLiveClock,
+    suite("RedisLocalCache")(RedisLocalCacheSpec.specs.map(toSpec)).provideSomeLayer(
+      redissonClientLive
+    ) @@ TestAspect.withLiveClock
   ).provideLayerShared(redisLive) @@ redissonTestAspect(30.seconds) // @@ TestAspect.ignore
 
 }
