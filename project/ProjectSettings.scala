@@ -15,7 +15,7 @@ object ProjectSettings {
   private val namespace = "io.kinoplan.utils"
 
   val scala2_12 = "2.12.21"
-  val scala2_13 = "2.13.18"
+  val scala2_13 = "3.9.0"
   val scala3 = "3.3.8"
 
   val ideScalaVersion: String = scala2_13
