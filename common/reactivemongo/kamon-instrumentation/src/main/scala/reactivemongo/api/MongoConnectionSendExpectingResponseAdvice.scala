@@ -27,7 +27,14 @@ object MongoConnectionSendExpectingResponseAdvice {
   def enter(
     @Advice.Argument(0)
     expectingResponse: ExpectingResponse
-  ): Span = {
+  ): Span = startSpan(expectingResponse)
+
+  @Advice.OnMethodExit(suppress = classOf[Throwable])
+  @static
+  def exit(@Advice.Enter span: Span, @Advice.Return future: Future[Response]): Unit =
+    finishSpan(span, future)
+
+  def startSpan(expectingResponse: ExpectingResponse): Span = {
     val buf = expectingResponse.requestMaker.payload.duplicate()
     Try[(Int, BSONDocument)] {
       val sz = buf.getIntLE(buf.readerIndex)
@@ -79,16 +86,13 @@ object MongoConnectionSendExpectingResponseAdvice {
 
   }
 
-  @Advice.OnMethodExit(suppress = classOf[Throwable])
-  @static
-  def exit(@Advice.Enter span: Span, @Advice.Return future: Future[Response]): Unit = future
-    .onComplete {
-      case Failure(exception) => span.fail(exception).finish()
-      case Success(response)  => response
-          .error
-          .fold(
-            span.tag(DB_RESPONSE_RETURNED_ROWS.getKey, response.reply.numberReturned.toLong).finish()
-          )(span.fail(_).finish())
-    }(CallingThreadExecutionContext)
+  def finishSpan(span: Span, future: Future[Response]): Unit = future.onComplete {
+    case Failure(exception) => span.fail(exception).finish()
+    case Success(response)  => response
+        .error
+        .fold(
+          span.tag(DB_RESPONSE_RETURNED_ROWS.getKey, response.reply.numberReturned.toLong).finish()
+        )(span.fail(_).finish())
+  }(CallingThreadExecutionContext)
 
 }
