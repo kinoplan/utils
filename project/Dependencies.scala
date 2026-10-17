@@ -4,7 +4,7 @@ import sbt.{Def, *}
 object Dependencies {
 
   object Versions {
-    val circeV         = "0.14.16"
+    val circeV         = "0.14.17"
     val kamonV         = "2.7.7"
     val logbackV       = "1.6.3"
     val openTelemetryV = "1.66.0"
