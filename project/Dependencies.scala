@@ -85,7 +85,7 @@ object Dependencies {
     val typesafeConfig                   = "com.typesafe"                   % "config"                                 % "1.4.9"
     val zioConfig                        = "dev.zio"                       %% "zio-config"                             % zioConfigV
     val zioConfigMagnolia                = "dev.zio"                       %% "zio-config-magnolia"                    % zioConfigV
-    val zioInteropCats                   = "dev.zio"                       %% "zio-interop-cats"                       % "23.1.0.13"
+    val zioInteropCats                   = "dev.zio"                       %% "zio-interop-cats"                       % "23.1.0.14"
     val zioMetricsConnectorsMicrometer   = "dev.zio"                       %% "zio-metrics-connectors-micrometer"      % "2.6.0"
     val zioOpenTelemetry                 = "dev.zio"                       %% "zio-opentelemetry"                      % "3.1.20"
   }
