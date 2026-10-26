@@ -1,12 +1,8 @@
-addDependencyTreePlugin
-
-addSbtPlugin("com.eed3si9n" % "sbt-projectmatrix" % "0.11.0")
-
 addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.22.0")
 
 addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "1.4.0")
 
-addSbtPlugin("io.github.cquiroz" % "sbt-locales" % "4.5.0")
+addSbtPlugin("io.github.cquiroz" % "sbt-locales" % "5.0.0")
 
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "2.4.4")
 

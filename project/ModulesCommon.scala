@@ -12,8 +12,7 @@ object ModulesCommon {
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-chimney-zio-prelude")
     .settings(
-      libraryDependencies ++=
-        Seq(Libraries.chimney.value % Provided, Libraries.zioPrelude.value % Provided)
+      libraryDependencies ++= Seq(Libraries.chimney % Provided, Libraries.zioPrelude % Provided)
     )
 
   lazy val circeReactivemongoBsonProfile: Project => Project = _
@@ -22,10 +21,10 @@ object ModulesCommon {
     .settings(
       libraryDependencies ++=
         Seq(
-          Libraries.circeCore.value      % Provided,
+          Libraries.circeCore            % Provided,
           Libraries.reactiveMongoBsonApi % Provided,
-          Libraries.circeGeneric.value   % Test,
-          Libraries.circeParser.value    % Test
+          Libraries.circeGeneric         % Test,
+          Libraries.circeParser          % Test
         )
     )
 
@@ -35,10 +34,10 @@ object ModulesCommon {
     .settings(
       libraryDependencies ++=
         Seq(
-          Libraries.circeCore.value    % Provided,
-          Libraries.circeGeneric.value % Test,
-          Libraries.circeParser.value  % Test,
-          Libraries.zioPrelude.value   % Provided
+          Libraries.circeCore    % Provided,
+          Libraries.circeGeneric % Test,
+          Libraries.circeParser  % Test,
+          Libraries.zioPrelude   % Provided
         )
     )
 
@@ -63,7 +62,7 @@ object ModulesCommon {
     .settings(
       cldrVersion := CLDRVersion.Version("45.0"), // http://unicode.org/Public/cldr/
       localesFilter := LocalesFilter.Selection("ru", "en"),
-      libraryDependencies ++= Seq(Libraries.scalaJavaLocales.value)
+      libraryDependencies ++= Seq(Libraries.scalaJavaLocales)
     )
 
   lazy val logbackConfigProfile: Project => Project = _
@@ -86,19 +85,18 @@ object ModulesCommon {
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-nullable-codec-circe")
     .settings(
-      libraryDependencies ++=
-        Seq(Libraries.circeCore.value % Provided, Libraries.circeGeneric.value % Test)
+      libraryDependencies ++= Seq(Libraries.circeCore % Provided, Libraries.circeGeneric % Test)
     )
 
   lazy val nullableCodecTapirProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-nullable-codec-tapir")
-    .settings(libraryDependencies ++= Seq(Libraries.tapirCore.value % Provided))
+    .settings(libraryDependencies ++= Seq(Libraries.tapirCore % Provided))
 
   lazy val nullableCodecZioJsonProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-nullable-codec-zio-json")
-    .settings(libraryDependencies ++= Seq(Libraries.zioJson.value % Provided))
+    .settings(libraryDependencies ++= Seq(Libraries.zioJson % Provided))
 
   lazy val scalaLoggingProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
@@ -137,8 +135,7 @@ object ModulesCommon {
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-reactivemongo-bson-zio-prelude")
     .settings(
-      libraryDependencies ++=
-        Seq(Libraries.reactiveMongoBsonApi % Provided, Libraries.zioPrelude.value)
+      libraryDependencies ++= Seq(Libraries.reactiveMongoBsonApi % Provided, Libraries.zioPrelude)
     )
 
   lazy val reactivemongoKamonInstrumentationProfile: Project => Project = _
@@ -182,8 +179,7 @@ object ModulesCommon {
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-redisson-codec-circe")
     .settings(
-      libraryDependencies ++=
-        Seq(Libraries.circeCore.value % Provided, Libraries.circeParser.value % Provided)
+      libraryDependencies ++= Seq(Libraries.circeCore % Provided, Libraries.circeParser % Provided)
     )
 
   lazy val redissonCodecPlayJsonProfile: Project => Project = _
@@ -201,26 +197,21 @@ object ModulesCommon {
   lazy val redissonCodecZioJsonProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-redisson-codec-zio-json")
-    .settings(libraryDependencies ++= Seq(Libraries.zioJson.value % Provided))
+    .settings(libraryDependencies ++= Seq(Libraries.zioJson % Provided))
 
   lazy val tapirZioPreludeProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-tapir-zio-prelude")
     .settings(
       libraryDependencies ++=
-        Seq(
-          Libraries.tapirCore.value % Provided,
-          Libraries.zioPrelude.value,
-          Libraries.scalatestPlusScalacheck.value
-        )
+        Seq(Libraries.tapirCore % Provided, Libraries.zioPrelude, Libraries.scalatestPlusScalacheck)
     )
 
   lazy val zioJsonPreludeProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-zio-json-prelude")
     .settings(
-      libraryDependencies ++=
-        Seq(Libraries.zioJson.value % Provided, Libraries.zioPrelude.value % Provided)
+      libraryDependencies ++= Seq(Libraries.zioJson % Provided, Libraries.zioPrelude % Provided)
     )
 
   lazy val zioJsonReactivemongoBsonProfile: Project => Project = _
@@ -228,7 +219,7 @@ object ModulesCommon {
     .settings(name := "utils-zio-json-reactivemongo-bson")
     .settings(
       libraryDependencies ++=
-        Seq(Libraries.zioJson.value % Provided, Libraries.reactiveMongoBsonApi % Provided)
+        Seq(Libraries.zioJson % Provided, Libraries.reactiveMongoBsonApi % Provided)
     )
 
 }
