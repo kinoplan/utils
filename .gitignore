@@ -16,3 +16,4 @@ null
 .vscode
 project/metals.sbt
 project/project
+.codegraph/

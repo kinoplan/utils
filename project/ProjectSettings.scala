@@ -1,4 +1,4 @@
-import Dependencies.Libraries
+import Dependencies.{Libraries, Schemes}
 import org.typelevel.sbt.tpolecat.TpolecatPlugin.autoImport.{
   tpolecatExcludeOptions,
   tpolecatScalacOptions
@@ -35,6 +35,7 @@ object ProjectSettings {
   lazy val commonProfile: Project => Project = _
     .enablePlugins(ScalafixPlugin)
     .settings(
+      libraryDependencySchemes ++= Schemes.common,
       Compile / unmanagedSourceDirectories ++=
         unmanaged(scalaVersion.value, (Compile / sourceDirectory).value),
       Test / unmanagedSourceDirectories ++=
@@ -66,15 +67,16 @@ object ProjectSettings {
       Test / javaOptions ++=
         Seq("-Duser.timezone=UTC", "--add-opens=java.base/java.lang=ALL-UNNAMED"),
       coverageHighlighting := true,
-      libraryDependencies ++= Seq(Libraries.scalatest.value, Libraries.mockitoScala)
+      libraryDependencies ++= Seq(Libraries.scalatest)
     )
 
+  val commonJvmSettings = Seq(libraryDependencies ++= Seq(Libraries.mockitoScala))
   val scalaJsSettings = Seq(Test / fork := false)
   lazy val scalaJsProfile: Project => Project = _.settings(scalaJsSettings)
 
   lazy val zioTestProfile: Project => Project = _.settings(
     testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework"),
-    libraryDependencies ++= Seq(Libraries.zioTest.value, Libraries.zioTestSbt.value)
+    libraryDependencies ++= Seq(Libraries.zioTest, Libraries.zioTestSbt)
   )
 
   lazy val kindProjectorProfile: Project => Project = _.settings(

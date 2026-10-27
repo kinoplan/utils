@@ -28,6 +28,7 @@ lazy val rawAllAggregates = chimneyZioPrelude.projectRefs ++ circeReactivemongoB
 lazy val allAggregates = rawAllAggregates
 
 val commonJsSettings = ProjectSettings.scalaJsSettings
+val commonJvmSettings = ProjectSettings.commonJvmSettings
 
 val scopesDescription = "Scala version can be: 2.12, 2.13, 3; platform: JVM, JS"
 
@@ -94,7 +95,7 @@ lazy val root = project
       Def
         .inputTaskDyn {
           val args = spaceDelimited("<arg>").parsed
-          Def.taskDyn((Test / test).all(filterByVersionAndPlatform(args.head, args(1))))
+          Def.taskDyn((Test / test).toTask("").all(filterByVersionAndPlatform(args.head, args(1))))
         }
         .evaluated,
     scalafmtCheckScoped :=
@@ -127,214 +128,214 @@ lazy val root = project
 
 lazy val chimneyZioPrelude = projectMatrix
   .in(file("common/chimney/zio-prelude"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .jsPlatform(ProjectSettings.scala2And3Versions, commonJsSettings)
   .configure(ModulesCommon.chimneyZioPreludeProfile)
 
 lazy val circeReactivemongoBson = projectMatrix
   .in(file("common/circe/reactivemongo-bson"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .configure(ModulesCommon.circeReactivemongoBsonProfile)
 
 lazy val circeZioPrelude = projectMatrix
   .in(file("common/circe/zio-prelude"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .jsPlatform(ProjectSettings.scala2And3Versions, commonJsSettings)
   .configure(ModulesCommon.circeZioPreludeProfile)
 
 lazy val crossCollection = projectMatrix
   .in(file("common/cross/collection"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .jsPlatform(ProjectSettings.scala2And3Versions, commonJsSettings)
   .configure(ModulesCommon.crossCollectionProfile)
 
 lazy val date = projectMatrix
   .in(file("common/date"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .jsPlatform(ProjectSettings.scala2And3Versions, commonJsSettings)
   .configure(ModulesCommon.dateProfile)
 
 lazy val http4sServer = projectMatrix
   .in(file("common/http4s/server"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .jsPlatform(ProjectSettings.scala2And3Versions, commonJsSettings)
   .configure(ModulesCommon.http4sServerProfile)
 
 lazy val integrationCheck = projectMatrix
   .in(file("common/integration-check"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .jsPlatform(ProjectSettings.scala2And3Versions, commonJsSettings)
   .configure(ModulesCommon.integrationCheckProfile)
 
 lazy val localesMinimalDb = projectMatrix
   .in(file("common/locales-minimal-db"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .jsPlatform(ProjectSettings.scala2And3Versions, commonJsSettings)
   .configure(ModulesCommon.localesMinimalDbProfile)
 
 lazy val logbackConfig = projectMatrix
   .in(file("common/logback/config"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .configure(ModulesCommon.logbackConfigProfile)
 
 lazy val logbackLayout = projectMatrix
   .in(file("common/logback/layout"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .configure(ModulesCommon.logbackLayoutProfile)
 
 lazy val nullableCore = projectMatrix
   .in(file("common/nullable/core"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .jsPlatform(ProjectSettings.scala2And3Versions, commonJsSettings)
   .configure(ModulesCommon.nullableCoreProfile)
 
 lazy val nullableCodecCirce = projectMatrix
   .in(file("common/nullable/codec/circe"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .jsPlatform(ProjectSettings.scala2And3Versions, commonJsSettings)
   .configure(ModulesCommon.nullableCodecCirceProfile)
   .dependsOn(nullableCore)
 
 lazy val nullableCodecTapir = projectMatrix
   .in(file("common/nullable/codec/tapir"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .jsPlatform(ProjectSettings.scala2And3Versions, commonJsSettings)
   .configure(ModulesCommon.nullableCodecTapirProfile)
   .dependsOn(nullableCore)
 
 lazy val nullableCodecZioJson = projectMatrix
   .in(file("common/nullable/codec/zio-json"))
-  .jvmPlatform(ProjectSettings.scala2Versions)
+  .jvmPlatform(ProjectSettings.scala2Versions, commonJvmSettings)
   .jsPlatform(ProjectSettings.scala2Versions, commonJsSettings)
   .configure(ModulesCommon.nullableCodecZioJsonProfile)
   .dependsOn(nullableCore)
 
 lazy val reactivemongoBase = projectMatrix
   .in(file("common/reactivemongo/base"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .configure(ModulesCommon.reactivemongoBaseProfile)
 
 lazy val reactivemongoBson = projectMatrix
   .in(file("common/reactivemongo/bson"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .configure(ModulesCommon.reactivemongoBsonProfile)
 
 lazy val reactivemongoBsonAny = projectMatrix
   .in(file("common/reactivemongo/bson-any"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .configure(ModulesCommon.reactivemongoBsonAnyProfile)
 
 lazy val reactivemongoBsonJodaTime = projectMatrix
   .in(file("common/reactivemongo/bson-joda-time"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .configure(ModulesCommon.reactivemongoBsonJodaTimeProfile)
   .dependsOn(reactivemongoBson)
 
 lazy val reactivemongoBsonRefined = projectMatrix
   .in(file("common/reactivemongo/bson-refined"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .configure(ModulesCommon.reactivemongoBsonRefinedProfile)
 
 lazy val reactivemongoBsonZioPrelude = projectMatrix
   .in(file("common/reactivemongo/bson-zio-prelude"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .configure(ModulesCommon.reactivemongoBsonZioPreludeProfile)
 
 lazy val reactivemongoKamonInstrumentation = projectMatrix
   .in(file("common/reactivemongo/kamon-instrumentation"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .configure(ModulesCommon.reactivemongoKamonInstrumentationProfile)
 
 lazy val redissonCore = projectMatrix
   .in(file("common/redisson/core"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .configure(ModulesCommon.redissonCoreProfile)
   .dependsOn(crossCollection, redissonCodecBase)
 
 lazy val redissonCodecBase = projectMatrix
   .in(file("common/redisson/codec/base"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .jsPlatform(ProjectSettings.scala2And3Versions, commonJsSettings)
   .configure(ModulesCommon.redissonCodecBaseProfile)
 
 lazy val redissonCodecCirce = projectMatrix
   .in(file("common/redisson/codec/circe"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .jsPlatform(ProjectSettings.scala2And3Versions, commonJsSettings)
   .configure(ModulesCommon.redissonCodecCirceProfile)
   .dependsOn(redissonCodecBase)
 
 lazy val redissonCodecPlayJson = projectMatrix
   .in(file("common/redisson/codec/play-json"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .jsPlatform(ProjectSettings.scala2And3Versions, commonJsSettings)
   .configure(ModulesCommon.redissonCodecPlayJsonProfile)
   .dependsOn(redissonCodecBase)
 
 lazy val redissonCodecPlay2Json = projectMatrix
   .in(file("common/redisson/codec/play-json"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .configure(ModulesCommon.redissonCodecPlay2JsonProfile)
   .dependsOn(redissonCodecBase)
 
 lazy val redissonCodecZioJson = projectMatrix
   .in(file("common/redisson/codec/zio-json"))
-  .jvmPlatform(ProjectSettings.scala2Versions)
+  .jvmPlatform(ProjectSettings.scala2Versions, commonJvmSettings)
   .jsPlatform(ProjectSettings.scala2Versions, commonJsSettings)
   .configure(ModulesCommon.redissonCodecZioJsonProfile)
   .dependsOn(redissonCodecBase)
 
 lazy val scalaLogging = projectMatrix
   .in(file("common/scala-logging"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .configure(ModulesCommon.scalaLoggingProfile)
 
 lazy val tapirZioPrelude = projectMatrix
   .in(file("common/tapir/zio-prelude"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .jsPlatform(ProjectSettings.scala2And3Versions, commonJsSettings)
   .configure(ModulesCommon.tapirZioPreludeProfile)
 
 lazy val zioJsonPrelude = projectMatrix
   .in(file("common/zio-json/prelude"))
-  .jvmPlatform(ProjectSettings.scala2Versions)
+  .jvmPlatform(ProjectSettings.scala2Versions, commonJvmSettings)
   .jsPlatform(ProjectSettings.scala2Versions, commonJsSettings)
   .configure(ModulesCommon.zioJsonPreludeProfile)
 
 lazy val zioJsonReactivemongoBson = projectMatrix
   .in(file("common/zio-json/reactivemongo-bson"))
-  .jvmPlatform(ProjectSettings.scala2Versions)
+  .jvmPlatform(ProjectSettings.scala2Versions, commonJvmSettings)
   .configure(ModulesCommon.zioJsonReactivemongoBsonProfile)
 
 // zzzzzzzzzzzzzzzzzzzz Implicits Modules zzzzzzzzzzzzzzzzzzzz
 
 lazy val implicitsAny = projectMatrix
   .in(file("implicits/any"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .jsPlatform(ProjectSettings.scala2And3Versions, commonJsSettings)
   .configure(ModulesImplicits.anyProfile)
 
 lazy val implicitsBoolean = projectMatrix
   .in(file("implicits/boolean"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .jsPlatform(ProjectSettings.scala2And3Versions, commonJsSettings)
   .configure(ModulesImplicits.booleanProfile)
 
 lazy val implicitsCollection = projectMatrix
   .in(file("implicits/collection"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .jsPlatform(ProjectSettings.scala2And3Versions, commonJsSettings)
   .configure(ModulesImplicits.collectionProfile)
 
 lazy val implicitsIdentity = projectMatrix
   .in(file("implicits/identity"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .jsPlatform(ProjectSettings.scala2And3Versions, commonJsSettings)
   .configure(ModulesImplicits.identityProfile)
 
 lazy val implicitsJavaTime = projectMatrix
   .in(file("implicits/date/java-time"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .jsPlatform(
     ProjectSettings.scala2And3Versions,
     Nil,
@@ -345,19 +346,23 @@ lazy val implicitsJavaTime = projectMatrix
 
 lazy val implicitsJodaTime = projectMatrix
   .in(file("implicits/date/joda-time"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .configure(ModulesImplicits.jodaTimeProfile)
   .dependsOn(date)
 
 lazy val implicitsZio = projectMatrix
   .in(file("implicits/zio"))
   .configure(ModulesImplicits.zioProfile)
-  .jvmPlatform(ProjectSettings.scala2And3Versions, Nil, ModulesImplicits.zioJvmProfile)
+  .jvmPlatform(
+    ProjectSettings.scala2And3Versions,
+    Nil,
+    ModulesImplicits.zioJvmProfile(_).settings(commonJvmSettings)
+  )
   .jsPlatform(ProjectSettings.scala2And3Versions, Nil, ModulesImplicits.zioJsProfile)
 
 lazy val implicitsZioPrelude = projectMatrix
   .in(file("implicits/zio-prelude"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .jsPlatform(ProjectSettings.scala2And3Versions, commonJsSettings)
   .configure(ModulesImplicits.zioPreludeProfile)
 
@@ -378,6 +383,7 @@ lazy val playErrorHandler = projectMatrix
     Seq(play3Axis, VirtualAxis.jvm),
     ModulesPlay.errorHandlerProfile
   )
+  .configure(_.settings(commonJvmSettings))
   .dependsOn(scalaLogging, playRequestMapContext, playFiltersLogging % "test->test")
 
 lazy val playFiltersLogging = projectMatrix
@@ -392,6 +398,7 @@ lazy val playFiltersLogging = projectMatrix
     Seq(play3Axis, VirtualAxis.jvm),
     ModulesPlay.filtersLoggingProfile
   )
+  .configure(_.settings(commonJvmSettings))
   .dependsOn(scalaLogging, playRequestMapContext)
 
 lazy val playReactivemongo = projectMatrix
@@ -406,6 +413,7 @@ lazy val playReactivemongo = projectMatrix
     Seq(play3Axis, VirtualAxis.jvm),
     ModulesPlay.reactivemongoProfile
   )
+  .configure(_.settings(commonJvmSettings))
   .dependsOn(reactivemongoBase)
 
 lazy val playRequestMapContext = projectMatrix
@@ -420,60 +428,61 @@ lazy val playRequestMapContext = projectMatrix
     Seq(play3Axis, VirtualAxis.jvm),
     ModulesPlay.requestMapContextProfile
   )
+  .configure(_.settings(commonJvmSettings))
   .dependsOn(scalaLogging)
 
 // zzzzzzzzzzzzzzzzzzzz ZIO Modules zzzzzzzzzzzzzzzzzzzz
 
 lazy val zioHttp4sHealthCheck = projectMatrix
   .in(file("zio/http4s/healthcheck"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .configure(ModulesZio.http4sHealthcheckProfile)
   .dependsOn(zioIntegrationCheck)
 
 lazy val zioIntegrationCheck = projectMatrix
   .in(file("zio/integration-check"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .jsPlatform(ProjectSettings.scala2And3Versions, commonJsSettings)
   .configure(ModulesZio.integrationCheckProfile)
   .dependsOn(integrationCheck)
 
 lazy val zioMonitoringPrometheus = projectMatrix
   .in(file("zio/monitoring/prometheus"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .configure(ModulesZio.monitoringPrometheusProfile)
 
 lazy val zioOpenTelemetry = projectMatrix
   .in(file("zio/opentelemetry"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .configure(ModulesZio.openTelemetryProfile)
   .dependsOn(crossCollection)
 
 lazy val zioReactivemongo = projectMatrix
   .in(file("zio/reactivemongo"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .configure(ModulesZio.reactivemongoProfile)
   .dependsOn(zioIntegrationCheck, reactivemongoBase)
 
 lazy val zioRedisson = projectMatrix
   .in(file("zio/redisson"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .configure(ModulesZio.redissonProfile)
   .dependsOn(crossCollection, zioIntegrationCheck, redissonCodecBase)
 
 lazy val zioSttpLoggingSlf4j = projectMatrix
   .in(file("zio/sttp/logging/slf4j"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .configure(ModulesZio.sttpLoggingSlf4jProfile)
 
 lazy val zioTapirServer = projectMatrix
   .in(file("zio/tapir/server"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .jsPlatform(ProjectSettings.scala2And3Versions, commonJsSettings)
   .configure(ModulesZio.tapirServerProfile)
 
 lazy val zioTapirOpenTelemetry = projectMatrix
   .in(file("zio/tapir/opentelemetry"))
-  .jvmPlatform(ProjectSettings.scala2And3Versions)
+  .jvmPlatform(ProjectSettings.scala2And3Versions, commonJvmSettings)
   .configure(ModulesZio.tapirOpenTelemetryProfile)
 
 // format: off
@@ -481,12 +490,12 @@ inThisBuild(
   List(
     versionScheme := Some(VersionScheme.EarlySemVer),
     organization := "io.kinoplan",
-    homepage := Some(url("https://github.com/kinoplan/utils")),
-    licenses := Seq("Apache-2.0" -> url("https://opensource.org/licenses/Apache-2.0")),
-    developers := List(Developer("kinoplan", "Kinoplan", "job@kinoplan.ru", url("https://kinoplan.tech"))),
+    homepage := Some(uri("https://github.com/kinoplan/utils")),
+    licenses := Seq(License("Apache-2.0", uri("https://opensource.org/licenses/Apache-2.0"))),
+    developers := List(Developer("kinoplan", "Kinoplan", "job@kinoplan.ru", uri("https://kinoplan.tech"))),
     scmInfo := Some(
       ScmInfo(
-        url("https://github.com/kinoplan/utils"),
+        uri("https://github.com/kinoplan/utils"),
         "scm:git:git@github.com:kinoplan/utils.git"
       )
     )

@@ -12,7 +12,7 @@ object ModulesZio {
         Seq(
           Libraries.http4sBlazeServer,
           Libraries.http4sDsl,
-          Libraries.zio.value,
+          Libraries.zio,
           Libraries.zioInteropCats
         )
     )
@@ -20,7 +20,7 @@ object ModulesZio {
   lazy val integrationCheckProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-zio-integration-check")
-    .settings(libraryDependencies ++= Seq(Libraries.zio.value))
+    .settings(libraryDependencies ++= Seq(Libraries.zio))
 
   lazy val monitoringPrometheusProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
@@ -30,7 +30,7 @@ object ModulesZio {
         Seq(
           Libraries.micrometerRegistryPrometheus,
           Libraries.prometheusExporterHttpServer,
-          Libraries.zio.value,
+          Libraries.zio,
           Libraries.zioMetricsConnectorsMicrometer
         )
     )
@@ -45,7 +45,7 @@ object ModulesZio {
           Libraries.openTelemetryExporterOtlp,
           Libraries.openTelemetryExporterLoggingOtlp,
           Libraries.openTelemetrySemconvIncubating,
-          Libraries.zio.value,
+          Libraries.zio,
           Libraries.zioOpenTelemetry
         )
     )
@@ -55,7 +55,7 @@ object ModulesZio {
     .settings(name := "utils-zio-reactivemongo")
     .settings(
       libraryDependencies ++=
-        Batches.zioConfig ++ Seq(Libraries.reactiveMongo % Provided, Libraries.zio.value)
+        Batches.zioConfig ++ Seq(Libraries.reactiveMongo % Provided, Libraries.zio)
     )
 
   lazy val redissonProfile: Project => Project = _
@@ -69,20 +69,20 @@ object ModulesZio {
           Libraries.redisson,
           Libraries.testContainers,
           Libraries.testContainersRedis,
-          Libraries.zio.value,
-          Libraries.zioStreams.value
+          Libraries.zio,
+          Libraries.zioStreams
         )
     )
 
   lazy val sttpLoggingSlf4jProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-zio-sttp-slf4j-backend")
-    .settings(libraryDependencies ++= Seq(Libraries.sttpSlf4jBackend, Libraries.zio.value % Provided))
+    .settings(libraryDependencies ++= Seq(Libraries.sttpSlf4jBackend, Libraries.zio % Provided))
 
   lazy val tapirServerProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile, ProjectSettings.kindProjectorProfile)
     .settings(name := "utils-zio-tapir-server")
-    .settings(libraryDependencies ++= Seq(Libraries.tapirServer, Libraries.zio.value % Provided))
+    .settings(libraryDependencies ++= Seq(Libraries.tapirServer, Libraries.zio % Provided))
 
   lazy val tapirOpenTelemetryProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile, ProjectSettings.kindProjectorProfile)
@@ -92,7 +92,7 @@ object ModulesZio {
         Seq(
           Libraries.openTelemetrySemconv,
           Libraries.tapirServer,
-          Libraries.zio.value,
+          Libraries.zio,
           Libraries.zioOpenTelemetry
         )
     )
