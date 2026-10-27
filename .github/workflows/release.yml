@@ -24,4 +24,4 @@ jobs:
       - uses: sbt/setup-sbt@v1
       - name: Publish
         if: ${{ !github.event.pull_request.head.repo.fork }}
-        run: sbt clean ci-release
+        run: sbt "clean;ci-release"
