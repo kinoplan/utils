@@ -17,8 +17,9 @@ object ModulesImplicits {
   lazy val identityProfile: Project => Project =
     _.configure(ProjectSettings.commonProfile).settings(name := "utils-implicits-identity")
 
-  lazy val javaTimeProfile: Project => Project =
-    _.configure(ProjectSettings.commonProfile).settings(name := "utils-implicits-java-time")
+  lazy val javaTimeProfile: Project => Project = _
+    .configure(ProjectSettings.commonProfile)
+    .settings(name := "utils-implicits-java-time", Test / parallelExecution := false)
 
   val javaTimeJsProfile: Project => Project = _
     .enablePlugins(ScalaJSJUnitPlugin)
