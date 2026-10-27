@@ -144,6 +144,8 @@ object ModulesCommon {
     .settings(name := "utils-reactivemongo-kamon-instrumentation")
     .settings(javaAgents := Seq(Libraries.kanelaAgent % "runtime;test"))
     .settings(
+      // Kanela must see instrumentation classes and reference.conf when the test JVM starts.
+      Test / classLoaderLayeringStrategy := ClassLoaderLayeringStrategy.Raw,
       libraryDependencies ++=
         Seq(
           Libraries.kamonCore % Provided,
