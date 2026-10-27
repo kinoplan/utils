@@ -19,7 +19,8 @@ object ModulesImplicits {
 
   lazy val javaTimeProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
-    .settings(name := "utils-implicits-java-time", Test / parallelExecution := false)
+    .settings(name := "utils-implicits-java-time")
+    .settings(Test / parallelExecution := false)
 
   val javaTimeJsProfile: Project => Project = _
     .enablePlugins(ScalaJSJUnitPlugin)
@@ -36,6 +37,7 @@ object ModulesImplicits {
   lazy val jodaTimeProfile: Project => Project = _
     .configure(ProjectSettings.commonProfile)
     .settings(name := "utils-implicits-joda-time")
+    .settings(Test / parallelExecution := false)
     .settings(libraryDependencies ++= Seq(Libraries.jodaTime))
 
   lazy val zioProfile: Project => Project = _
