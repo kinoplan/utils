@@ -49,7 +49,7 @@ jobs:
       run: |
         export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS --add-opens=java.base/java.lang=ALL-UNNAMED";
         SBT_COVERAGE=""
-        if [[ "${{ matrix.platform }}" != "JS" || "${{ matrix.scala }}" != "3" ]]; then
+        if [[ "${{ matrix.platform }}" != "JS" ]]; then
           SBT_COVERAGE="coverage;"
         fi
         sbt $SBT_JAVA_OPTS -v "${SBT_COVERAGE}testScoped ${{ matrix.scala }} ${{ matrix.platform }}"
@@ -65,11 +65,11 @@ jobs:
       run: sbt $SBT_JAVA_OPTS -v "scalafixCheckScoped ${{ matrix.scala }} ${{ matrix.platform }}"
 
     - name: Coverage report
-      if: matrix.platform != 'JS' || matrix.scala != '3'
+      if: matrix.platform != 'JS'
       run: sbt $SBT_JAVA_OPTS -v "coverageReportScoped ${{ matrix.scala }} ${{ matrix.platform }}"
 
     - name: Send coverage report to codecov
-      if: matrix.platform != 'JS' || matrix.scala != '3'
+      if: matrix.platform != 'JS'
       uses: codecov/codecov-action@v7.1.1
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
