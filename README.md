@@ -12,6 +12,7 @@ to facilitate re-development and use.
 
 ##### Contents
 
+* [utils-reactivemongo-opentelemetry-javaagent-extension](docs/reactivemongo/opentelemetry-javaagent-extension.md)
 * [utils-zio-redisson](docs/zio/redisson/redisson.md)
 * [utils-zio-sttp-opentelemetry](docs/zio/sttp/opentelemetry.md)
 * [utils-zio-tapir-opentelemetry](docs/zio/tapir/opentelemetry.md)
@@ -52,6 +53,7 @@ libraryDependencies ++= Seq(
   "io.kinoplan" %% "utils-reactivemongo-bson-refined" % ${version}, // JVM only
   "io.kinoplan" %% "utils-reactivemongo-bson-zio-prelude" % ${version}, // JVM only
   "io.kinoplan" %% "utils-reactivemongo-kamon-instrumentation" % ${version}, // JVM only
+  "io.kinoplan" %% "utils-reactivemongo-opentelemetry-javaagent-extension" % ${version}, // JVM only, see docs
   "io.kinoplan" %% "utils-redisson-core" % ${version}, // JVM only
   "io.kinoplan" %% "utils-redisson-codec-base" % ${version}, // JVM and Scala.js
   "io.kinoplan" %% "utils-redisson-codec-circe" % ${version}, // JVM and Scala.js

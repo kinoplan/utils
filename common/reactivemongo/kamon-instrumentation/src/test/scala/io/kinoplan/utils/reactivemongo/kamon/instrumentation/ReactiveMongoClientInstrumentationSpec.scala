@@ -18,7 +18,8 @@ import reactivemongo.api.AsyncDriver
 import reactivemongo.api.bson.{BSONDocument, document}
 import reactivemongo.api.bson.collection.BSONCollection
 
-class ReactiveMongoClientInstrumentationSpec
+// MongoDB 6.0+ is sent commands with OP_MSG, earlier versions - with OP_QUERY
+abstract class ReactiveMongoClientInstrumentationSpec(mongoVersion: String)
     extends AnyWordSpec
       with Matchers
       with Eventually
@@ -54,7 +55,7 @@ class ReactiveMongoClientInstrumentationSpec
   override def beforeAll(): Unit = {
     super.beforeAll()
 
-    container = new MongoDBContainer(DockerImageName.parse("mongo:5.0")).withCommand(
+    container = new MongoDBContainer(DockerImageName.parse(s"mongo:$mongoVersion")).withCommand(
       "mongod --replSet \"rs0\""
     )
 
@@ -101,13 +102,17 @@ class ReactiveMongoClientInstrumentationSpec
     testSpanReporter().clear()
   }
 
-  "ReactiveMongo Instrumentation" should {
+  s"ReactiveMongo Instrumentation with MongoDB $mongoVersion" should {
     "create spans for drop" taggedAs Retryable in
-      testOp("drop", Seq(_.hasError shouldBe true)) {
+      testOp("drop") {
         for {
           t <- tools
-          _ <- t.drop()
+          _ <- t.drop(failIfNotFound = false)
         } yield ()
+      }
+    "mark failed commands as errors" taggedAs Retryable in
+      testOp("find", Seq(_.hasError shouldBe true)) {
+        tools.flatMap(_.find(document("$unknown" -> true)).one[BSONDocument]).failed.map(_ => ())
       }
     "create spans for findAndUpdate" taggedAs Retryable in
       testOp("findAndModify") {
@@ -326,3 +331,9 @@ class ReactiveMongoClientInstrumentationSpec
   }
 
 }
+
+class ReactiveMongoClientInstrumentationMongo5Spec
+    extends ReactiveMongoClientInstrumentationSpec("5.0")
+
+class ReactiveMongoClientInstrumentationMongo7Spec
+    extends ReactiveMongoClientInstrumentationSpec("7.0")

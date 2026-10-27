@@ -1,10 +1,10 @@
 import Dependencies.Libraries
 import com.lightbend.sbt.javaagent.JavaAgent
 import com.lightbend.sbt.javaagent.JavaAgent.JavaAgentKeys.javaAgents
-import sbt.Keys.*
+import locales.LocalesPlugin.autoImport.*
 import locales.{CLDRVersion, LocalesFilter, LocalesPlugin}
 import sbt.*
-import locales.LocalesPlugin.autoImport.*
+import sbt.Keys.*
 
 object ModulesCommon {
 
@@ -159,6 +159,54 @@ object ModulesCommon {
           Libraries.reactiveMongo % Provided,
           Libraries.testContainers,
           Libraries.testContainersMongodb
+        )
+    )
+
+  lazy val reactivemongoOpentelemetryJavaagentExtensionProfile: Project => Project = _
+    .configure(ProjectSettings.commonProfile)
+    .enablePlugins(JavaAgent)
+    .settings(name := "utils-reactivemongo-opentelemetry-javaagent-extension")
+    .settings(javaAgents := Seq(Libraries.openTelemetryJavaagentTestingAgent))
+    .settings(
+      libraryDependencies ++=
+        Seq(
+          Libraries.googleAutoService                  % Provided,
+          Libraries.openTelemetryJavaagentExtensionApi % Provided,
+          Libraries.openTelemetryJavaagentTesting,
+          Libraries.logbackClassic        % Test,
+          Libraries.reactiveMongo         % Provided,
+          Libraries.scalaCollectionCompat % Test,
+          Libraries.testContainers,
+          Libraries.testContainersMongodb
+        )
+    )
+    .settings(
+      // The agent loads helper classes by name, so they are listed in a resource
+      Compile / resourceGenerators +=
+        Def
+          .task {
+            val classes = (Compile / classDirectory).value
+            val _ = (Compile / compile).value
+            val helpers = (classes / "reactivemongo" / "kinoplan" / "opentelemetry" ** "*.class")
+              .get()
+              .flatMap(IO.relativize(classes, _))
+              .map(_.stripSuffix(".class").replace('/', '.'))
+              .sorted
+            val file = (Compile / resourceManaged).value / "META-INF" /
+              "io/kinoplan/utils/reactivemongo/opentelemetry/javaagent/extension/helpers"
+            IO.writeLines(file, helpers)
+            Seq(file)
+          }
+          .taskValue,
+      // Extension classes must be loaded only by the agent, not by the application class loader
+      Test / fullClasspath :=
+        (Test / fullClasspath).value.filterNot(_.data == (Compile / classDirectory).value),
+      Test / javaOptions ++=
+        Seq(
+          s"-Dotel.javaagent.extensions=${(Compile / packageBin).value}",
+          "-Dotel.semconv-stability.opt-in=database",
+          "-Dotel.instrumentation.reactivemongo.query-text.max-length=1024",
+          "-Dio.opentelemetry.javaagent.slf4j.simpleLogger.log.io.opentelemetry.javaagent.testing.exporter=warn"
         )
     )
 

@@ -14,7 +14,7 @@ import reactivemongo.api.bson.BSONDocument
 import reactivemongo.api.bson.buffer.ReadableBuffer
 import reactivemongo.api.bson.collection.BSONSerializationPack.readFromBuffer
 import reactivemongo.core.actors.ExpectingResponse
-import reactivemongo.core.protocol.{CollectionAwareRequestOp, Response}
+import reactivemongo.core.protocol.{CollectionAwareRequestOp, Message, Response}
 
 import io.kinoplan.utils.reactivemongo.kamon.instrumentation.ReactiveMongoClientInstrumentation
 
@@ -35,20 +35,26 @@ object MongoConnectionSendExpectingResponseAdvice {
     finishSpan(span, future)
 
   def startSpan(expectingResponse: ExpectingResponse): Span = {
-    val buf = expectingResponse.requestMaker.payload.duplicate()
+    val requestMaker = expectingResponse.requestMaker
     Try[(Int, BSONDocument)] {
-      val sz = buf.getIntLE(buf.readerIndex)
+      val buf = requestMaker.payload
+      val index = requestMaker.op match {
+        // OP_MSG section starts with its kind, the driver sends only kind 0 - a single document
+        case _: Message =>
+          require(buf.getByte(buf.readerIndex) == 0, "Unsupported OP_MSG section kind")
+          buf.readerIndex + 1
+        case _ => buf.readerIndex
+      }
+      val sz = buf.getIntLE(index)
       val bytes = Array.ofDim[Byte](sz)
-      buf.readBytes(bytes)
+      buf.getBytes(index, bytes)
       (sz, readFromBuffer(ReadableBuffer(bytes)))
     } match {
       case Failure(_)                => Span.Empty
       case Success((size, document)) =>
-        buf.resetReaderIndex()
-
-        val dbO = expectingResponse.requestMaker.op match {
+        val dbO = requestMaker.op match {
           case op: CollectionAwareRequestOp => Some(op.db)
-          case _                            => None
+          case _                            => document.getAsOpt[String]("$db") // OP_MSG
         }
 
         // at first position there is the operation name as key
@@ -74,12 +80,14 @@ object MongoConnectionSendExpectingResponseAdvice {
           .add(collectionNameO.fold(TagSet.Empty)(TagSet.of(DB_COLLECTION_NAME.getKey, _)))
           .build()
 
+        val printer = ReactiveMongoClientInstrumentation.printer
+
         Kamon
           .clientSpanBuilder(spanOperationName, "org.reactivemongo")
           .tagMetrics(metricsTag)
           .tag(
             DB_QUERY_TEXT.getKey,
-            ReactiveMongoClientInstrumentation.printer.print(document, math.max(16, size))
+            printer.print(document, math.max(16, math.min(size, printer.maxLength)))
           )
           .start()
     }
