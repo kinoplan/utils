@@ -27,7 +27,7 @@ object Dependencies {
     val http4sDsl                        = "org.http4s"                    %% "http4s-dsl"                             % "0.23.38"
     val http4sServer                     = "org.http4s"                    %% "http4s-server"                          % "0.23.38"
     val jacksonModule                    = "com.fasterxml.jackson.module"  %% "jackson-module-scala"                   % "2.22.3.1"
-    val jodaTime                         = "joda-time"                      % "joda-time"                              % "2.15.0"
+    val jodaTime                         = "joda-time"                      % "joda-time"                              % "2.15.1"
     val kamonCore                        = "io.kamon"                      %% "kamon-core"                             % kamonV
     val kamonInstrumentationCommon       = "io.kamon"                      %% "kamon-instrumentation-common"           % kamonV
     val kamonTestkit                     = "io.kamon"                      %% "kamon-testkit"                          % kamonV     % Test
