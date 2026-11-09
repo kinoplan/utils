@@ -72,7 +72,7 @@ object Dependencies {
     val tapirServer                      = "com.softwaremill.sttp.tapir"   %% "tapir-server"                           % tapirV
     val testContainers                   = "org.testcontainers"             % "testcontainers"                         % "2.0.5"    % Test
     val testContainersMongodb            = "org.testcontainers"             % "mongodb"                                % "1.21.4"   % Test
-    val testContainersRedis              = "com.redis"                      % "testcontainers-redis"                   % "3.0.0"    % Test
+    val testContainersRedis              = "com.redis"                      % "testcontainers-redis"                   % "3.0.1"    % Test
     val typesafeConfig                   = "com.typesafe"                   % "config"                                 % "1.4.9"
     val zio                              = "dev.zio"                       %% "zio"                                    % zioV
     val zioConfig                        = "dev.zio"                       %% "zio-config"                             % zioConfigV
