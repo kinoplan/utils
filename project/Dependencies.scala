@@ -42,7 +42,7 @@ object Dependencies {
     val openTelemetryExporterLoggingOtlp = "io.opentelemetry"               % "opentelemetry-exporter-logging-otlp"    % openTelemetryV
     val openTelemetryExporterOtlp        = "io.opentelemetry"               % "opentelemetry-exporter-otlp"            % openTelemetryV
     val openTelemetrySdk                 = "io.opentelemetry"               % "opentelemetry-sdk"                      % openTelemetryV
-    val openTelemetrySemconv             = "io.opentelemetry.semconv"       % "opentelemetry-semconv"                  % "1.44.0"
+    val openTelemetrySemconv             = "io.opentelemetry.semconv"       % "opentelemetry-semconv"                  % "1.45.0"
     val openTelemetrySemconvIncubating   = "io.opentelemetry.semconv"       % "opentelemetry-semconv-incubating"       % "1.30.0-alpha"
     val play                             = "org.playframework"             %% "play"                                   % "3.0.12"
     val play2                            = "com.typesafe.play"             %% "play"                                   % "2.8.22"
