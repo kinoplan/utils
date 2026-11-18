@@ -77,7 +77,7 @@ object Dependencies {
     val zio                              = "dev.zio"                       %% "zio"                                    % zioV
     val zioConfig                        = "dev.zio"                       %% "zio-config"                             % zioConfigV
     val zioConfigMagnolia                = "dev.zio"                       %% "zio-config-magnolia"                    % zioConfigV
-    val zioInteropCats                   = "dev.zio"                       %% "zio-interop-cats"                       % "23.1.0.14"
+    val zioInteropCats                   = "dev.zio"                       %% "zio-interop-cats"                       % "23.1.0.15"
     val zioJson                          = "dev.zio"                       %% "zio-json"                               % "1.1.2"
     val zioMetricsConnectorsMicrometer   = "dev.zio"                       %% "zio-metrics-connectors-micrometer"      % "2.6.0"
     val zioOpenTelemetry                 = "dev.zio"                       %% "zio-opentelemetry"                      % "3.1.21"
