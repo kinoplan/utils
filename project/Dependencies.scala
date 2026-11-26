@@ -24,8 +24,8 @@ object Dependencies {
     val circeGeneric                     = "io.circe"                      %% "circe-generic"                          % circeV
     val circeParser                      = "io.circe"                      %% "circe-parser"                           % circeV
     val http4sBlazeServer                = "org.http4s"                    %% "http4s-blaze-server"                    % "0.23.18"
-    val http4sDsl                        = "org.http4s"                    %% "http4s-dsl"                             % "0.23.38"
-    val http4sServer                     = "org.http4s"                    %% "http4s-server"                          % "0.23.38"
+    val http4sDsl                        = "org.http4s"                    %% "http4s-dsl"                             % "0.23.39"
+    val http4sServer                     = "org.http4s"                    %% "http4s-server"                          % "0.23.39"
     val jacksonModule                    = "com.fasterxml.jackson.module"  %% "jackson-module-scala"                   % "2.23.0"
     val jodaTime                         = "joda-time"                      % "joda-time"                              % "2.15.1"
     val kamonCore                        = "io.kamon"                      %% "kamon-core"                             % kamonV
