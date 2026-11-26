@@ -81,7 +81,7 @@ object Dependencies {
     val zioJson                          = "dev.zio"                       %% "zio-json"                               % "1.1.2"
     val zioMetricsConnectorsMicrometer   = "dev.zio"                       %% "zio-metrics-connectors-micrometer"      % "2.6.0"
     val zioOpenTelemetry                 = "dev.zio"                       %% "zio-opentelemetry"                      % "3.1.21"
-    val zioPrelude                       = "dev.zio"                       %% "zio-prelude"                            % "1.0.0-RC48"
+    val zioPrelude                       = "dev.zio"                       %% "zio-prelude"                            % "1.0.0-RC49"
     val zioStreams                       = "dev.zio"                       %% "zio-streams"                            % zioV
     val zioTest                          = "dev.zio"                       %% "zio-test"                               % zioV
     val zioTestSbt                       = "dev.zio"                       %% "zio-test-sbt"                           % zioV
